@@ -15,6 +15,7 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: none;
 }
 
 body {
@@ -469,10 +470,10 @@ const SpriteGenerator = (function () {
 
   function createNinjaSprites() {
     const pSize = 2; const width = 36; const height = 48;
-    const idleRight = createCanvas(width, height); drawPixelMatrix(idleRight.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
-    const idleLeft = createCanvas(width, height); idleLeft.ctx.translate(width, 0); idleLeft.ctx.scale(-1, 1); drawPixelMatrix(idleLeft.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
-    const runRight = createCanvas(width, height); drawPixelMatrix(runRight.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
-    const runLeft = createCanvas(width, height); runLeft.ctx.translate(width, 0); runLeft.ctx.scale(-1, 1); drawPixelMatrix(runLeft.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
+    const idleLeft = createCanvas(width, height); drawPixelMatrix(idleLeft.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
+    const idleRight = createCanvas(width, height); idleRight.ctx.translate(width, 0); idleRight.ctx.scale(-1, 1); drawPixelMatrix(idleRight.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
+    const runLeft = createCanvas(width, height); drawPixelMatrix(runLeft.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
+    const runRight = createCanvas(width, height); runRight.ctx.translate(width, 0); runRight.ctx.scale(-1, 1); drawPixelMatrix(runRight.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
     return { idleRight: idleRight.canvas, idleLeft: idleLeft.canvas, runRight: runRight.canvas, runLeft: runLeft.canvas };
   }
 
@@ -699,28 +700,71 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.code === 'Space') keys.shoot = false;
   });
 
-  function handleTouchLeft(e) { if (e) e.preventDefault(); if (gameState === 'PLAYING') { player.facing = 'LEFT'; keys.left = true; shootShuriken(); } }
-  function handleTouchRight(e) { if (e) e.preventDefault(); if (gameState === 'PLAYING') { player.facing = 'RIGHT'; keys.right = true; shootShuriken(); } }
+  ['touchstart', 'touchend', 'mousedown', 'keydown'].forEach((eventType) => {
+    window.addEventListener(eventType, () => { SoundSystem.init(); }, { passive: true });
+  });
+
+  function bindButton(btn, callback) {
+    if (!btn) return;
+    let touched = false;
+    btn.addEventListener('touchstart', (e) => {
+      touched = true;
+      if (e.cancelable) e.preventDefault();
+      SoundSystem.init();
+      callback(e);
+    }, { passive: false });
+    btn.addEventListener('click', (e) => {
+      if (touched) {
+        touched = false;
+        return;
+      }
+      SoundSystem.init();
+      callback(e);
+    });
+  }
+
+  function handleTouchLeft(e) {
+    if (e && e.cancelable) e.preventDefault();
+    SoundSystem.init();
+    if (gameState === 'PLAYING') { player.facing = 'LEFT'; keys.left = true; shootShuriken(); }
+  }
+
+  function handleTouchRight(e) {
+    if (e && e.cancelable) e.preventDefault();
+    SoundSystem.init();
+    if (gameState === 'PLAYING') { player.facing = 'RIGHT'; keys.right = true; shootShuriken(); }
+  }
 
   touchLeft.addEventListener('touchstart', handleTouchLeft, { passive: false });
-  touchLeft.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; });
-  touchLeft.addEventListener('mousedown', handleTouchLeft); touchLeft.addEventListener('mouseup', () => { keys.left = false; });
+  touchLeft.addEventListener('touchend', (e) => { if (e && e.cancelable) e.preventDefault(); keys.left = false; }, { passive: false });
+  touchLeft.addEventListener('touchcancel', () => { keys.left = false; }, { passive: true });
+  touchLeft.addEventListener('mousedown', handleTouchLeft);
+  touchLeft.addEventListener('mouseup', () => { keys.left = false; });
+  touchLeft.addEventListener('mouseleave', () => { keys.left = false; });
 
   touchRight.addEventListener('touchstart', handleTouchRight, { passive: false });
-  touchRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
-  touchRight.addEventListener('mouseup', handleTouchRight); touchRight.addEventListener('mouseup', () => { keys.right = false; });
+  touchRight.addEventListener('touchend', (e) => { if (e && e.cancelable) e.preventDefault(); keys.right = false; }, { passive: false });
+  touchRight.addEventListener('touchcancel', () => { keys.right = false; }, { passive: true });
+  touchRight.addEventListener('mousedown', handleTouchRight);
+  touchRight.addEventListener('mouseup', () => { keys.right = false; });
+  touchRight.addEventListener('mouseleave', () => { keys.right = false; });
 
   diffButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      SoundSystem.playClick(); diffButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active'); selectedDifficulty = btn.getAttribute('data-diff');
+    bindButton(btn, () => {
+      SoundSystem.playClick();
+      diffButtons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedDifficulty = btn.getAttribute('data-diff');
     });
   });
 
-  btnStart.addEventListener('click', startGame); btnPause.addEventListener('click', pauseGame);
-  btnResume.addEventListener('click', resumeGame); btnRestartPause.addEventListener('click', startGame);
-  btnMenuPause.addEventListener('click', returnToMenu); btnRestart.addEventListener('click', startGame);
-  btnMenuGameOver.addEventListener('click', returnToMenu);
+  bindButton(btnStart, startGame);
+  bindButton(btnPause, pauseGame);
+  bindButton(btnResume, resumeGame);
+  bindButton(btnRestartPause, startGame);
+  bindButton(btnMenuPause, returnToMenu);
+  bindButton(btnRestart, startGame);
+  bindButton(btnMenuGameOver, returnToMenu);
 
   function update(dt) {
     if (gameState !== 'PLAYING') return;
@@ -731,8 +775,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const minX = GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN;
     const maxX = GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN - player.width;
 
-    if (keys.left) { player.x -= GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; }
-    if (keys.right) { player.x += GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; }
+    if (keys.left) { player.x -= GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'LEFT'; }
+    if (keys.right) { player.x += GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'RIGHT'; }
     player.x = Math.max(minX, Math.min(maxX, player.x));
 
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
