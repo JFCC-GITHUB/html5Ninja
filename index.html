@@ -412,14 +412,26 @@ body {
 
       <div id="menu-screen" class="overlay-screen">
         <h1 class="game-title">🥷 忍者手裏劍 🥷</h1>
-        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v1.2.0</span></p>
+        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v1.2.2</span></p>
 
         <div class="menu-box">
-          <h2 style="font-size:1.1rem; color:#f1c40f;">模式選擇 (Game Mode)</h2>
-          <div class="difficulty-buttons">
-            <button class="btn btn-mode active" data-mode="CLASSIC">🛡️ 經典</button>
-            <button class="btn btn-mode" data-mode="ENDLESS">♾️ 無盡</button>
-            <button class="btn btn-mode" data-mode="BOSS_RUSH">👹 討伐</button>
+          <div id="character-preview-container" style="display:flex; justify-content:space-around; align-items:center; width:100%; background:rgba(0,0,0,0.4); border:1px solid #f39c12; border-radius:8px; padding:8px 4px; margin-bottom:4px;">
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem; color:#2ecc71; font-weight:bold; margin-bottom:2px;">主角 (HERO)</div>
+              <canvas id="preview-hero" width="40" height="50" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem; color:#f1c40f; font-weight:bold; margin-bottom:2px;">疾風忍</div>
+              <canvas id="preview-fast" width="32" height="42" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem; color:#e74c3c; font-weight:bold; margin-bottom:2px;">普通忍</div>
+              <canvas id="preview-normal" width="36" height="48" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem; color:#9b59b6; font-weight:bold; margin-bottom:2px;">重裝忍</div>
+              <canvas id="preview-tank" width="48" height="58" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
+            </div>
           </div>
 
           <h2 style="font-size:1.1rem; color:#f1c40f; margin-top:2px;">選擇難度 (Difficulty)</h2>
@@ -650,8 +662,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnRestart = document.getElementById('btn-restart');
   const btnMenuGameOver = document.getElementById('btn-menu-gameover');
   const diffButtons = document.querySelectorAll('.btn-diff');
-  const modeButtons = document.querySelectorAll('.btn-mode');
-
   const touchLeft = document.getElementById('touch-left');
   const touchRight = document.getElementById('touch-right');
   const touchSword = document.getElementById('touch-sword');
@@ -682,12 +692,47 @@ window.addEventListener('DOMContentLoaded', () => {
   highScoreVal.textContent = highScore;
 
   function updateDifficultyPanel() {
-    const modeInfo = GAME_CONFIG.GAME_MODES[selectedMode];
+    const modeInfo = GAME_CONFIG.GAME_MODES[selectedMode] || GAME_CONFIG.GAME_MODES['CLASSIC'];
     const diffInfo = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
     diffTitle.textContent = `${modeInfo.title} - ${diffInfo.title}`;
     diffDesc.textContent = `${modeInfo.desc} ${diffInfo.desc}`;
     diffStats.textContent = diffInfo.stats;
   }
+
+  function renderMenuCharacterPreviews() {
+    try {
+      const pHero = document.getElementById('preview-hero');
+      if (pHero) {
+        const ctxH = pHero.getContext('2d');
+        ctxH.clearRect(0, 0, pHero.width, pHero.height);
+        ctxH.drawImage(sprites.ninja.idleRight, 2, 1);
+      }
+
+      const pFast = document.getElementById('preview-fast');
+      if (pFast) {
+        const ctxF = pFast.getContext('2d');
+        ctxF.clearRect(0, 0, pFast.width, pFast.height);
+        ctxF.drawImage(sprites.enemies.FAST.right, 2, 2);
+      }
+
+      const pNormal = document.getElementById('preview-normal');
+      if (pNormal) {
+        const ctxN = pNormal.getContext('2d');
+        ctxN.clearRect(0, 0, pNormal.width, pNormal.height);
+        ctxN.drawImage(sprites.enemies.NORMAL.right, 2, 2);
+      }
+
+      const pTank = document.getElementById('preview-tank');
+      if (pTank) {
+        const ctxT = pTank.getContext('2d');
+        ctxT.clearRect(0, 0, pTank.width, pTank.height);
+        ctxT.drawImage(sprites.enemies.TANK.right, 2, 1);
+      }
+    } catch (e) {
+      console.warn('Preview render error:', e);
+    }
+  }
+  renderMenuCharacterPreviews();
 
   function createPlayer(maxHp) {
     return {
@@ -966,16 +1011,6 @@ window.addEventListener('DOMContentLoaded', () => {
   touchRight.addEventListener('mouseleave', () => { keys.right = false; });
 
   bindButton(touchSword, () => { if (gameState === 'PLAYING') performSwordAttack(); });
-
-  modeButtons.forEach((btn) => {
-    bindButton(btn, () => {
-      SoundSystem.playClick();
-      modeButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedMode = btn.getAttribute('data-mode');
-      updateDifficultyPanel();
-    });
-  });
 
   diffButtons.forEach((btn) => {
     bindButton(btn, () => {
