@@ -538,6 +538,12 @@ const GAME_CONFIG = {
     SHADOW: { id: 'SHADOW', name: '影忍', width: 30, height: 40, baseSpeed: 4.2, hp: 2, expValue: 80, scoreValue: 500, color: '#34495e', spawnWeight: 10, reqLevel: 3 },
     BOSS: { id: 'BOSS', name: '鬼將', width: 52, height: 64, baseSpeed: 1.2, hp: 6, expValue: 150, scoreValue: 800, color: '#2c3e50', spawnWeight: 5, reqLevel: 5 }
   },
+  SPAWN: {
+    INITIAL_INTERVAL_MS: 1800,
+    MIN_INTERVAL_MS: 400,
+    DIFFICULTY_RAMP_INTERVAL_MS: 5000,
+    INTERVAL_DECREASE_STEP: 50,
+  },
   PARTICLES: { HIT_COUNT: 12, DEATH_COUNT: 25 }
 };
 
