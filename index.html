@@ -74,17 +74,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
+  padding: 8px 14px;
   background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
   z-index: 10;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .hud-item {
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 #000;
 }
@@ -97,7 +97,7 @@ body {
 #hp-hearts {
   display: flex;
   gap: 3px;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .level-badge {
@@ -106,7 +106,7 @@ body {
 }
 
 .exp-bar-container {
-  width: 80px;
+  width: 70px;
   height: 8px;
   background: rgba(255,255,255,0.2);
   border-radius: 4px;
@@ -127,7 +127,7 @@ body {
   border: 2px solid #fff;
   color: #fff;
   padding: 4px 10px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
@@ -152,88 +152,107 @@ body {
   align-items: center;
   z-index: 20;
   text-align: center;
-  padding: 20px;
+  padding: 16px;
 }
 
 .game-title {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: #e74c3c;
   text-shadow: 3px 3px 0 #000, -2px -2px 0 #ff6b6b;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   letter-spacing: 2px;
 }
 
 .game-subtitle {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #f1c40f;
-  margin-bottom: 20px;
-  letter-spacing: 4px;
+  margin-bottom: 12px;
+  letter-spacing: 3px;
 }
 
 .gameover-title {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   color: #e74c3c;
   text-shadow: 4px 4px 0 #000;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .menu-box {
-  background: rgba(20, 24, 38, 0.9);
+  background: rgba(20, 24, 38, 0.92);
   border: 3px solid #f39c12;
   border-radius: 12px;
-  padding: 24px 32px;
+  padding: 18px 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  width: 90%;
-  max-width: 420px;
+  gap: 12px;
+  width: 95%;
+  max-width: 480px;
 }
 
 .difficulty-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn {
   background: #2c3e50;
   color: #fff;
   border: 2px solid #7f8c8d;
-  padding: 8px 16px;
+  padding: 6px 10px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  box-shadow: 0 4px 0 #1a252f;
+  box-shadow: 0 3px 0 #1a252f;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #1a252f;
+  box-shadow: 0 5px 0 #1a252f;
   filter: brightness(1.1);
 }
 
 .btn:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #1a252f;
+  box-shadow: 0 1px 0 #1a252f;
 }
 
 .btn-diff {
   flex: 1;
-  padding: 8px 4px;
-  font-size: 0.85rem;
+  min-width: 80px;
+  padding: 6px 4px;
+  font-size: 0.75rem;
   background: #34495e;
 }
 
 .btn-diff.active {
   background: #e67e22;
   border-color: #f1c40f;
-  box-shadow: 0 4px 0 #a04000;
+  box-shadow: 0 3px 0 #a04000;
+}
+
+.diff-detail-panel {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(243, 156, 18, 0.5);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  color: #e0e0e0;
+  width: 100%;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.diff-detail-panel h4 {
+  color: #f1c40f;
+  margin-bottom: 4px;
 }
 
 .btn-primary {
@@ -244,9 +263,9 @@ body {
 
 .btn-large {
   width: 100%;
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  margin-top: 8px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  margin-top: 4px;
 }
 
 .btn-secondary {
@@ -255,29 +274,29 @@ body {
 }
 
 .controls-guide {
-  margin-top: 18px;
+  margin-top: 10px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 0.8rem;
+  padding: 8px 12px;
+  font-size: 0.75rem;
   color: #bdc3c7;
-  max-width: 460px;
-  line-height: 1.4;
+  max-width: 480px;
+  line-height: 1.35;
 }
 
 .controls-guide h3 {
   color: #f1c40f;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .final-score {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: #2ecc71;
   font-weight: bold;
 }
 
 .best-score {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #f1c40f;
 }
 
@@ -309,7 +328,7 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 25px;
+  padding-bottom: 20px;
   opacity: 0.35;
   transition: opacity 0.15s;
 }
@@ -321,16 +340,16 @@ body {
 
 .touch-sword-btn {
   position: absolute;
-  bottom: 25px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   background: rgba(231, 76, 60, 0.85);
   border: 2px solid #ff6b6b;
   color: #fff;
-  padding: 10px 20px;
+  padding: 8px 18px;
   border-radius: 25px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: bold;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   cursor: pointer;
@@ -346,16 +365,16 @@ body {
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
-  padding: 8px 16px;
+  padding: 6px 12px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: bold;
 }
 
 @media (max-width: 600px) {
-  .game-title { font-size: 1.8rem; }
-  .menu-box { padding: 16px; }
-  .btn-large { font-size: 1rem; }
+  .game-title { font-size: 1.6rem; }
+  .menu-box { padding: 12px 16px; }
+  .btn-large { font-size: 0.95rem; }
 }
   </style>
 </head>
@@ -376,6 +395,10 @@ body {
             <div id="exp-bar-fill" class="exp-bar-fill"></div>
           </div>
         </div>
+        <div id="wave-container" class="hud-item">
+          <span class="hud-label">WAVE:</span>
+          <span id="wave-val" style="color:#3498db;">1</span>
+        </div>
         <div id="score-container" class="hud-item">
           <span class="hud-label">SCORE:</span>
           <span id="score-val">0</span>
@@ -394,18 +417,27 @@ body {
         <div class="menu-box">
           <h2>選擇難度 (Difficulty)</h2>
           <div class="difficulty-buttons">
-            <button class="btn btn-diff" data-diff="EASY">簡單 (Easy)</button>
-            <button class="btn btn-diff active" data-diff="NORMAL">普通 (Normal)</button>
-            <button class="btn btn-diff" data-diff="HARD">困難 (Hard)</button>
+            <button class="btn btn-diff" data-diff="VERY_EASY">極簡</button>
+            <button class="btn btn-diff" data-diff="EASY">簡單</button>
+            <button class="btn btn-diff active" data-diff="NORMAL">普通</button>
+            <button class="btn btn-diff" data-diff="HARD">困難</button>
+            <button class="btn btn-diff" data-diff="NIGHTMARE">噩夢</button>
+          </div>
+
+          <div id="diff-detail-panel" class="diff-detail-panel">
+            <h4 id="diff-title">普通模式 (Normal)</h4>
+            <p id="diff-desc">標準挑戰！敵人屬性平衡，適合所有玩家。</p>
+            <p id="diff-stats">初始血量: ❤️x3 | 敵人速度: 100% | 敵人生命: 100% | 分數加成: x1.5</p>
           </div>
 
           <button id="btn-start" class="btn btn-primary btn-large">開始遊戲 (START)</button>
         </div>
 
         <div class="controls-guide">
-          <h3>🎮 操作說明</h3>
-          <p><strong>電腦：</strong> A / D 或 ⬅️ / ➡️ 移動 & 按住連發 | Space 射擊 | J / Z 武士刀近戰斬擊</p>
-          <p><strong>等級系統：</strong> 擊殺敵人獲得經驗值等級提升！等級越高，攻擊範圍越龐大；怪物血量更厚，並出現新種類型敵人！</p>
+          <h3>🎮 操作說明與遊戲特色</h3>
+          <p><strong>電腦：</strong> A / D 移動連射 | Space 射擊 | J / Z 武士刀斬擊</p>
+          <p><strong>手機：</strong> 點擊/按住左右區域移動連射 | 中央 ⚔️ 斬擊</p>
+          <p><strong>等級與波次：</strong> 等級提升解鎖強大巨大化斬擊與多方向360度圓形斬擊；波次越高等級越強，怪獸血量與種類越加豐富！</p>
         </div>
       </div>
 
@@ -443,6 +475,9 @@ body {
   </div>
 
   <script>
+// ==========================================
+// 1. CONFIGURATION MODULE
+// ==========================================
 const GAME_CONFIG = {
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 450,
@@ -455,9 +490,9 @@ const GAME_CONFIG = {
     HEIGHT: 48,
     MOVE_BOUNDS_MARGIN: 100,
     SHOOT_COOLDOWN_MS: 180,
-    SWORD_COOLDOWN_MS: 300,
-    BASE_SWORD_RANGE: 65,
-    SWORD_DURATION_MS: 180,
+    SWORD_COOLDOWN_MS: 280,
+    BASE_SWORD_RANGE: 70,
+    SWORD_DURATION_MS: 200,
   },
   SHURIKEN: {
     SPEED: 9,
@@ -465,29 +500,50 @@ const GAME_CONFIG = {
     MAX_COUNT: 12,
   },
   DIFFICULTIES: {
-    EASY: { label: '簡單 (Easy)', enemySpeedMultiplier: 0.8, enemySpawnRateMultiplier: 1.3, playerHp: 4, scoreMultiplier: 1.0 },
-    NORMAL: { label: '普通 (Normal)', enemySpeedMultiplier: 1.0, enemySpawnRateMultiplier: 1.0, playerHp: 3, scoreMultiplier: 1.5 },
-    HARD: { label: '困難 (Hard)', enemySpeedMultiplier: 1.3, enemySpawnRateMultiplier: 0.7, playerHp: 2, scoreMultiplier: 2.0 }
+    VERY_EASY: {
+      title: '極簡模式 (Very Easy)',
+      desc: '輕鬆體驗！敵人速度極慢，血量極少，適合新手娛樂。',
+      stats: '初始血量: ❤️x5 | 敵人速度: 60% | 敵人生命: 70% | 分數加成: x0.8',
+      enemySpeedMultiplier: 0.6, enemyHpMultiplier: 0.7, enemySpawnRateMultiplier: 1.5, playerHp: 5, scoreMultiplier: 0.8
+    },
+    EASY: {
+      title: '簡單模式 (Easy)',
+      desc: '較為輕鬆！適中的節奏與較多的生命值。',
+      stats: '初始血量: ❤️x4 | 敵人速度: 80% | 敵人生命: 85% | 分數加成: x1.0',
+      enemySpeedMultiplier: 0.8, enemyHpMultiplier: 0.85, enemySpawnRateMultiplier: 1.2, playerHp: 4, scoreMultiplier: 1.0
+    },
+    NORMAL: {
+      title: '普通模式 (Normal)',
+      desc: '標準挑戰！敵人屬性平衡，適合所有玩家。',
+      stats: '初始血量: ❤️x3 | 敵人速度: 100% | 敵人生命: 100% | 分數加成: x1.5',
+      enemySpeedMultiplier: 1.0, enemyHpMultiplier: 1.0, enemySpawnRateMultiplier: 1.0, playerHp: 3, scoreMultiplier: 1.5
+    },
+    HARD: {
+      title: '困難模式 (Hard)',
+      desc: '高難挑戰！敵人移動敏捷且生命力強，考驗反應！',
+      stats: '初始血量: ❤️x2 | 敵人速度: 125% | 敵人生命: 130% | 分數加成: x2.0',
+      enemySpeedMultiplier: 1.25, enemyHpMultiplier: 1.3, enemySpawnRateMultiplier: 0.8, playerHp: 2, scoreMultiplier: 2.0
+    },
+    NIGHTMARE: {
+      title: '噩夢模式 (Nightmare)',
+      desc: '極限地獄！敵人群聚狂暴襲來，容錯率極低！',
+      stats: '初始血量: ❤️x1 | 敵人速度: 150% | 敵人生命: 170% | 分數加成: x3.0',
+      enemySpeedMultiplier: 1.5, enemyHpMultiplier: 1.7, enemySpawnRateMultiplier: 0.6, playerHp: 1, scoreMultiplier: 3.0
+    }
   },
   ENEMY_TYPES: {
-    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, expValue: 20, scoreValue: 100, color: '#e74c3c', spawnWeight: 50 },
+    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, expValue: 20, scoreValue: 100, color: '#e74c3c', spawnWeight: 45 },
     FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, expValue: 35, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
     TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, expValue: 60, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 },
     SHADOW: { id: 'SHADOW', name: '影忍', width: 30, height: 40, baseSpeed: 4.2, hp: 2, expValue: 80, scoreValue: 500, color: '#34495e', spawnWeight: 10, reqLevel: 3 },
     BOSS: { id: 'BOSS', name: '鬼將', width: 52, height: 64, baseSpeed: 1.2, hp: 6, expValue: 150, scoreValue: 800, color: '#2c3e50', spawnWeight: 5, reqLevel: 5 }
   },
-  SPAWN: {
-    INITIAL_INTERVAL_MS: 1800,
-    MIN_INTERVAL_MS: 400,
-    DIFFICULTY_RAMP_INTERVAL_MS: 5000,
-    INTERVAL_DECREASE_STEP: 50,
-  },
-  PARTICLES: {
-    HIT_COUNT: 12,
-    DEATH_COUNT: 25,
-  }
+  PARTICLES: { HIT_COUNT: 12, DEATH_COUNT: 25 }
 };
 
+// ==========================================
+// 2. SPRITE GENERATOR MODULE
+// ==========================================
 const SpriteGenerator = (function () {
   function createCanvas(w, h) {
     const canvas = document.createElement('canvas');
@@ -581,6 +637,9 @@ const SpriteGenerator = (function () {
   return { getSprites: init };
 })();
 
+// ==========================================
+// 3. SOUND SYSTEM MODULE
+// ==========================================
 const SoundSystem = (function () {
   let audioCtx = null;
   function initAudioContext() {
@@ -608,11 +667,14 @@ const SoundSystem = (function () {
     playPlayerHurt: () => playTone(150, 'sawtooth', 0.2, 0.3, 0.01),
     playGameOver: () => [400, 350, 300, 250, 180].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.2, 0.25, 0.01), i * 120)),
     playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01),
-    playSwordSlash: () => playTone(1200, 'sawtooth', 0.1, 0.3, 0.01),
+    playSwordSlash: () => playTone(1200, 'sawtooth', 0.12, 0.35, 0.01),
     playLevelUp: () => [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.15, 0.3, 0.01), i * 80)),
   };
 })();
 
+// ==========================================
+// 4. MAIN GAME ENGINE MODULE
+// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
@@ -626,12 +688,17 @@ window.addEventListener('DOMContentLoaded', () => {
   const touchControls = document.getElementById('touch-controls');
   const hpHearts = document.getElementById('hp-hearts');
   const levelVal = document.getElementById('level-val');
+  const waveVal = document.getElementById('wave-val');
   const expBarFill = document.getElementById('exp-bar-fill');
   const scoreVal = document.getElementById('score-val');
   const highScoreVal = document.getElementById('high-score-val');
   const finalScoreVal = document.getElementById('final-score-val');
   const finalBestVal = document.getElementById('final-best-val');
   const newRecordTag = document.getElementById('new-record-tag');
+
+  const diffTitle = document.getElementById('diff-title');
+  const diffDesc = document.getElementById('diff-desc');
+  const diffStats = document.getElementById('diff-stats');
 
   const btnStart = document.getElementById('btn-start');
   const btnPause = document.getElementById('btn-pause');
@@ -652,6 +719,7 @@ window.addEventListener('DOMContentLoaded', () => {
   let selectedDifficulty = 'NORMAL';
   let score = 0;
   let level = 1;
+  let currentWave = 1;
   let currentExp = 0;
   let expToNextLevel = 100;
   let highScore = parseInt(localStorage.getItem(GAME_CONFIG.HIGH_SCORE_KEY) || '0', 10);
@@ -669,6 +737,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const keys = { left: false, right: false, shoot: false, sword: false };
   highScoreVal.textContent = highScore;
 
+  function updateDifficultyPanel() {
+    const info = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
+    diffTitle.textContent = info.title;
+    diffDesc.textContent = info.desc;
+    diffStats.textContent = info.stats;
+  }
+
   function createPlayer(maxHp) {
     return {
       x: GAME_CONFIG.CANVAS_WIDTH / 2 - GAME_CONFIG.PLAYER.WIDTH / 2,
@@ -680,11 +755,12 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function getShurikenSize() {
-    return GAME_CONFIG.SHURIKEN.BASE_SIZE + (level - 1) * 3;
+    return GAME_CONFIG.SHURIKEN.BASE_SIZE + (level - 1) * 4;
   }
 
   function getSwordRange() {
-    return GAME_CONFIG.PLAYER.BASE_SWORD_RANGE + (level - 1) * 12;
+    // Dramatically scaled sword range per level
+    return GAME_CONFIG.PLAYER.BASE_SWORD_RANGE + (level - 1) * 22;
   }
 
   function addExp(amount) {
@@ -692,7 +768,7 @@ window.addEventListener('DOMContentLoaded', () => {
     while (currentExp >= expToNextLevel) {
       currentExp -= expToNextLevel;
       level += 1;
-      expToNextLevel = Math.round(expToNextLevel * 1.4);
+      expToNextLevel = Math.round(expToNextLevel * 1.35);
       SoundSystem.playLevelUp();
       createParticles(player.x + player.width / 2, player.y + player.height / 2, '#2ecc71', 30);
       floatingTexts.push({
@@ -708,6 +784,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function updateLevelDisplay() {
     levelVal.textContent = level;
+    waveVal.textContent = currentWave;
     const fillPercent = Math.min(100, Math.floor((currentExp / expToNextLevel) * 100));
     expBarFill.style.width = `${fillPercent}%`;
   }
@@ -738,21 +815,34 @@ window.addEventListener('DOMContentLoaded', () => {
     SoundSystem.playSwordSlash();
 
     const currentSwordRange = getSwordRange();
-    const swordBox = {
-      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - currentSwordRange,
-      y: player.y - 10,
-      width: currentSwordRange,
-      height: player.height + 20
-    };
-
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    const swordDamage = 2 + Math.floor((level - 1) / 2);
+    const swordDamage = 3 + Math.floor((level - 1) * 1.5);
+
+    // Multi-direction / 360 Whirlwind Slash unlocked at Level 3+
+    const isMultiDirection = level >= 3;
+
+    let swordBox = null;
+    if (isMultiDirection) {
+      swordBox = {
+        x: player.x + player.width / 2 - currentSwordRange,
+        y: player.y + player.height / 2 - currentSwordRange,
+        width: currentSwordRange * 2,
+        height: currentSwordRange * 2
+      };
+    } else {
+      swordBox = {
+        x: player.facing === 'RIGHT' ? player.x + player.width : player.x - currentSwordRange,
+        y: player.y - 15,
+        width: currentSwordRange,
+        height: player.height + 30
+      };
+    }
 
     for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
       const enemy = enemies[eIdx];
       if (checkAABBCollision(swordBox, enemy)) {
         enemy.hp -= swordDamage;
-        createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#e74c3c', 12);
+        createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#e74c3c', 15);
         if (enemy.hp <= 0) {
           SoundSystem.playEnemyHit();
           createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
@@ -771,8 +861,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
     const side = Math.random() < 0.5 ? 'LEFT' : 'RIGHT';
 
-    // Filter available enemy types based on player level
-    const availableTypes = Object.values(GAME_CONFIG.ENEMY_TYPES).filter((t) => !t.reqLevel || level >= t.reqLevel);
+    // Wave calculations
+    const elapsedSec = (Date.now() - gameStartTime) / 1000;
+    currentWave = 1 + Math.floor(elapsedSec / 15);
+
+    // Filter available enemy types based on player level & wave
+    const availableTypes = Object.values(GAME_CONFIG.ENEMY_TYPES).filter((t) => !t.reqLevel || level >= t.reqLevel || currentWave >= t.reqLevel);
     const totalWeight = availableTypes.reduce((sum, t) => sum + t.spawnWeight, 0);
     let rand = Math.random() * totalWeight;
     let typeConfig = availableTypes[0];
@@ -787,15 +881,15 @@ window.addEventListener('DOMContentLoaded', () => {
     const startX = side === 'LEFT' ? -typeConfig.width - 10 : GAME_CONFIG.CANVAS_WIDTH + 10;
     const moveDir = side === 'LEFT' ? 1 : -1;
 
-    // Enemy stats scale with player level
-    const levelHpScaling = Math.floor((level - 1) / 2);
-    const levelSpeedScaling = 1 + (level - 1) * 0.05;
-    const maxHp = typeConfig.hp + levelHpScaling;
+    // Grid/Wave curve scaling for enemy HP & speed
+    const waveHpBonus = Math.floor((currentWave - 1) * 0.8) + Math.floor((level - 1) * 0.5);
+    const waveSpeedMultiplier = 1 + (currentWave - 1) * 0.06 + (level - 1) * 0.03;
+    const maxHp = Math.round((typeConfig.hp + waveHpBonus) * diff.enemyHpMultiplier);
 
     enemies.push({
       type: typeConfig.id, x: startX, y: GAME_CONFIG.CANVAS_HEIGHT - typeConfig.height - 40,
       width: typeConfig.width, height: typeConfig.height,
-      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * levelSpeedScaling * moveDir,
+      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * waveSpeedMultiplier * moveDir,
       hp: maxHp, maxHp: maxHp,
       expValue: typeConfig.expValue, scoreValue: typeConfig.scoreValue,
       facing: side === 'LEFT' ? 'RIGHT' : 'LEFT',
@@ -827,7 +921,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     SoundSystem.playClick();
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    score = 0; level = 1; currentExp = 0; expToNextLevel = 100;
+    score = 0; level = 1; currentWave = 1; currentExp = 0; expToNextLevel = 100;
     gameStartTime = Date.now(); lastSpawnTime = Date.now();
     shurikens = []; enemies = []; particles = []; floatingTexts = [];
     player = createPlayer(diff.playerHp); updateHpDisplay(); updateLevelDisplay(); scoreVal.textContent = '0';
@@ -924,6 +1018,7 @@ window.addEventListener('DOMContentLoaded', () => {
       diffButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       selectedDifficulty = btn.getAttribute('data-diff');
+      updateDifficultyPanel();
     });
   });
 
@@ -934,6 +1029,8 @@ window.addEventListener('DOMContentLoaded', () => {
   bindButton(btnMenuPause, returnToMenu);
   bindButton(btnRestart, startGame);
   bindButton(btnMenuGameOver, returnToMenu);
+
+  updateDifficultyPanel();
 
   function update(dt) {
     if (gameState !== 'PLAYING') return;
@@ -961,10 +1058,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let i = shurikens.length - 1; i >= 0; i--) {
       const s = shurikens[i]; s.x += s.vx; s.rotation += 0.3;
-      if (s.x < -40 || s.x > GAME_CONFIG.CANVAS_WIDTH + 40) shurikens.splice(i, 1);
+      if (s.x < -50 || s.x > GAME_CONFIG.CANVAS_WIDTH + 50) shurikens.splice(i, 1);
     }
 
-    const shurikenDamage = 1 + Math.floor((level - 1) / 3);
+    const shurikenDamage = 1 + Math.floor((level - 1) * 0.8);
 
     for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
       const enemy = enemies[eIdx]; enemy.x += enemy.vx;
@@ -1024,7 +1121,7 @@ window.addEventListener('DOMContentLoaded', () => {
         ctx.drawImage(sprite, enemy.x, enemy.y);
         if (enemy.maxHp > 1) {
           ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(enemy.x, enemy.y - 8, enemy.width, 4);
-          ctx.fillStyle = '#2ecc71'; ctx.fillRect(enemy.x, enemy.y - 8, enemy.width * (enemy.hp / enemy.maxHp), 4);
+          ctx.fillStyle = '#2ecc71'; ctx.fillRect(enemy.x, enemy.y - 8, enemy.width * (Math.max(0, enemy.hp) / enemy.maxHp), 4);
         }
       });
 
@@ -1039,19 +1136,28 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (player.isSwordslashing) {
           ctx.save();
-          ctx.strokeStyle = '#f1c40f';
-          ctx.lineWidth = 5 + Math.floor(level / 2);
-          ctx.shadowColor = '#e74c3c';
-          ctx.shadowBlur = 10;
+          ctx.strokeStyle = level >= 3 ? '#e74c3c' : '#f1c40f';
+          ctx.lineWidth = 6 + Math.floor(level * 1.5);
+          ctx.shadowColor = level >= 3 ? '#f39c12' : '#e74c3c';
+          ctx.shadowBlur = 12;
           ctx.beginPath();
-          const startX = player.facing === 'RIGHT' ? player.x + player.width : player.x;
           const currentSwordRange = getSwordRange();
-          ctx.arc(
-            startX, player.y + player.height / 2,
-            currentSwordRange,
-            player.facing === 'RIGHT' ? -Math.PI / 4 : Math.PI * 3 / 4,
-            player.facing === 'RIGHT' ? Math.PI / 4 : Math.PI * 5 / 4
-          );
+          const centerX = player.x + player.width / 2;
+          const centerY = player.y + player.height / 2;
+
+          if (level >= 3) {
+            // Full 360-degree Whirlwind Slash Effect at LV.3+
+            ctx.arc(centerX, centerY, currentSwordRange, 0, Math.PI * 2);
+          } else {
+            // Directional Arc
+            const startX = player.facing === 'RIGHT' ? player.x + player.width : player.x;
+            ctx.arc(
+              startX, centerY,
+              currentSwordRange,
+              player.facing === 'RIGHT' ? -Math.PI / 4 : Math.PI * 3 / 4,
+              player.facing === 'RIGHT' ? Math.PI / 4 : Math.PI * 5 / 4
+            );
+          }
           ctx.stroke();
           ctx.restore();
         }
