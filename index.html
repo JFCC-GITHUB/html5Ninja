@@ -73,15 +73,16 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 10px 16px;
   background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
   z-index: 10;
+  gap: 12px;
 }
 
 .hud-item {
   display: flex;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 #000;
 }
@@ -94,7 +95,28 @@ body {
 #hp-hearts {
   display: flex;
   gap: 4px;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
+}
+
+#energy-bar-container {
+  width: 90px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+#energy-bar-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  transition: width 0.1s linear;
+}
+
+#energy-bar-container.low #energy-bar-fill {
+  background: linear-gradient(90deg, #e74c3c, #e67e22);
 }
 
 .icon-btn {
@@ -156,19 +178,19 @@ body {
   background: rgba(20, 24, 38, 0.9);
   border: 3px solid #f39c12;
   border-radius: 12px;
-  padding: 24px 32px;
+  padding: 20px 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  width: 90%;
-  max-width: 420px;
+  gap: 14px;
+  width: 95%;
+  max-width: 480px;
 }
 
 .difficulty-buttons {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   justify-content: center;
 }
@@ -177,9 +199,9 @@ body {
   background: #2c3e50;
   color: #fff;
   border: 2px solid #7f8c8d;
-  padding: 8px 16px;
+  padding: 8px 12px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
@@ -200,8 +222,8 @@ body {
 
 .btn-diff {
   flex: 1;
-  padding: 8px 4px;
-  font-size: 0.85rem;
+  padding: 8px 2px;
+  font-size: 0.8rem;
   background: #34495e;
 }
 
@@ -209,6 +231,12 @@ body {
   background: #e67e22;
   border-color: #f1c40f;
   box-shadow: 0 4px 0 #a04000;
+}
+
+.btn-diff[data-diff="EXTREME"].active {
+  background: #c0392b;
+  border-color: #e74c3c;
+  box-shadow: 0 4px 0 #641e16;
 }
 
 .btn-primary {
@@ -221,7 +249,7 @@ body {
   width: 100%;
   padding: 12px 24px;
   font-size: 1.2rem;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .btn-secondary {
@@ -230,13 +258,13 @@ body {
 }
 
 .controls-guide {
-  margin-top: 18px;
+  margin-top: 14px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 10px 16px;
   font-size: 0.8rem;
   color: #bdc3c7;
-  max-width: 460px;
+  max-width: 480px;
   line-height: 1.4;
 }
 
@@ -246,7 +274,7 @@ body {
 }
 
 .final-score {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: #2ecc71;
   font-weight: bold;
 }
@@ -321,6 +349,16 @@ body {
           <span class="hud-label">HP:</span>
           <div id="hp-hearts"></div>
         </div>
+        <div id="energy-container" class="hud-item">
+          <span class="hud-label">ENERGY:</span>
+          <div id="energy-bar-container">
+            <div id="energy-bar-fill"></div>
+          </div>
+        </div>
+        <div id="level-container" class="hud-item">
+          <span class="hud-label">LV:</span>
+          <span id="level-val">1</span>
+        </div>
         <div id="score-container" class="hud-item">
           <span class="hud-label">SCORE:</span>
           <span id="score-val">0</span>
@@ -342,15 +380,18 @@ body {
             <button class="btn btn-diff" data-diff="EASY">簡單 (Easy)</button>
             <button class="btn btn-diff active" data-diff="NORMAL">普通 (Normal)</button>
             <button class="btn btn-diff" data-diff="HARD">困難 (Hard)</button>
+            <button class="btn btn-diff" data-diff="EXTREME">地獄 (Extreme)</button>
           </div>
 
           <button id="btn-start" class="btn btn-primary btn-large">開始遊戲 (START)</button>
         </div>
 
         <div class="controls-guide">
-          <h3>🎮 操作說明</h3>
+          <h3>🎮 操作說明與機制</h3>
           <p><strong>電腦：</strong> A / D 或 ⬅️ / ➡️ 移動 | 空白鍵 (Space) 射擊手裏劍</p>
           <p><strong>手機 (iPhone)：</strong> 點擊螢幕左半邊（向左+射擊） | 點擊螢幕右半邊（向右+射擊）</p>
+          <p><strong>⚡ 能量機制：</strong> 每次射擊消耗能量，能量會自動回覆，請注意控能！</p>
+          <p><strong>📈 漸進關卡：</strong> 隨著時間與擊殺數關卡提升 (LV)，敵人移動速度與出現率大幅增加！</p>
         </div>
       </div>
 
@@ -366,7 +407,7 @@ body {
       <div id="gameover-screen" class="overlay-screen hidden">
         <h1 class="gameover-title">💀 GAME OVER 💀</h1>
         <div class="menu-box">
-          <p class="final-score">最終得分：<span id="final-score-val">0</span></p>
+          <p class="final-score">最終關卡：<span id="final-level-val">LV.1</span> | 得分：<span id="final-score-val">0</span></p>
           <p class="new-record hidden" id="new-record-tag">🎉 刷新最高紀錄！ 🎉</p>
           <p class="best-score">歷史最高：<span id="final-best-val">0</span></p>
 
@@ -394,32 +435,35 @@ const GAME_CONFIG = {
   PLAYER: {
     INITIAL_HP: 3,
     INVINCIBILITY_DURATION_MS: 1500,
-    SPEED: 4,
+    SPEED: 4.5,
     WIDTH: 36,
     HEIGHT: 48,
     MOVE_BOUNDS_MARGIN: 100,
-    SHOOT_COOLDOWN_MS: 200,
+    SHOOT_COOLDOWN_MS: 180,
+    MAX_ENERGY: 100,
+    ENERGY_COST_PER_SHOT: 18,
+    ENERGY_RECHARGE_RATE: 25, // per second
   },
   SHURIKEN: {
-    SPEED: 9,
+    SPEED: 9.5,
     SIZE: 16,
-    MAX_COUNT: 10,
+    MAX_COUNT: 12,
   },
   DIFFICULTIES: {
-    EASY: { label: '簡單 (Easy)', enemySpeedMultiplier: 0.8, enemySpawnRateMultiplier: 1.3, playerHp: 4, scoreMultiplier: 1.0 },
-    NORMAL: { label: '普通 (Normal)', enemySpeedMultiplier: 1.0, enemySpawnRateMultiplier: 1.0, playerHp: 3, scoreMultiplier: 1.5 },
-    HARD: { label: '困難 (Hard)', enemySpeedMultiplier: 1.3, enemySpawnRateMultiplier: 0.7, playerHp: 2, scoreMultiplier: 2.0 }
+    EASY: { label: '簡單 (Easy)', enemySpeedMultiplier: 0.8, enemySpawnRateMultiplier: 1.2, playerHp: 4, scoreMultiplier: 1.0, energyCostMult: 0.8 },
+    NORMAL: { label: '普通 (Normal)', enemySpeedMultiplier: 1.0, enemySpawnRateMultiplier: 1.0, playerHp: 3, scoreMultiplier: 1.5, energyCostMult: 1.0 },
+    HARD: { label: '困難 (Hard)', enemySpeedMultiplier: 1.3, enemySpawnRateMultiplier: 0.7, playerHp: 2, scoreMultiplier: 2.2, energyCostMult: 1.2 },
+    EXTREME: { label: '地獄 (Extreme)', enemySpeedMultiplier: 1.6, enemySpawnRateMultiplier: 0.5, playerHp: 1, scoreMultiplier: 3.5, energyCostMult: 1.5 }
   },
   ENEMY_TYPES: {
-    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, scoreValue: 100, color: '#e74c3c', spawnWeight: 60 },
-    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
-    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 }
+    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, scoreValue: 100, color: '#e74c3c', spawnWeight: 55 },
+    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, scoreValue: 200, color: '#f1c40f', spawnWeight: 30 },
+    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.1, hp: 3, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 }
   },
   SPAWN: {
-    INITIAL_INTERVAL_MS: 1800,
-    MIN_INTERVAL_MS: 500,
-    DIFFICULTY_RAMP_INTERVAL_MS: 5000,
-    INTERVAL_DECREASE_STEP: 50,
+    INITIAL_INTERVAL_MS: 1600,
+    MIN_INTERVAL_MS: 300,
+    LEVEL_INTERVAL_MS: 10000, // Level up every 10s
   },
   PARTICLES: {
     HIT_COUNT: 12,
@@ -541,8 +585,10 @@ const SoundSystem = (function () {
   return {
     init: initAudioContext,
     playShurikenThrow: () => playTone(800, 'sawtooth', 0.08, 0.15, 0.01),
+    playEmptyEnergy: () => playTone(120, 'sine', 0.08, 0.2, 0.01),
     playEnemyHit: () => playTone(220, 'square', 0.12, 0.25, 0.01),
     playPlayerHurt: () => playTone(150, 'sawtooth', 0.2, 0.3, 0.01),
+    playLevelUp: () => [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.15, 0.2, 0.01), i * 80)),
     playGameOver: () => [400, 350, 300, 250, 180].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.2, 0.25, 0.01), i * 120)),
     playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01)
   };
@@ -560,8 +606,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const hud = document.getElementById('hud');
   const touchControls = document.getElementById('touch-controls');
   const hpHearts = document.getElementById('hp-hearts');
+  const energyBarFill = document.getElementById('energy-bar-fill');
+  const energyBarContainer = document.getElementById('energy-bar-container');
+  const levelVal = document.getElementById('level-val');
   const scoreVal = document.getElementById('score-val');
   const highScoreVal = document.getElementById('high-score-val');
+  const finalLevelVal = document.getElementById('final-level-val');
   const finalScoreVal = document.getElementById('final-score-val');
   const finalBestVal = document.getElementById('final-best-val');
   const newRecordTag = document.getElementById('new-record-tag');
@@ -583,15 +633,18 @@ window.addEventListener('DOMContentLoaded', () => {
   let gameState = 'MENU';
   let selectedDifficulty = 'NORMAL';
   let score = 0;
+  let currentLevel = 1;
   let highScore = parseInt(localStorage.getItem(GAME_CONFIG.HIGH_SCORE_KEY) || '0', 10);
 
   let player = null;
   let shurikens = [];
   let enemies = [];
   let particles = [];
+  let floatTexts = [];
   let lastSpawnTime = 0;
   let gameStartTime = 0;
   let lastShootTime = 0;
+  let lastLevelCheckTime = 0;
 
   const keys = { left: false, right: false, shoot: false };
   highScoreVal.textContent = highScore;
@@ -601,15 +654,32 @@ window.addEventListener('DOMContentLoaded', () => {
       x: GAME_CONFIG.CANVAS_WIDTH / 2 - GAME_CONFIG.PLAYER.WIDTH / 2,
       y: GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.PLAYER.HEIGHT - 40,
       width: GAME_CONFIG.PLAYER.WIDTH, height: GAME_CONFIG.PLAYER.HEIGHT,
-      facing: 'RIGHT', hp: maxHp, maxHp: maxHp, isInvincible: false, invincibleUntil: 0, isMoving: false,
+      facing: 'RIGHT', hp: maxHp, maxHp: maxHp,
+      energy: GAME_CONFIG.PLAYER.MAX_ENERGY, maxEnergy: GAME_CONFIG.PLAYER.MAX_ENERGY,
+      isInvincible: false, invincibleUntil: 0, isMoving: false,
     };
+  }
+
+  function addFloatingText(text, x, y, color = '#f1c40f') {
+    floatTexts.push({ text, x, y, vy: -1.5, alpha: 1.0, color });
   }
 
   function shootShuriken() {
     const now = Date.now();
+    const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
+    const cost = GAME_CONFIG.PLAYER.ENERGY_COST_PER_SHOT * diff.energyCostMult;
+
+    if (player.energy < cost) {
+      SoundSystem.playEmptyEnergy();
+      addFloatingText('NO ENERGY!', player.x - 10, player.y - 10, '#e74c3c');
+      return;
+    }
+
     if (now - lastShootTime < GAME_CONFIG.PLAYER.SHOOT_COOLDOWN_MS) return;
     if (shurikens.length >= GAME_CONFIG.SHURIKEN.MAX_COUNT) return;
+
     lastShootTime = now;
+    player.energy -= cost;
     SoundSystem.playShurikenThrow();
     const dir = player.facing === 'RIGHT' ? 1 : -1;
     shurikens.push({
@@ -628,10 +698,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const startX = side === 'LEFT' ? -typeConfig.width - 10 : GAME_CONFIG.CANVAS_WIDTH + 10;
     const moveDir = side === 'LEFT' ? 1 : -1;
+    const levelSpeedMultiplier = 1 + (currentLevel - 1) * 0.12;
+
     enemies.push({
       type: typeConfig.id, x: startX, y: GAME_CONFIG.CANVAS_HEIGHT - typeConfig.height - 40,
       width: typeConfig.width, height: typeConfig.height,
-      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * moveDir,
+      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * levelSpeedMultiplier * moveDir,
       hp: typeConfig.hp, maxHp: typeConfig.hp, scoreValue: typeConfig.scoreValue,
       facing: side === 'LEFT' ? 'RIGHT' : 'LEFT',
     });
@@ -659,12 +731,24 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function updateEnergyDisplay() {
+    const pct = Math.max(0, Math.min(100, (player.energy / player.maxEnergy) * 100));
+    energyBarFill.style.width = `${pct}%`;
+    if (pct < 25) {
+      energyBarContainer.classList.add('low');
+    } else {
+      energyBarContainer.classList.remove('low');
+    }
+  }
+
   function startGame() {
     SoundSystem.playClick();
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    score = 0; gameStartTime = Date.now(); lastSpawnTime = Date.now();
-    shurikens = []; enemies = []; particles = [];
-    player = createPlayer(diff.playerHp); updateHpDisplay(); scoreVal.textContent = '0';
+    score = 0; currentLevel = 1;
+    gameStartTime = Date.now(); lastSpawnTime = Date.now(); lastLevelCheckTime = Date.now();
+    shurikens = []; enemies = []; particles = []; floatTexts = [];
+    player = createPlayer(diff.playerHp); updateHpDisplay(); updateEnergyDisplay();
+    scoreVal.textContent = '0'; levelVal.textContent = '1';
     menuScreen.classList.add('hidden'); pauseScreen.classList.add('hidden'); gameOverScreen.classList.add('hidden');
     hud.classList.remove('hidden'); touchControls.classList.remove('hidden');
     gameState = 'PLAYING';
@@ -677,6 +761,7 @@ window.addEventListener('DOMContentLoaded', () => {
       highScore = score; localStorage.setItem(GAME_CONFIG.HIGH_SCORE_KEY, highScore.toString());
       highScoreVal.textContent = highScore; isNewRecord = true;
     }
+    finalLevelVal.textContent = `LV.${currentLevel}`;
     finalScoreVal.textContent = score; finalBestVal.textContent = highScore;
     if (isNewRecord) newRecordTag.classList.remove('hidden'); else newRecordTag.classList.add('hidden');
     hud.classList.add('hidden'); touchControls.classList.add('hidden'); gameOverScreen.classList.remove('hidden');
@@ -708,7 +793,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   touchRight.addEventListener('touchstart', handleTouchRight, { passive: false });
   touchRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
-  touchRight.addEventListener('mouseup', handleTouchRight); touchRight.addEventListener('mouseup', () => { keys.right = false; });
+  touchRight.addEventListener('mousedown', handleTouchRight); touchRight.addEventListener('mouseup', () => { keys.right = false; });
 
   diffButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -727,6 +812,19 @@ window.addEventListener('DOMContentLoaded', () => {
     const now = Date.now();
     if (player.isInvincible && now > player.invincibleUntil) player.isInvincible = false;
 
+    // Energy recharge
+    player.energy = Math.min(player.maxEnergy, player.energy + GAME_CONFIG.PLAYER.ENERGY_RECHARGE_RATE * dt);
+    updateEnergyDisplay();
+
+    // Check Level Up
+    if (now - lastLevelCheckTime > GAME_CONFIG.SPAWN.LEVEL_INTERVAL_MS) {
+      currentLevel += 1;
+      lastLevelCheckTime = now;
+      levelVal.textContent = currentLevel;
+      SoundSystem.playLevelUp();
+      addFloatingText(`LEVEL UP! LV.${currentLevel}`, GAME_CONFIG.CANVAS_WIDTH / 2 - 60, 160, '#2ecc71');
+    }
+
     player.isMoving = false;
     const minX = GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN;
     const maxX = GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN - player.width;
@@ -738,7 +836,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
     const currentRampInterval = Math.max(
       GAME_CONFIG.SPAWN.MIN_INTERVAL_MS,
-      (GAME_CONFIG.SPAWN.INITIAL_INTERVAL_MS - Math.floor((now - gameStartTime) / GAME_CONFIG.SPAWN.DIFFICULTY_RAMP_INTERVAL_MS) * GAME_CONFIG.SPAWN.INTERVAL_DECREASE_STEP) * diff.enemySpawnRateMultiplier
+      (GAME_CONFIG.SPAWN.INITIAL_INTERVAL_MS - (currentLevel - 1) * 120) * diff.enemySpawnRateMultiplier
     );
 
     if (now - lastSpawnTime > currentRampInterval) { spawnEnemy(); lastSpawnTime = now; }
@@ -756,7 +854,10 @@ window.addEventListener('DOMContentLoaded', () => {
           shurikens.splice(sIdx, 1); enemy.hp -= 1; createParticles(s.x + 8, s.y + 8, '#f1c40f', 8);
           if (enemy.hp <= 0) {
             SoundSystem.playEnemyHit(); createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
-            score += Math.round(enemy.scoreValue * diff.scoreMultiplier); scoreVal.textContent = score; enemies.splice(eIdx, 1); break;
+            const gainedScore = Math.round(enemy.scoreValue * diff.scoreMultiplier * (1 + (currentLevel - 1) * 0.2));
+            score += gainedScore; scoreVal.textContent = score;
+            addFloatingText(`+${gainedScore}`, enemy.x, enemy.y - 10, '#f1c40f');
+            enemies.splice(eIdx, 1); break;
           } else { SoundSystem.playEnemyHit(); }
         }
       }
@@ -773,6 +874,11 @@ window.addEventListener('DOMContentLoaded', () => {
     for (let pIdx = particles.length - 1; pIdx >= 0; pIdx--) {
       const p = particles[pIdx]; p.x += p.vx; p.y += p.vy; p.life -= 0.04;
       if (p.life <= 0) particles.splice(pIdx, 1);
+    }
+
+    for (let ftIdx = floatTexts.length - 1; ftIdx >= 0; ftIdx--) {
+      const ft = floatTexts[ftIdx]; ft.y += ft.vy; ft.alpha -= 0.02;
+      if (ft.alpha <= 0) floatTexts.splice(ftIdx, 1);
     }
   }
 
@@ -809,10 +915,22 @@ window.addEventListener('DOMContentLoaded', () => {
       particles.forEach((p) => {
         ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, p.size, p.size); ctx.globalAlpha = 1.0;
       });
+
+      floatTexts.forEach((ft) => {
+        ctx.save(); ctx.globalAlpha = Math.max(0, ft.alpha);
+        ctx.font = 'bold 14px "Courier New", monospace';
+        ctx.fillStyle = ft.color; ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
+      });
     }
   }
 
-  function gameLoop() { update(1/60); render(); requestAnimationFrame(gameLoop); }
+  let lastTime = performance.now();
+  function gameLoop(now) {
+    const dt = Math.min(0.1, (now - lastTime) / 1000);
+    lastTime = now;
+    update(dt); render(); requestAnimationFrame(gameLoop);
+  }
   requestAnimationFrame(gameLoop);
 });
   </script>
