@@ -295,6 +295,29 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.touch-sword-btn {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(231, 76, 60, 0.85);
+  border: 2px solid #ff6b6b;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.touch-sword-btn:active {
+  background: rgba(192, 57, 43, 1);
+  transform: translateX(-50%) scale(0.95);
+}
+
 .touch-hint {
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -350,8 +373,8 @@ body {
 
         <div class="controls-guide">
           <h3>🎮 操作說明</h3>
-          <p><strong>電腦：</strong> A / D 或 ⬅️ / ➡️ 移動 | 空白鍵 (Space) 射擊手裏劍</p>
-          <p><strong>手機 (iPhone)：</strong> 點擊螢幕左半邊（向左+射擊） | 點擊螢幕右半邊（向右+射擊）</p>
+          <p><strong>電腦：</strong> A / D 或 ⬅️ / ➡️ 移動 & 按住連發 | Space 射擊 | J / Z 武士刀近戰斬擊</p>
+          <p><strong>手機 (iPhone)：</strong> 按住螢幕左/右半邊連射 | 點擊中央 ⚔️ 斬擊按鈕進行近戰</p>
         </div>
       </div>
 
@@ -380,6 +403,7 @@ body {
         <div id="touch-left" class="touch-zone">
           <span class="touch-hint">⬅️ 左移 & 射擊</span>
         </div>
+        <button id="touch-sword" class="touch-sword-btn">⚔️ 斬擊</button>
         <div id="touch-right" class="touch-zone">
           <span class="touch-hint">➡️ 右移 & 射擊</span>
         </div>
@@ -399,7 +423,10 @@ const GAME_CONFIG = {
     WIDTH: 36,
     HEIGHT: 48,
     MOVE_BOUNDS_MARGIN: 100,
-    SHOOT_COOLDOWN_MS: 200,
+    SHOOT_COOLDOWN_MS: 180,
+    SWORD_COOLDOWN_MS: 300,
+    SWORD_RANGE: 65,
+    SWORD_DURATION_MS: 180,
   },
   SHURIKEN: {
     SPEED: 9,
@@ -465,7 +492,7 @@ const SpriteGenerator = (function () {
     "....BBBBBBBBBB....", "....BDDDDDBBBB....", "...BBDDDDDDBBBB...", "...BBDDDDDDBBBB...",
     "...BDDDDDDDDBBB...", "...BDDDDDDDDBBB...", "....BDDDDDDDDB....", ".....BBBBBBBB.....",
     "....BBBB...BBBB...", "...BBBB.....BBBB..", "..BBBB.......BBBB.", "..BBBB.......BBBB.",
-    ".BBBBB.......BBBBB", ".BBBBB.......BBBBB", "..................", ".................."
+    ".BBBBB.......BBBBB", ".BBBBB.......BBBBB", ".................."
   ];
 
   function createNinjaSprites() {
@@ -545,7 +572,8 @@ const SoundSystem = (function () {
     playEnemyHit: () => playTone(220, 'square', 0.12, 0.25, 0.01),
     playPlayerHurt: () => playTone(150, 'sawtooth', 0.2, 0.3, 0.01),
     playGameOver: () => [400, 350, 300, 250, 180].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.2, 0.25, 0.01), i * 120)),
-    playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01)
+    playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01),
+    playSwordSlash: () => playTone(1200, 'sawtooth', 0.1, 0.3, 0.01)
   };
 })();
 
@@ -578,6 +606,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const touchLeft = document.getElementById('touch-left');
   const touchRight = document.getElementById('touch-right');
+  const touchSword = document.getElementById('touch-sword');
 
   const sprites = SpriteGenerator.getSprites();
 
@@ -593,8 +622,9 @@ window.addEventListener('DOMContentLoaded', () => {
   let lastSpawnTime = 0;
   let gameStartTime = 0;
   let lastShootTime = 0;
+  let lastSwordTime = 0;
 
-  const keys = { left: false, right: false, shoot: false };
+  const keys = { left: false, right: false, shoot: false, sword: false };
   highScoreVal.textContent = highScore;
 
   function createPlayer(maxHp) {
@@ -603,6 +633,7 @@ window.addEventListener('DOMContentLoaded', () => {
       y: GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.PLAYER.HEIGHT - 40,
       width: GAME_CONFIG.PLAYER.WIDTH, height: GAME_CONFIG.PLAYER.HEIGHT,
       facing: 'RIGHT', hp: maxHp, maxHp: maxHp, isInvincible: false, invincibleUntil: 0, isMoving: false,
+      isSwordslashing: false, swordUntil: 0,
     };
   }
 
@@ -617,6 +648,40 @@ window.addEventListener('DOMContentLoaded', () => {
       x: player.facing === 'RIGHT' ? player.x + player.width : player.x - GAME_CONFIG.SHURIKEN.SIZE,
       y: player.y + 16, vx: GAME_CONFIG.SHURIKEN.SPEED * dir, size: GAME_CONFIG.SHURIKEN.SIZE, rotation: 0,
     });
+  }
+
+  function performSwordAttack() {
+    const now = Date.now();
+    if (now - lastSwordTime < GAME_CONFIG.PLAYER.SWORD_COOLDOWN_MS) return;
+    lastSwordTime = now;
+    player.isSwordslashing = true;
+    player.swordUntil = now + GAME_CONFIG.PLAYER.SWORD_DURATION_MS;
+    SoundSystem.playSwordSlash();
+
+    const swordBox = {
+      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - GAME_CONFIG.PLAYER.SWORD_RANGE,
+      y: player.y,
+      width: GAME_CONFIG.PLAYER.SWORD_RANGE,
+      height: player.height
+    };
+
+    const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
+    for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
+      const enemy = enemies[eIdx];
+      if (checkAABBCollision(swordBox, enemy)) {
+        enemy.hp -= 2;
+        createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#e74c3c', 12);
+        if (enemy.hp <= 0) {
+          SoundSystem.playEnemyHit();
+          createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
+          score += Math.round(enemy.scoreValue * diff.scoreMultiplier);
+          scoreVal.textContent = score;
+          enemies.splice(eIdx, 1);
+        } else {
+          SoundSystem.playEnemyHit();
+        }
+      }
+    }
   }
 
   function spawnEnemy() {
@@ -688,9 +753,10 @@ window.addEventListener('DOMContentLoaded', () => {
   function returnToMenu() { gameState = 'MENU'; pauseScreen.classList.add('hidden'); gameOverScreen.classList.add('hidden'); hud.classList.add('hidden'); touchControls.classList.add('hidden'); menuScreen.classList.remove('hidden'); }
 
   window.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyA' || e.code === 'ArrowLeft') { keys.left = true; if (gameState === 'PLAYING') { player.facing = 'LEFT'; shootShuriken(); } }
-    else if (e.code === 'KeyD' || e.code === 'ArrowRight') { keys.right = true; if (gameState === 'PLAYING') { player.facing = 'RIGHT'; shootShuriken(); } }
-    else if (e.code === 'Space') { keys.shoot = true; if (gameState === 'PLAYING') shootShuriken(); }
+    if (e.code === 'KeyA' || e.code === 'ArrowLeft') { keys.left = true; if (gameState === 'PLAYING') player.facing = 'LEFT'; }
+    else if (e.code === 'KeyD' || e.code === 'ArrowRight') { keys.right = true; if (gameState === 'PLAYING') player.facing = 'RIGHT'; }
+    else if (e.code === 'Space') { keys.shoot = true; }
+    else if (e.code === 'KeyJ' || e.code === 'KeyZ') { keys.sword = true; if (gameState === 'PLAYING') performSwordAttack(); }
     else if (e.code === 'KeyP' || e.code === 'Escape') { if (gameState === 'PLAYING') pauseGame(); else if (gameState === 'PAUSED') resumeGame(); }
   });
 
@@ -698,6 +764,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.left = false;
     if (e.code === 'KeyD' || e.code === 'ArrowRight') keys.right = false;
     if (e.code === 'Space') keys.shoot = false;
+    if (e.code === 'KeyJ' || e.code === 'KeyZ') keys.sword = false;
   });
 
   ['touchstart', 'touchend', 'mousedown', 'keydown'].forEach((eventType) => {
@@ -726,13 +793,13 @@ window.addEventListener('DOMContentLoaded', () => {
   function handleTouchLeft(e) {
     if (e && e.cancelable) e.preventDefault();
     SoundSystem.init();
-    if (gameState === 'PLAYING') { player.facing = 'LEFT'; keys.left = true; shootShuriken(); }
+    if (gameState === 'PLAYING') { player.facing = 'LEFT'; keys.left = true; }
   }
 
   function handleTouchRight(e) {
     if (e && e.cancelable) e.preventDefault();
     SoundSystem.init();
-    if (gameState === 'PLAYING') { player.facing = 'RIGHT'; keys.right = true; shootShuriken(); }
+    if (gameState === 'PLAYING') { player.facing = 'RIGHT'; keys.right = true; }
   }
 
   touchLeft.addEventListener('touchstart', handleTouchLeft, { passive: false });
@@ -748,6 +815,8 @@ window.addEventListener('DOMContentLoaded', () => {
   touchRight.addEventListener('mousedown', handleTouchRight);
   touchRight.addEventListener('mouseup', () => { keys.right = false; });
   touchRight.addEventListener('mouseleave', () => { keys.right = false; });
+
+  bindButton(touchSword, () => { if (gameState === 'PLAYING') performSwordAttack(); });
 
   diffButtons.forEach((btn) => {
     bindButton(btn, () => {
@@ -770,13 +839,16 @@ window.addEventListener('DOMContentLoaded', () => {
     if (gameState !== 'PLAYING') return;
     const now = Date.now();
     if (player.isInvincible && now > player.invincibleUntil) player.isInvincible = false;
+    if (player.isSwordslashing && now > player.swordUntil) player.isSwordslashing = false;
 
     player.isMoving = false;
     const minX = GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN;
     const maxX = GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN - player.width;
 
-    if (keys.left) { player.x -= GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'LEFT'; }
-    if (keys.right) { player.x += GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'RIGHT'; }
+    if (keys.left) { player.x -= GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'LEFT'; shootShuriken(); }
+    if (keys.right) { player.x += GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'RIGHT'; shootShuriken(); }
+    if (keys.shoot) { shootShuriken(); }
+
     player.x = Math.max(minX, Math.min(maxX, player.x));
 
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
@@ -848,6 +920,25 @@ window.addEventListener('DOMContentLoaded', () => {
       if (player && (!player.isInvincible || Math.floor(Date.now() / 80) % 2 === 0)) {
         const pSprite = player.facing === 'RIGHT' ? (player.isMoving ? sprites.ninja.runRight : sprites.ninja.idleRight) : (player.isMoving ? sprites.ninja.runLeft : sprites.ninja.idleLeft);
         ctx.drawImage(pSprite, player.x, player.y);
+
+        if (player.isSwordslashing) {
+          ctx.save();
+          ctx.strokeStyle = '#f1c40f';
+          ctx.lineWidth = 4;
+          ctx.shadowColor = '#e74c3c';
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          const startX = player.facing === 'RIGHT' ? player.x + player.width : player.x;
+          const endX = player.facing === 'RIGHT' ? player.x + player.width + GAME_CONFIG.PLAYER.SWORD_RANGE : player.x - GAME_CONFIG.PLAYER.SWORD_RANGE;
+          ctx.arc(
+            startX, player.y + player.height / 2,
+            GAME_CONFIG.PLAYER.SWORD_RANGE,
+            player.facing === 'RIGHT' ? -Math.PI / 4 : Math.PI * 3 / 4,
+            player.facing === 'RIGHT' ? Math.PI / 4 : Math.PI * 5 / 4
+          );
+          ctx.stroke();
+          ctx.restore();
+        }
       }
 
       particles.forEach((p) => {
