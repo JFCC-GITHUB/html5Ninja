@@ -74,28 +74,52 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 10px 16px;
   background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
   z-index: 10;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .hud-item {
   display: flex;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 #000;
 }
 
 .hud-label {
   color: #f39c12;
-  margin-right: 6px;
+  margin-right: 4px;
 }
 
 #hp-hearts {
   display: flex;
-  gap: 4px;
-  font-size: 1.3rem;
+  gap: 3px;
+  font-size: 1.2rem;
+}
+
+.level-badge {
+  color: #2ecc71;
+  font-size: 1.1rem;
+}
+
+.exp-bar-container {
+  width: 80px;
+  height: 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-left: 6px;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.exp-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: #2ecc71;
+  transition: width 0.2s ease-out;
 }
 
 .icon-btn {
@@ -345,6 +369,13 @@ body {
           <span class="hud-label">HP:</span>
           <div id="hp-hearts"></div>
         </div>
+        <div id="level-container" class="hud-item">
+          <span class="hud-label">LV:</span>
+          <span id="level-val" class="level-badge">1</span>
+          <div class="exp-bar-container">
+            <div id="exp-bar-fill" class="exp-bar-fill"></div>
+          </div>
+        </div>
         <div id="score-container" class="hud-item">
           <span class="hud-label">SCORE:</span>
           <span id="score-val">0</span>
@@ -374,7 +405,7 @@ body {
         <div class="controls-guide">
           <h3>🎮 操作說明</h3>
           <p><strong>電腦：</strong> A / D 或 ⬅️ / ➡️ 移動 & 按住連發 | Space 射擊 | J / Z 武士刀近戰斬擊</p>
-          <p><strong>手機 (iPhone)：</strong> 按住螢幕左/右半邊連射 | 點擊中央 ⚔️ 斬擊按鈕進行近戰</p>
+          <p><strong>等級系統：</strong> 擊殺敵人獲得經驗值等級提升！等級越高，攻擊範圍越龐大；怪物血量更厚，並出現新種類型敵人！</p>
         </div>
       </div>
 
@@ -425,13 +456,13 @@ const GAME_CONFIG = {
     MOVE_BOUNDS_MARGIN: 100,
     SHOOT_COOLDOWN_MS: 180,
     SWORD_COOLDOWN_MS: 300,
-    SWORD_RANGE: 65,
+    BASE_SWORD_RANGE: 65,
     SWORD_DURATION_MS: 180,
   },
   SHURIKEN: {
     SPEED: 9,
-    SIZE: 16,
-    MAX_COUNT: 10,
+    BASE_SIZE: 16,
+    MAX_COUNT: 12,
   },
   DIFFICULTIES: {
     EASY: { label: '簡單 (Easy)', enemySpeedMultiplier: 0.8, enemySpawnRateMultiplier: 1.3, playerHp: 4, scoreMultiplier: 1.0 },
@@ -439,13 +470,15 @@ const GAME_CONFIG = {
     HARD: { label: '困難 (Hard)', enemySpeedMultiplier: 1.3, enemySpawnRateMultiplier: 0.7, playerHp: 2, scoreMultiplier: 2.0 }
   },
   ENEMY_TYPES: {
-    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, scoreValue: 100, color: '#e74c3c', spawnWeight: 60 },
-    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
-    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 }
+    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, expValue: 20, scoreValue: 100, color: '#e74c3c', spawnWeight: 50 },
+    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, expValue: 35, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
+    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, expValue: 60, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 },
+    SHADOW: { id: 'SHADOW', name: '影忍', width: 30, height: 40, baseSpeed: 4.2, hp: 2, expValue: 80, scoreValue: 500, color: '#34495e', spawnWeight: 10, reqLevel: 3 },
+    BOSS: { id: 'BOSS', name: '鬼將', width: 52, height: 64, baseSpeed: 1.2, hp: 6, expValue: 150, scoreValue: 800, color: '#2c3e50', spawnWeight: 5, reqLevel: 5 }
   },
   SPAWN: {
     INITIAL_INTERVAL_MS: 1800,
-    MIN_INTERVAL_MS: 500,
+    MIN_INTERVAL_MS: 400,
     DIFFICULTY_RAMP_INTERVAL_MS: 5000,
     INTERVAL_DECREASE_STEP: 50,
   },
@@ -505,19 +538,19 @@ const SpriteGenerator = (function () {
   }
 
   function createShurikenSprite() {
-    const { canvas, ctx } = createCanvas(16, 16);
-    ctx.fillStyle = '#bdc3c7'; ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 1.5;
+    const { canvas, ctx } = createCanvas(32, 32);
+    ctx.fillStyle = '#bdc3c7'; ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(8, 0); ctx.lineTo(10, 6); ctx.lineTo(16, 8); ctx.lineTo(10, 10);
-    ctx.lineTo(8, 16); ctx.lineTo(6, 10); ctx.lineTo(0, 8); ctx.lineTo(6, 6);
+    ctx.moveTo(16, 0); ctx.lineTo(20, 12); ctx.lineTo(32, 16); ctx.lineTo(20, 20);
+    ctx.lineTo(16, 32); ctx.lineTo(12, 20); ctx.lineTo(0, 16); ctx.lineTo(12, 12);
     ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(8, 8, 2.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(16, 16, 5, 0, Math.PI * 2); ctx.fill();
     return canvas;
   }
 
   function createEnemySprites(colorMain, colorSub, width, height) {
     const { canvas, ctx } = createCanvas(width, height);
-    const pSize = Math.floor(width / 16);
+    const pSize = Math.max(1, Math.floor(width / 16));
     ctx.fillStyle = colorMain; ctx.fillRect(pSize * 2, pSize * 2, width - pSize * 4, height - pSize * 4);
     ctx.fillStyle = '#111'; ctx.fillRect(pSize * 3, pSize * 3, width - pSize * 6, pSize * 6);
     ctx.fillStyle = '#fff'; ctx.fillRect(pSize * 4, pSize * 5, pSize * 2, pSize * 2); ctx.fillRect(width - pSize * 6, pSize * 5, pSize * 2, pSize * 2);
@@ -539,6 +572,8 @@ const SpriteGenerator = (function () {
         NORMAL: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.NORMAL.color, '#c0392b', GAME_CONFIG.ENEMY_TYPES.NORMAL.width, GAME_CONFIG.ENEMY_TYPES.NORMAL.height),
         FAST: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.FAST.color, '#f39c12', GAME_CONFIG.ENEMY_TYPES.FAST.width, GAME_CONFIG.ENEMY_TYPES.FAST.height),
         TANK: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.TANK.color, '#9b59b6', GAME_CONFIG.ENEMY_TYPES.TANK.width, GAME_CONFIG.ENEMY_TYPES.TANK.height),
+        SHADOW: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.SHADOW.color, '#2c3e50', GAME_CONFIG.ENEMY_TYPES.SHADOW.width, GAME_CONFIG.ENEMY_TYPES.SHADOW.height),
+        BOSS: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.BOSS.color, '#e74c3c', GAME_CONFIG.ENEMY_TYPES.BOSS.width, GAME_CONFIG.ENEMY_TYPES.BOSS.height),
       }
     };
     return cache;
@@ -573,7 +608,8 @@ const SoundSystem = (function () {
     playPlayerHurt: () => playTone(150, 'sawtooth', 0.2, 0.3, 0.01),
     playGameOver: () => [400, 350, 300, 250, 180].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.2, 0.25, 0.01), i * 120)),
     playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01),
-    playSwordSlash: () => playTone(1200, 'sawtooth', 0.1, 0.3, 0.01)
+    playSwordSlash: () => playTone(1200, 'sawtooth', 0.1, 0.3, 0.01),
+    playLevelUp: () => [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.15, 0.3, 0.01), i * 80)),
   };
 })();
 
@@ -589,6 +625,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const hud = document.getElementById('hud');
   const touchControls = document.getElementById('touch-controls');
   const hpHearts = document.getElementById('hp-hearts');
+  const levelVal = document.getElementById('level-val');
+  const expBarFill = document.getElementById('exp-bar-fill');
   const scoreVal = document.getElementById('score-val');
   const highScoreVal = document.getElementById('high-score-val');
   const finalScoreVal = document.getElementById('final-score-val');
@@ -613,12 +651,16 @@ window.addEventListener('DOMContentLoaded', () => {
   let gameState = 'MENU';
   let selectedDifficulty = 'NORMAL';
   let score = 0;
+  let level = 1;
+  let currentExp = 0;
+  let expToNextLevel = 100;
   let highScore = parseInt(localStorage.getItem(GAME_CONFIG.HIGH_SCORE_KEY) || '0', 10);
 
   let player = null;
   let shurikens = [];
   let enemies = [];
   let particles = [];
+  let floatingTexts = [];
   let lastSpawnTime = 0;
   let gameStartTime = 0;
   let lastShootTime = 0;
@@ -637,16 +679,53 @@ window.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+  function getShurikenSize() {
+    return GAME_CONFIG.SHURIKEN.BASE_SIZE + (level - 1) * 3;
+  }
+
+  function getSwordRange() {
+    return GAME_CONFIG.PLAYER.BASE_SWORD_RANGE + (level - 1) * 12;
+  }
+
+  function addExp(amount) {
+    currentExp += amount;
+    while (currentExp >= expToNextLevel) {
+      currentExp -= expToNextLevel;
+      level += 1;
+      expToNextLevel = Math.round(expToNextLevel * 1.4);
+      SoundSystem.playLevelUp();
+      createParticles(player.x + player.width / 2, player.y + player.height / 2, '#2ecc71', 30);
+      floatingTexts.push({
+        text: `LEVEL UP! LV.${level}`,
+        x: player.x + player.width / 2,
+        y: player.y - 20,
+        color: '#2ecc71',
+        life: 1.0,
+      });
+    }
+    updateLevelDisplay();
+  }
+
+  function updateLevelDisplay() {
+    levelVal.textContent = level;
+    const fillPercent = Math.min(100, Math.floor((currentExp / expToNextLevel) * 100));
+    expBarFill.style.width = `${fillPercent}%`;
+  }
+
   function shootShuriken() {
     const now = Date.now();
     if (now - lastShootTime < GAME_CONFIG.PLAYER.SHOOT_COOLDOWN_MS) return;
     if (shurikens.length >= GAME_CONFIG.SHURIKEN.MAX_COUNT) return;
     lastShootTime = now;
     SoundSystem.playShurikenThrow();
+    const size = getShurikenSize();
     const dir = player.facing === 'RIGHT' ? 1 : -1;
     shurikens.push({
-      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - GAME_CONFIG.SHURIKEN.SIZE,
-      y: player.y + 16, vx: GAME_CONFIG.SHURIKEN.SPEED * dir, size: GAME_CONFIG.SHURIKEN.SIZE, rotation: 0,
+      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - size,
+      y: player.y + 16 - (size - GAME_CONFIG.SHURIKEN.BASE_SIZE) / 2,
+      vx: GAME_CONFIG.SHURIKEN.SPEED * dir,
+      size: size,
+      rotation: 0,
     });
   }
 
@@ -658,24 +737,28 @@ window.addEventListener('DOMContentLoaded', () => {
     player.swordUntil = now + GAME_CONFIG.PLAYER.SWORD_DURATION_MS;
     SoundSystem.playSwordSlash();
 
+    const currentSwordRange = getSwordRange();
     const swordBox = {
-      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - GAME_CONFIG.PLAYER.SWORD_RANGE,
-      y: player.y,
-      width: GAME_CONFIG.PLAYER.SWORD_RANGE,
-      height: player.height
+      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - currentSwordRange,
+      y: player.y - 10,
+      width: currentSwordRange,
+      height: player.height + 20
     };
 
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
+    const swordDamage = 2 + Math.floor((level - 1) / 2);
+
     for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
       const enemy = enemies[eIdx];
       if (checkAABBCollision(swordBox, enemy)) {
-        enemy.hp -= 2;
+        enemy.hp -= swordDamage;
         createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#e74c3c', 12);
         if (enemy.hp <= 0) {
           SoundSystem.playEnemyHit();
           createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
           score += Math.round(enemy.scoreValue * diff.scoreMultiplier);
           scoreVal.textContent = score;
+          addExp(enemy.expValue);
           enemies.splice(eIdx, 1);
         } else {
           SoundSystem.playEnemyHit();
@@ -687,18 +770,34 @@ window.addEventListener('DOMContentLoaded', () => {
   function spawnEnemy() {
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
     const side = Math.random() < 0.5 ? 'LEFT' : 'RIGHT';
-    const rand = Math.random() * 100;
-    let typeConfig = GAME_CONFIG.ENEMY_TYPES.NORMAL;
-    if (rand > 100 - GAME_CONFIG.ENEMY_TYPES.TANK.spawnWeight) typeConfig = GAME_CONFIG.ENEMY_TYPES.TANK;
-    else if (rand > 100 - GAME_CONFIG.ENEMY_TYPES.TANK.spawnWeight - GAME_CONFIG.ENEMY_TYPES.FAST.spawnWeight) typeConfig = GAME_CONFIG.ENEMY_TYPES.FAST;
+
+    // Filter available enemy types based on player level
+    const availableTypes = Object.values(GAME_CONFIG.ENEMY_TYPES).filter((t) => !t.reqLevel || level >= t.reqLevel);
+    const totalWeight = availableTypes.reduce((sum, t) => sum + t.spawnWeight, 0);
+    let rand = Math.random() * totalWeight;
+    let typeConfig = availableTypes[0];
+    for (const t of availableTypes) {
+      if (rand <= t.spawnWeight) {
+        typeConfig = t;
+        break;
+      }
+      rand -= t.spawnWeight;
+    }
 
     const startX = side === 'LEFT' ? -typeConfig.width - 10 : GAME_CONFIG.CANVAS_WIDTH + 10;
     const moveDir = side === 'LEFT' ? 1 : -1;
+
+    // Enemy stats scale with player level
+    const levelHpScaling = Math.floor((level - 1) / 2);
+    const levelSpeedScaling = 1 + (level - 1) * 0.05;
+    const maxHp = typeConfig.hp + levelHpScaling;
+
     enemies.push({
       type: typeConfig.id, x: startX, y: GAME_CONFIG.CANVAS_HEIGHT - typeConfig.height - 40,
       width: typeConfig.width, height: typeConfig.height,
-      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * moveDir,
-      hp: typeConfig.hp, maxHp: typeConfig.hp, scoreValue: typeConfig.scoreValue,
+      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * levelSpeedScaling * moveDir,
+      hp: maxHp, maxHp: maxHp,
+      expValue: typeConfig.expValue, scoreValue: typeConfig.scoreValue,
       facing: side === 'LEFT' ? 'RIGHT' : 'LEFT',
     });
   }
@@ -728,9 +827,10 @@ window.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     SoundSystem.playClick();
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    score = 0; gameStartTime = Date.now(); lastSpawnTime = Date.now();
-    shurikens = []; enemies = []; particles = [];
-    player = createPlayer(diff.playerHp); updateHpDisplay(); scoreVal.textContent = '0';
+    score = 0; level = 1; currentExp = 0; expToNextLevel = 100;
+    gameStartTime = Date.now(); lastSpawnTime = Date.now();
+    shurikens = []; enemies = []; particles = []; floatingTexts = [];
+    player = createPlayer(diff.playerHp); updateHpDisplay(); updateLevelDisplay(); scoreVal.textContent = '0';
     menuScreen.classList.add('hidden'); pauseScreen.classList.add('hidden'); gameOverScreen.classList.add('hidden');
     hud.classList.remove('hidden'); touchControls.classList.remove('hidden');
     gameState = 'PLAYING';
@@ -861,18 +961,27 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let i = shurikens.length - 1; i >= 0; i--) {
       const s = shurikens[i]; s.x += s.vx; s.rotation += 0.3;
-      if (s.x < -30 || s.x > GAME_CONFIG.CANVAS_WIDTH + 30) shurikens.splice(i, 1);
+      if (s.x < -40 || s.x > GAME_CONFIG.CANVAS_WIDTH + 40) shurikens.splice(i, 1);
     }
+
+    const shurikenDamage = 1 + Math.floor((level - 1) / 3);
 
     for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
       const enemy = enemies[eIdx]; enemy.x += enemy.vx;
       for (let sIdx = shurikens.length - 1; sIdx >= 0; sIdx--) {
         const s = shurikens[sIdx];
         if (checkAABBCollision({ x: s.x, y: s.y, width: s.size, height: s.size }, enemy)) {
-          shurikens.splice(sIdx, 1); enemy.hp -= 1; createParticles(s.x + 8, s.y + 8, '#f1c40f', 8);
+          shurikens.splice(sIdx, 1);
+          enemy.hp -= shurikenDamage;
+          createParticles(s.x + s.size / 2, s.y + s.size / 2, '#f1c40f', 8);
           if (enemy.hp <= 0) {
-            SoundSystem.playEnemyHit(); createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
-            score += Math.round(enemy.scoreValue * diff.scoreMultiplier); scoreVal.textContent = score; enemies.splice(eIdx, 1); break;
+            SoundSystem.playEnemyHit();
+            createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
+            score += Math.round(enemy.scoreValue * diff.scoreMultiplier);
+            scoreVal.textContent = score;
+            addExp(enemy.expValue);
+            enemies.splice(eIdx, 1);
+            break;
           } else { SoundSystem.playEnemyHit(); }
         }
       }
@@ -889,6 +998,13 @@ window.addEventListener('DOMContentLoaded', () => {
     for (let pIdx = particles.length - 1; pIdx >= 0; pIdx--) {
       const p = particles[pIdx]; p.x += p.vx; p.y += p.vy; p.life -= 0.04;
       if (p.life <= 0) particles.splice(pIdx, 1);
+    }
+
+    for (let tIdx = floatingTexts.length - 1; tIdx >= 0; tIdx--) {
+      const ft = floatingTexts[tIdx];
+      ft.y -= 1;
+      ft.life -= 0.02;
+      if (ft.life <= 0) floatingTexts.splice(tIdx, 1);
     }
   }
 
@@ -924,15 +1040,15 @@ window.addEventListener('DOMContentLoaded', () => {
         if (player.isSwordslashing) {
           ctx.save();
           ctx.strokeStyle = '#f1c40f';
-          ctx.lineWidth = 4;
+          ctx.lineWidth = 5 + Math.floor(level / 2);
           ctx.shadowColor = '#e74c3c';
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 10;
           ctx.beginPath();
           const startX = player.facing === 'RIGHT' ? player.x + player.width : player.x;
-          const endX = player.facing === 'RIGHT' ? player.x + player.width + GAME_CONFIG.PLAYER.SWORD_RANGE : player.x - GAME_CONFIG.PLAYER.SWORD_RANGE;
+          const currentSwordRange = getSwordRange();
           ctx.arc(
             startX, player.y + player.height / 2,
-            GAME_CONFIG.PLAYER.SWORD_RANGE,
+            currentSwordRange,
             player.facing === 'RIGHT' ? -Math.PI / 4 : Math.PI * 3 / 4,
             player.facing === 'RIGHT' ? Math.PI / 4 : Math.PI * 5 / 4
           );
@@ -943,6 +1059,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
       particles.forEach((p) => {
         ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, p.size, p.size); ctx.globalAlpha = 1.0;
+      });
+
+      floatingTexts.forEach((ft) => {
+        ctx.save();
+        ctx.fillStyle = ft.color;
+        ctx.font = 'bold 16px Courier New';
+        ctx.textAlign = 'center';
+        ctx.globalAlpha = ft.life;
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 4;
+        ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
       });
     }
   }
