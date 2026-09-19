@@ -30,23 +30,6 @@ const GAME_CONFIG = {
       desc: '中央防守經典玩法！漸進難度，擊退陸續襲來的各路忍者。',
       scoreMultiplier: 1.0,
       initialSpawnInterval: 1800,
-    },
-    ENDLESS: {
-      id: 'ENDLESS',
-      title: '無盡生存 (Endless Rampage)',
-      badge: '♾️ 無盡',
-      desc: '極速生成與無限升級！怪物生成速度更快，挑戰生存極限高分！',
-      scoreMultiplier: 1.5,
-      initialSpawnInterval: 1200,
-    },
-    BOSS_RUSH: {
-      id: 'BOSS_RUSH',
-      title: '鬼將討伐 (Boss Rush)',
-      badge: '👹 討伐',
-      desc: '高難精英討伐戰！登場即面臨高血量鬼將與影忍圍攻！',
-      scoreMultiplier: 2.0,
-      initialSpawnInterval: 1000,
-      unlockLevel: 2,
     }
   },
   DIFFICULTIES: {
