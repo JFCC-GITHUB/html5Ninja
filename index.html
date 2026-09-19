@@ -415,7 +415,14 @@ body {
         <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v1.2.0</span></p>
 
         <div class="menu-box">
-          <h2>選擇難度 (Difficulty)</h2>
+          <h2 style="font-size:1.1rem; color:#f1c40f;">模式選擇 (Game Mode)</h2>
+          <div class="difficulty-buttons">
+            <button class="btn btn-mode active" data-mode="CLASSIC">🛡️ 經典</button>
+            <button class="btn btn-mode" data-mode="ENDLESS">♾️ 無盡</button>
+            <button class="btn btn-mode" data-mode="BOSS_RUSH">👹 討伐</button>
+          </div>
+
+          <h2 style="font-size:1.1rem; color:#f1c40f; margin-top:2px;">選擇難度 (Difficulty)</h2>
           <div class="difficulty-buttons">
             <button class="btn btn-diff" data-diff="VERY_EASY">極簡</button>
             <button class="btn btn-diff" data-diff="EASY">簡單</button>
@@ -425,7 +432,7 @@ body {
           </div>
 
           <div id="diff-detail-panel" class="diff-detail-panel">
-            <h4 id="diff-title">普通模式 (Normal)</h4>
+            <h4 id="diff-title">經典防守 (Classic Defense) - 普通難度</h4>
             <p id="diff-desc">標準挑戰！敵人屬性平衡，適合所有玩家。</p>
             <p id="diff-stats">初始血量: ❤️x3 | 敵人速度: 100% | 敵人生命: 100% | 分數加成: x1.5</p>
           </div>
@@ -643,6 +650,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnRestart = document.getElementById('btn-restart');
   const btnMenuGameOver = document.getElementById('btn-menu-gameover');
   const diffButtons = document.querySelectorAll('.btn-diff');
+  const modeButtons = document.querySelectorAll('.btn-mode');
 
   const touchLeft = document.getElementById('touch-left');
   const touchRight = document.getElementById('touch-right');
@@ -651,6 +659,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const sprites = SpriteGenerator.getSprites();
 
   let gameState = 'MENU';
+  let selectedMode = 'CLASSIC';
   let selectedDifficulty = 'NORMAL';
   let score = 0;
   let level = 1;
@@ -673,10 +682,11 @@ window.addEventListener('DOMContentLoaded', () => {
   highScoreVal.textContent = highScore;
 
   function updateDifficultyPanel() {
-    const info = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    diffTitle.textContent = info.title;
-    diffDesc.textContent = info.desc;
-    diffStats.textContent = info.stats;
+    const modeInfo = GAME_CONFIG.GAME_MODES[selectedMode];
+    const diffInfo = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
+    diffTitle.textContent = `${modeInfo.title} - ${diffInfo.title}`;
+    diffDesc.textContent = `${modeInfo.desc} ${diffInfo.desc}`;
+    diffStats.textContent = diffInfo.stats;
   }
 
   function createPlayer(maxHp) {
@@ -794,14 +804,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function spawnEnemy() {
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
+    const mode = GAME_CONFIG.GAME_MODES[selectedMode];
     const side = Math.random() < 0.5 ? 'LEFT' : 'RIGHT';
 
     // Wave calculations
     const elapsedSec = (Date.now() - gameStartTime) / 1000;
     currentWave = 1 + Math.floor(elapsedSec / 15);
 
-    // Filter available enemy types based on player level & wave
-    const availableTypes = Object.values(GAME_CONFIG.ENEMY_TYPES).filter((t) => !t.reqLevel || level >= t.reqLevel || currentWave >= t.reqLevel);
+    // Filter available enemy types based on mode, player level & wave
+    let availableTypes = Object.values(GAME_CONFIG.ENEMY_TYPES);
+    if (selectedMode === 'BOSS_RUSH') {
+      availableTypes = availableTypes.filter((t) => t.id === 'BOSS' || t.id === 'SHADOW' || t.id === 'TANK');
+    } else {
+      availableTypes = availableTypes.filter((t) => !t.reqLevel || level >= t.reqLevel || currentWave >= t.reqLevel);
+    }
+
     const totalWeight = availableTypes.reduce((sum, t) => sum + t.spawnWeight, 0);
     let rand = Math.random() * totalWeight;
     let typeConfig = availableTypes[0];
@@ -816,10 +833,13 @@ window.addEventListener('DOMContentLoaded', () => {
     const startX = side === 'LEFT' ? -typeConfig.width - 10 : GAME_CONFIG.CANVAS_WIDTH + 10;
     const moveDir = side === 'LEFT' ? 1 : -1;
 
+    // Mode specific scaling
+    const modeHpMult = selectedMode === 'BOSS_RUSH' ? 1.5 : (selectedMode === 'ENDLESS' ? 1.2 : 1.0);
+
     // Grid/Wave curve scaling for enemy HP & speed
     const waveHpBonus = Math.floor((currentWave - 1) * 0.8) + Math.floor((level - 1) * 0.5);
     const waveSpeedMultiplier = 1 + (currentWave - 1) * 0.06 + (level - 1) * 0.03;
-    const maxHp = Math.round((typeConfig.hp + waveHpBonus) * diff.enemyHpMultiplier);
+    const maxHp = Math.round((typeConfig.hp + waveHpBonus) * diff.enemyHpMultiplier * modeHpMult);
 
     enemies.push({
       type: typeConfig.id, x: startX, y: GAME_CONFIG.CANVAS_HEIGHT - typeConfig.height - 40,
@@ -946,6 +966,16 @@ window.addEventListener('DOMContentLoaded', () => {
   touchRight.addEventListener('mouseleave', () => { keys.right = false; });
 
   bindButton(touchSword, () => { if (gameState === 'PLAYING') performSwordAttack(); });
+
+  modeButtons.forEach((btn) => {
+    bindButton(btn, () => {
+      SoundSystem.playClick();
+      modeButtons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMode = btn.getAttribute('data-mode');
+      updateDifficultyPanel();
+    });
+  });
 
   diffButtons.forEach((btn) => {
     bindButton(btn, () => {
