@@ -849,7 +849,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function spawnEnemy() {
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    const mode = GAME_CONFIG.GAME_MODES[selectedMode];
+    const mode = GAME_CONFIG.GAME_MODES[selectedMode] || GAME_CONFIG.GAME_MODES['CLASSIC'];
     const side = Math.random() < 0.5 ? 'LEFT' : 'RIGHT';
 
     // Wave calculations
