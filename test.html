@@ -15,7 +15,6 @@
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
-  touch-action: none;
 }
 
 body {
@@ -74,52 +73,28 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 14px;
+  padding: 12px 20px;
   background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
   z-index: 10;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
 .hud-item {
   display: flex;
   align-items: center;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 #000;
 }
 
 .hud-label {
   color: #f39c12;
-  margin-right: 4px;
+  margin-right: 6px;
 }
 
 #hp-hearts {
   display: flex;
-  gap: 3px;
-  font-size: 1.1rem;
-}
-
-.level-badge {
-  color: #2ecc71;
-  font-size: 1.1rem;
-}
-
-.exp-bar-container {
-  width: 70px;
-  height: 8px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-left: 6px;
-  border: 1px solid rgba(255,255,255,0.4);
-}
-
-.exp-bar-fill {
-  height: 100%;
-  width: 0%;
-  background: #2ecc71;
-  transition: width 0.2s ease-out;
+  gap: 4px;
+  font-size: 1.3rem;
 }
 
 .icon-btn {
@@ -127,7 +102,7 @@ body {
   border: 2px solid #fff;
   color: #fff;
   padding: 4px 10px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.2s;
@@ -152,107 +127,88 @@ body {
   align-items: center;
   z-index: 20;
   text-align: center;
-  padding: 16px;
+  padding: 20px;
 }
 
 .game-title {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   color: #e74c3c;
   text-shadow: 3px 3px 0 #000, -2px -2px 0 #ff6b6b;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   letter-spacing: 2px;
 }
 
 .game-subtitle {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #f1c40f;
-  margin-bottom: 12px;
-  letter-spacing: 3px;
+  margin-bottom: 20px;
+  letter-spacing: 4px;
 }
 
 .gameover-title {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   color: #e74c3c;
   text-shadow: 4px 4px 0 #000;
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
 .menu-box {
-  background: rgba(20, 24, 38, 0.92);
+  background: rgba(20, 24, 38, 0.9);
   border: 3px solid #f39c12;
   border-radius: 12px;
-  padding: 18px 24px;
+  padding: 24px 32px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  width: 95%;
-  max-width: 480px;
+  gap: 16px;
+  width: 90%;
+  max-width: 420px;
 }
 
 .difficulty-buttons {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
   justify-content: center;
-  flex-wrap: wrap;
 }
 
 .btn {
   background: #2c3e50;
   color: #fff;
   border: 2px solid #7f8c8d;
-  padding: 6px 10px;
+  padding: 8px 16px;
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  box-shadow: 0 3px 0 #1a252f;
+  box-shadow: 0 4px 0 #1a252f;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 0 #1a252f;
+  box-shadow: 0 6px 0 #1a252f;
   filter: brightness(1.1);
 }
 
 .btn:active {
   transform: translateY(2px);
-  box-shadow: 0 1px 0 #1a252f;
+  box-shadow: 0 2px 0 #1a252f;
 }
 
 .btn-diff {
   flex: 1;
-  min-width: 80px;
-  padding: 6px 4px;
-  font-size: 0.75rem;
+  padding: 8px 4px;
+  font-size: 0.85rem;
   background: #34495e;
 }
 
 .btn-diff.active {
   background: #e67e22;
   border-color: #f1c40f;
-  box-shadow: 0 3px 0 #a04000;
-}
-
-.diff-detail-panel {
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(243, 156, 18, 0.5);
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 0.75rem;
-  color: #e0e0e0;
-  width: 100%;
-  text-align: left;
-  line-height: 1.4;
-}
-
-.diff-detail-panel h4 {
-  color: #f1c40f;
-  margin-bottom: 4px;
+  box-shadow: 0 4px 0 #a04000;
 }
 
 .btn-primary {
@@ -263,9 +219,9 @@ body {
 
 .btn-large {
   width: 100%;
-  padding: 10px 20px;
-  font-size: 1.1rem;
-  margin-top: 4px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  margin-top: 8px;
 }
 
 .btn-secondary {
@@ -274,29 +230,29 @@ body {
 }
 
 .controls-guide {
-  margin-top: 10px;
+  margin-top: 18px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 0.75rem;
+  padding: 10px 16px;
+  font-size: 0.8rem;
   color: #bdc3c7;
-  max-width: 480px;
-  line-height: 1.35;
+  max-width: 460px;
+  line-height: 1.4;
 }
 
 .controls-guide h3 {
   color: #f1c40f;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .final-score {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: #2ecc71;
   font-weight: bold;
 }
 
 .best-score {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #f1c40f;
 }
 
@@ -328,7 +284,7 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: 25px;
   opacity: 0.35;
   transition: opacity 0.15s;
 }
@@ -338,43 +294,20 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.touch-sword-btn {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  background: rgba(231, 76, 60, 0.85);
-  border: 2px solid #ff6b6b;
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 25px;
-  font-size: 0.95rem;
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-  cursor: pointer;
-  touch-action: manipulation;
-}
-
-.touch-sword-btn:active {
-  background: rgba(192, 57, 43, 1);
-  transform: translateX(-50%) scale(0.95);
-}
-
 .touch-hint {
   background: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: bold;
 }
 
 @media (max-width: 600px) {
-  .game-title { font-size: 1.6rem; }
-  .menu-box { padding: 12px 16px; }
-  .btn-large { font-size: 0.95rem; }
+  .game-title { font-size: 1.8rem; }
+  .menu-box { padding: 16px; }
+  .btn-large { font-size: 1rem; }
 }
   </style>
 </head>
@@ -387,17 +320,6 @@ body {
         <div id="hp-container" class="hud-item">
           <span class="hud-label">HP:</span>
           <div id="hp-hearts"></div>
-        </div>
-        <div id="level-container" class="hud-item">
-          <span class="hud-label">LV:</span>
-          <span id="level-val" class="level-badge">1</span>
-          <div class="exp-bar-container">
-            <div id="exp-bar-fill" class="exp-bar-fill"></div>
-          </div>
-        </div>
-        <div id="wave-container" class="hud-item">
-          <span class="hud-label">WAVE:</span>
-          <span id="wave-val" style="color:#3498db;">1</span>
         </div>
         <div id="score-container" class="hud-item">
           <span class="hud-label">SCORE:</span>
@@ -412,32 +334,23 @@ body {
 
       <div id="menu-screen" class="overlay-screen">
         <h1 class="game-title">🥷 忍者手裏劍 🥷</h1>
-        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v1.2.0</span></p>
+        <p class="game-subtitle">SHURIKEN HERO</p>
 
         <div class="menu-box">
           <h2>選擇難度 (Difficulty)</h2>
           <div class="difficulty-buttons">
-            <button class="btn btn-diff" data-diff="VERY_EASY">極簡</button>
-            <button class="btn btn-diff" data-diff="EASY">簡單</button>
-            <button class="btn btn-diff active" data-diff="NORMAL">普通</button>
-            <button class="btn btn-diff" data-diff="HARD">困難</button>
-            <button class="btn btn-diff" data-diff="NIGHTMARE">噩夢</button>
-          </div>
-
-          <div id="diff-detail-panel" class="diff-detail-panel">
-            <h4 id="diff-title">普通模式 (Normal)</h4>
-            <p id="diff-desc">標準挑戰！敵人屬性平衡，適合所有玩家。</p>
-            <p id="diff-stats">初始血量: ❤️x3 | 敵人速度: 100% | 敵人生命: 100% | 分數加成: x1.5</p>
+            <button class="btn btn-diff" data-diff="EASY">簡單 (Easy)</button>
+            <button class="btn btn-diff active" data-diff="NORMAL">普通 (Normal)</button>
+            <button class="btn btn-diff" data-diff="HARD">困難 (Hard)</button>
           </div>
 
           <button id="btn-start" class="btn btn-primary btn-large">開始遊戲 (START)</button>
         </div>
 
         <div class="controls-guide">
-          <h3>🎮 操作說明與遊戲特色</h3>
-          <p><strong>電腦：</strong> A / D 移動連射 | Space 射擊 | J / Z 武士刀斬擊</p>
-          <p><strong>手機：</strong> 點擊/按住左右區域移動連射 | 中央 ⚔️ 斬擊</p>
-          <p><strong>等級與波次：</strong> 等級提升解鎖強大巨大化斬擊與多方向360度圓形斬擊；波次越高等級越強，怪獸血量與種類越加豐富！</p>
+          <h3>🎮 操作說明</h3>
+          <p><strong>電腦：</strong> A / D 或 ⬅️ / ➡️ 移動 | 空白鍵 (Space) 射擊手裏劍</p>
+          <p><strong>手機 (iPhone)：</strong> 點擊螢幕左半邊（向左+射擊） | 點擊螢幕右半邊（向右+射擊）</p>
         </div>
       </div>
 
@@ -466,7 +379,6 @@ body {
         <div id="touch-left" class="touch-zone">
           <span class="touch-hint">⬅️ 左移 & 射擊</span>
         </div>
-        <button id="touch-sword" class="touch-sword-btn">⚔️ 斬擊</button>
         <div id="touch-right" class="touch-zone">
           <span class="touch-hint">➡️ 右移 & 射擊</span>
         </div>
@@ -475,9 +387,6 @@ body {
   </div>
 
   <script>
-// ==========================================
-// 1. CONFIGURATION MODULE
-// ==========================================
 const GAME_CONFIG = {
   CANVAS_WIDTH: 800,
   CANVAS_HEIGHT: 450,
@@ -489,67 +398,35 @@ const GAME_CONFIG = {
     WIDTH: 36,
     HEIGHT: 48,
     MOVE_BOUNDS_MARGIN: 100,
-    SHOOT_COOLDOWN_MS: 180,
-    SWORD_COOLDOWN_MS: 280,
-    BASE_SWORD_RANGE: 70,
-    SWORD_DURATION_MS: 200,
+    SHOOT_COOLDOWN_MS: 200,
   },
   SHURIKEN: {
     SPEED: 9,
-    BASE_SIZE: 16,
-    MAX_COUNT: 12,
+    SIZE: 16,
+    MAX_COUNT: 10,
   },
   DIFFICULTIES: {
-    VERY_EASY: {
-      title: '極簡模式 (Very Easy)',
-      desc: '輕鬆體驗！敵人速度極慢，血量極少，適合新手娛樂。',
-      stats: '初始血量: ❤️x5 | 敵人速度: 60% | 敵人生命: 70% | 分數加成: x0.8',
-      enemySpeedMultiplier: 0.6, enemyHpMultiplier: 0.7, enemySpawnRateMultiplier: 1.5, playerHp: 5, scoreMultiplier: 0.8
-    },
-    EASY: {
-      title: '簡單模式 (Easy)',
-      desc: '較為輕鬆！適中的節奏與較多的生命值。',
-      stats: '初始血量: ❤️x4 | 敵人速度: 80% | 敵人生命: 85% | 分數加成: x1.0',
-      enemySpeedMultiplier: 0.8, enemyHpMultiplier: 0.85, enemySpawnRateMultiplier: 1.2, playerHp: 4, scoreMultiplier: 1.0
-    },
-    NORMAL: {
-      title: '普通模式 (Normal)',
-      desc: '標準挑戰！敵人屬性平衡，適合所有玩家。',
-      stats: '初始血量: ❤️x3 | 敵人速度: 100% | 敵人生命: 100% | 分數加成: x1.5',
-      enemySpeedMultiplier: 1.0, enemyHpMultiplier: 1.0, enemySpawnRateMultiplier: 1.0, playerHp: 3, scoreMultiplier: 1.5
-    },
-    HARD: {
-      title: '困難模式 (Hard)',
-      desc: '高難挑戰！敵人移動敏捷且生命力強，考驗反應！',
-      stats: '初始血量: ❤️x2 | 敵人速度: 125% | 敵人生命: 130% | 分數加成: x2.0',
-      enemySpeedMultiplier: 1.25, enemyHpMultiplier: 1.3, enemySpawnRateMultiplier: 0.8, playerHp: 2, scoreMultiplier: 2.0
-    },
-    NIGHTMARE: {
-      title: '噩夢模式 (Nightmare)',
-      desc: '極限地獄！敵人群聚狂暴襲來，容錯率極低！',
-      stats: '初始血量: ❤️x1 | 敵人速度: 150% | 敵人生命: 170% | 分數加成: x3.0',
-      enemySpeedMultiplier: 1.5, enemyHpMultiplier: 1.7, enemySpawnRateMultiplier: 0.6, playerHp: 1, scoreMultiplier: 3.0
-    }
+    EASY: { label: '簡單 (Easy)', enemySpeedMultiplier: 0.8, enemySpawnRateMultiplier: 1.3, playerHp: 4, scoreMultiplier: 1.0 },
+    NORMAL: { label: '普通 (Normal)', enemySpeedMultiplier: 1.0, enemySpawnRateMultiplier: 1.0, playerHp: 3, scoreMultiplier: 1.5 },
+    HARD: { label: '困難 (Hard)', enemySpeedMultiplier: 1.3, enemySpawnRateMultiplier: 0.7, playerHp: 2, scoreMultiplier: 2.0 }
   },
   ENEMY_TYPES: {
-    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, expValue: 20, scoreValue: 100, color: '#e74c3c', spawnWeight: 45 },
-    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, expValue: 35, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
-    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, expValue: 60, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 },
-    SHADOW: { id: 'SHADOW', name: '影忍', width: 30, height: 40, baseSpeed: 4.2, hp: 2, expValue: 80, scoreValue: 500, color: '#34495e', spawnWeight: 10, reqLevel: 3 },
-    BOSS: { id: 'BOSS', name: '鬼將', width: 52, height: 64, baseSpeed: 1.2, hp: 6, expValue: 150, scoreValue: 800, color: '#2c3e50', spawnWeight: 5, reqLevel: 5 }
+    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, scoreValue: 100, color: '#e74c3c', spawnWeight: 60 },
+    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
+    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 }
   },
   SPAWN: {
     INITIAL_INTERVAL_MS: 1800,
-    MIN_INTERVAL_MS: 400,
+    MIN_INTERVAL_MS: 500,
     DIFFICULTY_RAMP_INTERVAL_MS: 5000,
     INTERVAL_DECREASE_STEP: 50,
   },
-  PARTICLES: { HIT_COUNT: 12, DEATH_COUNT: 25 }
+  PARTICLES: {
+    HIT_COUNT: 12,
+    DEATH_COUNT: 25,
+  }
 };
 
-// ==========================================
-// 2. SPRITE GENERATOR MODULE
-// ==========================================
 const SpriteGenerator = (function () {
   function createCanvas(w, h) {
     const canvas = document.createElement('canvas');
@@ -587,32 +464,32 @@ const SpriteGenerator = (function () {
     "....BBBBBBBBBB....", "....BDDDDDBBBB....", "...BBDDDDDDBBBB...", "...BBDDDDDDBBBB...",
     "...BDDDDDDDDBBB...", "...BDDDDDDDDBBB...", "....BDDDDDDDDB....", ".....BBBBBBBB.....",
     "....BBBB...BBBB...", "...BBBB.....BBBB..", "..BBBB.......BBBB.", "..BBBB.......BBBB.",
-    ".BBBBB.......BBBBB", ".BBBBB.......BBBBB", ".................."
+    ".BBBBB.......BBBBB", ".BBBBB.......BBBBB", "..................", ".................."
   ];
 
   function createNinjaSprites() {
     const pSize = 2; const width = 36; const height = 48;
-    const idleLeft = createCanvas(width, height); drawPixelMatrix(idleLeft.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
-    const idleRight = createCanvas(width, height); idleRight.ctx.translate(width, 0); idleRight.ctx.scale(-1, 1); drawPixelMatrix(idleRight.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
-    const runLeft = createCanvas(width, height); drawPixelMatrix(runLeft.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
-    const runRight = createCanvas(width, height); runRight.ctx.translate(width, 0); runRight.ctx.scale(-1, 1); drawPixelMatrix(runRight.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
+    const idleRight = createCanvas(width, height); drawPixelMatrix(idleRight.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
+    const idleLeft = createCanvas(width, height); idleLeft.ctx.translate(width, 0); idleLeft.ctx.scale(-1, 1); drawPixelMatrix(idleLeft.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
+    const runRight = createCanvas(width, height); drawPixelMatrix(runRight.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
+    const runLeft = createCanvas(width, height); runLeft.ctx.translate(width, 0); runLeft.ctx.scale(-1, 1); drawPixelMatrix(runLeft.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
     return { idleRight: idleRight.canvas, idleLeft: idleLeft.canvas, runRight: runRight.canvas, runLeft: runLeft.canvas };
   }
 
   function createShurikenSprite() {
-    const { canvas, ctx } = createCanvas(32, 32);
-    ctx.fillStyle = '#bdc3c7'; ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 2;
+    const { canvas, ctx } = createCanvas(16, 16);
+    ctx.fillStyle = '#bdc3c7'; ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(16, 0); ctx.lineTo(20, 12); ctx.lineTo(32, 16); ctx.lineTo(20, 20);
-    ctx.lineTo(16, 32); ctx.lineTo(12, 20); ctx.lineTo(0, 16); ctx.lineTo(12, 12);
+    ctx.moveTo(8, 0); ctx.lineTo(10, 6); ctx.lineTo(16, 8); ctx.lineTo(10, 10);
+    ctx.lineTo(8, 16); ctx.lineTo(6, 10); ctx.lineTo(0, 8); ctx.lineTo(6, 6);
     ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(16, 16, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(8, 8, 2.5, 0, Math.PI * 2); ctx.fill();
     return canvas;
   }
 
   function createEnemySprites(colorMain, colorSub, width, height) {
     const { canvas, ctx } = createCanvas(width, height);
-    const pSize = Math.max(1, Math.floor(width / 16));
+    const pSize = Math.floor(width / 16);
     ctx.fillStyle = colorMain; ctx.fillRect(pSize * 2, pSize * 2, width - pSize * 4, height - pSize * 4);
     ctx.fillStyle = '#111'; ctx.fillRect(pSize * 3, pSize * 3, width - pSize * 6, pSize * 6);
     ctx.fillStyle = '#fff'; ctx.fillRect(pSize * 4, pSize * 5, pSize * 2, pSize * 2); ctx.fillRect(width - pSize * 6, pSize * 5, pSize * 2, pSize * 2);
@@ -634,8 +511,6 @@ const SpriteGenerator = (function () {
         NORMAL: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.NORMAL.color, '#c0392b', GAME_CONFIG.ENEMY_TYPES.NORMAL.width, GAME_CONFIG.ENEMY_TYPES.NORMAL.height),
         FAST: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.FAST.color, '#f39c12', GAME_CONFIG.ENEMY_TYPES.FAST.width, GAME_CONFIG.ENEMY_TYPES.FAST.height),
         TANK: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.TANK.color, '#9b59b6', GAME_CONFIG.ENEMY_TYPES.TANK.width, GAME_CONFIG.ENEMY_TYPES.TANK.height),
-        SHADOW: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.SHADOW.color, '#2c3e50', GAME_CONFIG.ENEMY_TYPES.SHADOW.width, GAME_CONFIG.ENEMY_TYPES.SHADOW.height),
-        BOSS: createEnemySprites(GAME_CONFIG.ENEMY_TYPES.BOSS.color, '#e74c3c', GAME_CONFIG.ENEMY_TYPES.BOSS.width, GAME_CONFIG.ENEMY_TYPES.BOSS.height),
       }
     };
     return cache;
@@ -643,9 +518,6 @@ const SpriteGenerator = (function () {
   return { getSprites: init };
 })();
 
-// ==========================================
-// 3. SOUND SYSTEM MODULE
-// ==========================================
 const SoundSystem = (function () {
   let audioCtx = null;
   function initAudioContext() {
@@ -672,15 +544,10 @@ const SoundSystem = (function () {
     playEnemyHit: () => playTone(220, 'square', 0.12, 0.25, 0.01),
     playPlayerHurt: () => playTone(150, 'sawtooth', 0.2, 0.3, 0.01),
     playGameOver: () => [400, 350, 300, 250, 180].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.2, 0.25, 0.01), i * 120)),
-    playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01),
-    playSwordSlash: () => playTone(1200, 'sawtooth', 0.12, 0.35, 0.01),
-    playLevelUp: () => [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.15, 0.3, 0.01), i * 80)),
+    playClick: () => playTone(600, 'sine', 0.05, 0.15, 0.01)
   };
 })();
 
-// ==========================================
-// 4. MAIN GAME ENGINE MODULE
-// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
@@ -693,18 +560,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const hud = document.getElementById('hud');
   const touchControls = document.getElementById('touch-controls');
   const hpHearts = document.getElementById('hp-hearts');
-  const levelVal = document.getElementById('level-val');
-  const waveVal = document.getElementById('wave-val');
-  const expBarFill = document.getElementById('exp-bar-fill');
   const scoreVal = document.getElementById('score-val');
   const highScoreVal = document.getElementById('high-score-val');
   const finalScoreVal = document.getElementById('final-score-val');
   const finalBestVal = document.getElementById('final-best-val');
   const newRecordTag = document.getElementById('new-record-tag');
-
-  const diffTitle = document.getElementById('diff-title');
-  const diffDesc = document.getElementById('diff-desc');
-  const diffStats = document.getElementById('diff-stats');
 
   const btnStart = document.getElementById('btn-start');
   const btnPause = document.getElementById('btn-pause');
@@ -717,38 +577,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const touchLeft = document.getElementById('touch-left');
   const touchRight = document.getElementById('touch-right');
-  const touchSword = document.getElementById('touch-sword');
 
   const sprites = SpriteGenerator.getSprites();
 
   let gameState = 'MENU';
   let selectedDifficulty = 'NORMAL';
   let score = 0;
-  let level = 1;
-  let currentWave = 1;
-  let currentExp = 0;
-  let expToNextLevel = 100;
   let highScore = parseInt(localStorage.getItem(GAME_CONFIG.HIGH_SCORE_KEY) || '0', 10);
 
   let player = null;
   let shurikens = [];
   let enemies = [];
   let particles = [];
-  let floatingTexts = [];
   let lastSpawnTime = 0;
   let gameStartTime = 0;
   let lastShootTime = 0;
-  let lastSwordTime = 0;
 
-  const keys = { left: false, right: false, shoot: false, sword: false };
+  const keys = { left: false, right: false, shoot: false };
   highScoreVal.textContent = highScore;
-
-  function updateDifficultyPanel() {
-    const info = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    diffTitle.textContent = info.title;
-    diffDesc.textContent = info.desc;
-    diffStats.textContent = info.stats;
-  }
 
   function createPlayer(maxHp) {
     return {
@@ -756,43 +602,7 @@ window.addEventListener('DOMContentLoaded', () => {
       y: GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.PLAYER.HEIGHT - 40,
       width: GAME_CONFIG.PLAYER.WIDTH, height: GAME_CONFIG.PLAYER.HEIGHT,
       facing: 'RIGHT', hp: maxHp, maxHp: maxHp, isInvincible: false, invincibleUntil: 0, isMoving: false,
-      isSwordslashing: false, swordUntil: 0,
     };
-  }
-
-  function getShurikenSize() {
-    return GAME_CONFIG.SHURIKEN.BASE_SIZE + (level - 1) * 4;
-  }
-
-  function getSwordRange() {
-    // Dramatically scaled sword range per level
-    return GAME_CONFIG.PLAYER.BASE_SWORD_RANGE + (level - 1) * 22;
-  }
-
-  function addExp(amount) {
-    currentExp += amount;
-    while (currentExp >= expToNextLevel) {
-      currentExp -= expToNextLevel;
-      level += 1;
-      expToNextLevel = Math.round(expToNextLevel * 1.35);
-      SoundSystem.playLevelUp();
-      createParticles(player.x + player.width / 2, player.y + player.height / 2, '#2ecc71', 30);
-      floatingTexts.push({
-        text: `LEVEL UP! LV.${level}`,
-        x: player.x + player.width / 2,
-        y: player.y - 20,
-        color: '#2ecc71',
-        life: 1.0,
-      });
-    }
-    updateLevelDisplay();
-  }
-
-  function updateLevelDisplay() {
-    levelVal.textContent = level;
-    waveVal.textContent = currentWave;
-    const fillPercent = Math.min(100, Math.floor((currentExp / expToNextLevel) * 100));
-    expBarFill.style.width = `${fillPercent}%`;
   }
 
   function shootShuriken() {
@@ -801,103 +611,28 @@ window.addEventListener('DOMContentLoaded', () => {
     if (shurikens.length >= GAME_CONFIG.SHURIKEN.MAX_COUNT) return;
     lastShootTime = now;
     SoundSystem.playShurikenThrow();
-    const size = getShurikenSize();
     const dir = player.facing === 'RIGHT' ? 1 : -1;
     shurikens.push({
-      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - size,
-      y: player.y + 16 - (size - GAME_CONFIG.SHURIKEN.BASE_SIZE) / 2,
-      vx: GAME_CONFIG.SHURIKEN.SPEED * dir,
-      size: size,
-      rotation: 0,
+      x: player.facing === 'RIGHT' ? player.x + player.width : player.x - GAME_CONFIG.SHURIKEN.SIZE,
+      y: player.y + 16, vx: GAME_CONFIG.SHURIKEN.SPEED * dir, size: GAME_CONFIG.SHURIKEN.SIZE, rotation: 0,
     });
-  }
-
-  function performSwordAttack() {
-    const now = Date.now();
-    if (now - lastSwordTime < GAME_CONFIG.PLAYER.SWORD_COOLDOWN_MS) return;
-    lastSwordTime = now;
-    player.isSwordslashing = true;
-    player.swordUntil = now + GAME_CONFIG.PLAYER.SWORD_DURATION_MS;
-    SoundSystem.playSwordSlash();
-
-    const currentSwordRange = getSwordRange();
-    const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    const swordDamage = 3 + Math.floor((level - 1) * 1.5);
-
-    // Multi-direction / 360 Whirlwind Slash unlocked at Level 3+
-    const isMultiDirection = level >= 3;
-
-    let swordBox = null;
-    if (isMultiDirection) {
-      swordBox = {
-        x: player.x + player.width / 2 - currentSwordRange,
-        y: player.y + player.height / 2 - currentSwordRange,
-        width: currentSwordRange * 2,
-        height: currentSwordRange * 2
-      };
-    } else {
-      swordBox = {
-        x: player.facing === 'RIGHT' ? player.x + player.width : player.x - currentSwordRange,
-        y: player.y - 15,
-        width: currentSwordRange,
-        height: player.height + 30
-      };
-    }
-
-    for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
-      const enemy = enemies[eIdx];
-      if (checkAABBCollision(swordBox, enemy)) {
-        enemy.hp -= swordDamage;
-        createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#e74c3c', 15);
-        if (enemy.hp <= 0) {
-          SoundSystem.playEnemyHit();
-          createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
-          score += Math.round(enemy.scoreValue * diff.scoreMultiplier);
-          scoreVal.textContent = score;
-          addExp(enemy.expValue);
-          enemies.splice(eIdx, 1);
-        } else {
-          SoundSystem.playEnemyHit();
-        }
-      }
-    }
   }
 
   function spawnEnemy() {
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
     const side = Math.random() < 0.5 ? 'LEFT' : 'RIGHT';
-
-    // Wave calculations
-    const elapsedSec = (Date.now() - gameStartTime) / 1000;
-    currentWave = 1 + Math.floor(elapsedSec / 15);
-
-    // Filter available enemy types based on player level & wave
-    const availableTypes = Object.values(GAME_CONFIG.ENEMY_TYPES).filter((t) => !t.reqLevel || level >= t.reqLevel || currentWave >= t.reqLevel);
-    const totalWeight = availableTypes.reduce((sum, t) => sum + t.spawnWeight, 0);
-    let rand = Math.random() * totalWeight;
-    let typeConfig = availableTypes[0];
-    for (const t of availableTypes) {
-      if (rand <= t.spawnWeight) {
-        typeConfig = t;
-        break;
-      }
-      rand -= t.spawnWeight;
-    }
+    const rand = Math.random() * 100;
+    let typeConfig = GAME_CONFIG.ENEMY_TYPES.NORMAL;
+    if (rand > 100 - GAME_CONFIG.ENEMY_TYPES.TANK.spawnWeight) typeConfig = GAME_CONFIG.ENEMY_TYPES.TANK;
+    else if (rand > 100 - GAME_CONFIG.ENEMY_TYPES.TANK.spawnWeight - GAME_CONFIG.ENEMY_TYPES.FAST.spawnWeight) typeConfig = GAME_CONFIG.ENEMY_TYPES.FAST;
 
     const startX = side === 'LEFT' ? -typeConfig.width - 10 : GAME_CONFIG.CANVAS_WIDTH + 10;
     const moveDir = side === 'LEFT' ? 1 : -1;
-
-    // Grid/Wave curve scaling for enemy HP & speed
-    const waveHpBonus = Math.floor((currentWave - 1) * 0.8) + Math.floor((level - 1) * 0.5);
-    const waveSpeedMultiplier = 1 + (currentWave - 1) * 0.06 + (level - 1) * 0.03;
-    const maxHp = Math.round((typeConfig.hp + waveHpBonus) * diff.enemyHpMultiplier);
-
     enemies.push({
       type: typeConfig.id, x: startX, y: GAME_CONFIG.CANVAS_HEIGHT - typeConfig.height - 40,
       width: typeConfig.width, height: typeConfig.height,
-      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * waveSpeedMultiplier * moveDir,
-      hp: maxHp, maxHp: maxHp,
-      expValue: typeConfig.expValue, scoreValue: typeConfig.scoreValue,
+      vx: typeConfig.baseSpeed * diff.enemySpeedMultiplier * moveDir,
+      hp: typeConfig.hp, maxHp: typeConfig.hp, scoreValue: typeConfig.scoreValue,
       facing: side === 'LEFT' ? 'RIGHT' : 'LEFT',
     });
   }
@@ -927,10 +662,9 @@ window.addEventListener('DOMContentLoaded', () => {
   function startGame() {
     SoundSystem.playClick();
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
-    score = 0; level = 1; currentWave = 1; currentExp = 0; expToNextLevel = 100;
-    gameStartTime = Date.now(); lastSpawnTime = Date.now();
-    shurikens = []; enemies = []; particles = []; floatingTexts = [];
-    player = createPlayer(diff.playerHp); updateHpDisplay(); updateLevelDisplay(); scoreVal.textContent = '0';
+    score = 0; gameStartTime = Date.now(); lastSpawnTime = Date.now();
+    shurikens = []; enemies = []; particles = [];
+    player = createPlayer(diff.playerHp); updateHpDisplay(); scoreVal.textContent = '0';
     menuScreen.classList.add('hidden'); pauseScreen.classList.add('hidden'); gameOverScreen.classList.add('hidden');
     hud.classList.remove('hidden'); touchControls.classList.remove('hidden');
     gameState = 'PLAYING';
@@ -953,10 +687,9 @@ window.addEventListener('DOMContentLoaded', () => {
   function returnToMenu() { gameState = 'MENU'; pauseScreen.classList.add('hidden'); gameOverScreen.classList.add('hidden'); hud.classList.add('hidden'); touchControls.classList.add('hidden'); menuScreen.classList.remove('hidden'); }
 
   window.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyA' || e.code === 'ArrowLeft') { keys.left = true; if (gameState === 'PLAYING') player.facing = 'LEFT'; }
-    else if (e.code === 'KeyD' || e.code === 'ArrowRight') { keys.right = true; if (gameState === 'PLAYING') player.facing = 'RIGHT'; }
-    else if (e.code === 'Space') { keys.shoot = true; }
-    else if (e.code === 'KeyJ' || e.code === 'KeyZ') { keys.sword = true; if (gameState === 'PLAYING') performSwordAttack(); }
+    if (e.code === 'KeyA' || e.code === 'ArrowLeft') { keys.left = true; if (gameState === 'PLAYING') { player.facing = 'LEFT'; shootShuriken(); } }
+    else if (e.code === 'KeyD' || e.code === 'ArrowRight') { keys.right = true; if (gameState === 'PLAYING') { player.facing = 'RIGHT'; shootShuriken(); } }
+    else if (e.code === 'Space') { keys.shoot = true; if (gameState === 'PLAYING') shootShuriken(); }
     else if (e.code === 'KeyP' || e.code === 'Escape') { if (gameState === 'PLAYING') pauseGame(); else if (gameState === 'PAUSED') resumeGame(); }
   });
 
@@ -964,94 +697,42 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.left = false;
     if (e.code === 'KeyD' || e.code === 'ArrowRight') keys.right = false;
     if (e.code === 'Space') keys.shoot = false;
-    if (e.code === 'KeyJ' || e.code === 'KeyZ') keys.sword = false;
   });
 
-  ['touchstart', 'touchend', 'mousedown', 'keydown'].forEach((eventType) => {
-    window.addEventListener(eventType, () => { SoundSystem.init(); }, { passive: true });
-  });
-
-  function bindButton(btn, callback) {
-    if (!btn) return;
-    let touched = false;
-    btn.addEventListener('touchstart', (e) => {
-      touched = true;
-      if (e.cancelable) e.preventDefault();
-      SoundSystem.init();
-      callback(e);
-    }, { passive: false });
-    btn.addEventListener('click', (e) => {
-      if (touched) {
-        touched = false;
-        return;
-      }
-      SoundSystem.init();
-      callback(e);
-    });
-  }
-
-  function handleTouchLeft(e) {
-    if (e && e.cancelable) e.preventDefault();
-    SoundSystem.init();
-    if (gameState === 'PLAYING') { player.facing = 'LEFT'; keys.left = true; }
-  }
-
-  function handleTouchRight(e) {
-    if (e && e.cancelable) e.preventDefault();
-    SoundSystem.init();
-    if (gameState === 'PLAYING') { player.facing = 'RIGHT'; keys.right = true; }
-  }
+  function handleTouchLeft(e) { if (e) e.preventDefault(); if (gameState === 'PLAYING') { player.facing = 'LEFT'; keys.left = true; shootShuriken(); } }
+  function handleTouchRight(e) { if (e) e.preventDefault(); if (gameState === 'PLAYING') { player.facing = 'RIGHT'; keys.right = true; shootShuriken(); } }
 
   touchLeft.addEventListener('touchstart', handleTouchLeft, { passive: false });
-  touchLeft.addEventListener('touchend', (e) => { if (e && e.cancelable) e.preventDefault(); keys.left = false; }, { passive: false });
-  touchLeft.addEventListener('touchcancel', () => { keys.left = false; }, { passive: true });
-  touchLeft.addEventListener('mousedown', handleTouchLeft);
-  touchLeft.addEventListener('mouseup', () => { keys.left = false; });
-  touchLeft.addEventListener('mouseleave', () => { keys.left = false; });
+  touchLeft.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; });
+  touchLeft.addEventListener('mousedown', handleTouchLeft); touchLeft.addEventListener('mouseup', () => { keys.left = false; });
 
   touchRight.addEventListener('touchstart', handleTouchRight, { passive: false });
-  touchRight.addEventListener('touchend', (e) => { if (e && e.cancelable) e.preventDefault(); keys.right = false; }, { passive: false });
-  touchRight.addEventListener('touchcancel', () => { keys.right = false; }, { passive: true });
-  touchRight.addEventListener('mousedown', handleTouchRight);
-  touchRight.addEventListener('mouseup', () => { keys.right = false; });
-  touchRight.addEventListener('mouseleave', () => { keys.right = false; });
-
-  bindButton(touchSword, () => { if (gameState === 'PLAYING') performSwordAttack(); });
+  touchRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
+  touchRight.addEventListener('mousedown', handleTouchRight); touchRight.addEventListener('mouseup', () => { keys.right = false; });
 
   diffButtons.forEach((btn) => {
-    bindButton(btn, () => {
-      SoundSystem.playClick();
-      diffButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedDifficulty = btn.getAttribute('data-diff');
-      updateDifficultyPanel();
+    btn.addEventListener('click', () => {
+      SoundSystem.playClick(); diffButtons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active'); selectedDifficulty = btn.getAttribute('data-diff');
     });
   });
 
-  bindButton(btnStart, startGame);
-  bindButton(btnPause, pauseGame);
-  bindButton(btnResume, resumeGame);
-  bindButton(btnRestartPause, startGame);
-  bindButton(btnMenuPause, returnToMenu);
-  bindButton(btnRestart, startGame);
-  bindButton(btnMenuGameOver, returnToMenu);
-
-  updateDifficultyPanel();
+  btnStart.addEventListener('click', startGame); btnPause.addEventListener('click', pauseGame);
+  btnResume.addEventListener('click', resumeGame); btnRestartPause.addEventListener('click', startGame);
+  btnMenuPause.addEventListener('click', returnToMenu); btnRestart.addEventListener('click', startGame);
+  btnMenuGameOver.addEventListener('click', returnToMenu);
 
   function update(dt) {
     if (gameState !== 'PLAYING') return;
     const now = Date.now();
     if (player.isInvincible && now > player.invincibleUntil) player.isInvincible = false;
-    if (player.isSwordslashing && now > player.swordUntil) player.isSwordslashing = false;
 
     player.isMoving = false;
     const minX = GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN;
     const maxX = GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN - player.width;
 
-    if (keys.left) { player.x -= GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'LEFT'; shootShuriken(); }
-    if (keys.right) { player.x += GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; player.facing = 'RIGHT'; shootShuriken(); }
-    if (keys.shoot) { shootShuriken(); }
-
+    if (keys.left) { player.x -= GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; }
+    if (keys.right) { player.x += GAME_CONFIG.PLAYER.SPEED; player.isMoving = true; }
     player.x = Math.max(minX, Math.min(maxX, player.x));
 
     const diff = GAME_CONFIG.DIFFICULTIES[selectedDifficulty];
@@ -1064,27 +745,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let i = shurikens.length - 1; i >= 0; i--) {
       const s = shurikens[i]; s.x += s.vx; s.rotation += 0.3;
-      if (s.x < -50 || s.x > GAME_CONFIG.CANVAS_WIDTH + 50) shurikens.splice(i, 1);
+      if (s.x < -30 || s.x > GAME_CONFIG.CANVAS_WIDTH + 30) shurikens.splice(i, 1);
     }
-
-    const shurikenDamage = 1 + Math.floor((level - 1) * 0.8);
 
     for (let eIdx = enemies.length - 1; eIdx >= 0; eIdx--) {
       const enemy = enemies[eIdx]; enemy.x += enemy.vx;
       for (let sIdx = shurikens.length - 1; sIdx >= 0; sIdx--) {
         const s = shurikens[sIdx];
         if (checkAABBCollision({ x: s.x, y: s.y, width: s.size, height: s.size }, enemy)) {
-          shurikens.splice(sIdx, 1);
-          enemy.hp -= shurikenDamage;
-          createParticles(s.x + s.size / 2, s.y + s.size / 2, '#f1c40f', 8);
+          shurikens.splice(sIdx, 1); enemy.hp -= 1; createParticles(s.x + 8, s.y + 8, '#f1c40f', 8);
           if (enemy.hp <= 0) {
-            SoundSystem.playEnemyHit();
-            createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
-            score += Math.round(enemy.scoreValue * diff.scoreMultiplier);
-            scoreVal.textContent = score;
-            addExp(enemy.expValue);
-            enemies.splice(eIdx, 1);
-            break;
+            SoundSystem.playEnemyHit(); createParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
+            score += Math.round(enemy.scoreValue * diff.scoreMultiplier); scoreVal.textContent = score; enemies.splice(eIdx, 1); break;
           } else { SoundSystem.playEnemyHit(); }
         }
       }
@@ -1102,13 +774,6 @@ window.addEventListener('DOMContentLoaded', () => {
       const p = particles[pIdx]; p.x += p.vx; p.y += p.vy; p.life -= 0.04;
       if (p.life <= 0) particles.splice(pIdx, 1);
     }
-
-    for (let tIdx = floatingTexts.length - 1; tIdx >= 0; tIdx--) {
-      const ft = floatingTexts[tIdx];
-      ft.y -= 1;
-      ft.life -= 0.02;
-      if (ft.life <= 0) floatingTexts.splice(tIdx, 1);
-    }
   }
 
   function render() {
@@ -1120,20 +785,14 @@ window.addEventListener('DOMContentLoaded', () => {
     ctx.fillStyle = '#2c1e14'; ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
     ctx.fillStyle = '#c0392b'; ctx.fillRect(0, canvas.height - 40, canvas.width, 4);
 
-    if (gameState === 'MENU') {
-      const menuPlayerX = canvas.width / 2 - GAME_CONFIG.PLAYER.WIDTH / 2;
-      const menuPlayerY = canvas.height - GAME_CONFIG.PLAYER.HEIGHT - 40;
-      ctx.drawImage(sprites.ninja.idleRight, menuPlayerX, menuPlayerY);
-      ctx.drawImage(sprites.enemies.NORMAL.right, 60, canvas.height - GAME_CONFIG.ENEMY_TYPES.NORMAL.height - 40);
-      ctx.drawImage(sprites.enemies.FAST.left, canvas.width - 60 - GAME_CONFIG.ENEMY_TYPES.FAST.width, canvas.height - GAME_CONFIG.ENEMY_TYPES.FAST.height - 40);
-    } else if (gameState === 'PLAYING' || gameState === 'PAUSED') {
+    if (gameState === 'PLAYING' || gameState === 'PAUSED') {
       enemies.forEach((enemy) => {
         const spriteSet = sprites.enemies[enemy.type];
         const sprite = enemy.facing === 'RIGHT' ? spriteSet.right : spriteSet.left;
         ctx.drawImage(sprite, enemy.x, enemy.y);
         if (enemy.maxHp > 1) {
           ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(enemy.x, enemy.y - 8, enemy.width, 4);
-          ctx.fillStyle = '#2ecc71'; ctx.fillRect(enemy.x, enemy.y - 8, enemy.width * (Math.max(0, enemy.hp) / enemy.maxHp), 4);
+          ctx.fillStyle = '#2ecc71'; ctx.fillRect(enemy.x, enemy.y - 8, enemy.width * (enemy.hp / enemy.maxHp), 4);
         }
       });
 
@@ -1145,50 +804,10 @@ window.addEventListener('DOMContentLoaded', () => {
       if (player && (!player.isInvincible || Math.floor(Date.now() / 80) % 2 === 0)) {
         const pSprite = player.facing === 'RIGHT' ? (player.isMoving ? sprites.ninja.runRight : sprites.ninja.idleRight) : (player.isMoving ? sprites.ninja.runLeft : sprites.ninja.idleLeft);
         ctx.drawImage(pSprite, player.x, player.y);
-
-        if (player.isSwordslashing) {
-          ctx.save();
-          ctx.strokeStyle = level >= 3 ? '#e74c3c' : '#f1c40f';
-          ctx.lineWidth = 6 + Math.floor(level * 1.5);
-          ctx.shadowColor = level >= 3 ? '#f39c12' : '#e74c3c';
-          ctx.shadowBlur = 12;
-          ctx.beginPath();
-          const currentSwordRange = getSwordRange();
-          const centerX = player.x + player.width / 2;
-          const centerY = player.y + player.height / 2;
-
-          if (level >= 3) {
-            // Full 360-degree Whirlwind Slash Effect at LV.3+
-            ctx.arc(centerX, centerY, currentSwordRange, 0, Math.PI * 2);
-          } else {
-            // Directional Arc
-            const startX = player.facing === 'RIGHT' ? player.x + player.width : player.x;
-            ctx.arc(
-              startX, centerY,
-              currentSwordRange,
-              player.facing === 'RIGHT' ? -Math.PI / 4 : Math.PI * 3 / 4,
-              player.facing === 'RIGHT' ? Math.PI / 4 : Math.PI * 5 / 4
-            );
-          }
-          ctx.stroke();
-          ctx.restore();
-        }
       }
 
       particles.forEach((p) => {
         ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fillRect(p.x, p.y, p.size, p.size); ctx.globalAlpha = 1.0;
-      });
-
-      floatingTexts.forEach((ft) => {
-        ctx.save();
-        ctx.fillStyle = ft.color;
-        ctx.font = 'bold 16px Courier New';
-        ctx.textAlign = 'center';
-        ctx.globalAlpha = ft.life;
-        ctx.shadowColor = '#000';
-        ctx.shadowBlur = 4;
-        ctx.fillText(ft.text, ft.x, ft.y);
-        ctx.restore();
       });
     }
   }
