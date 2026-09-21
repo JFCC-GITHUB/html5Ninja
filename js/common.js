@@ -78,15 +78,16 @@ export function setupControls(keys, getGameState, performSwordAttack) {
   window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyA' || e.code === 'ArrowLeft') { keys.left = true; }
     else if (e.code === 'KeyD' || e.code === 'ArrowRight') { keys.right = true; }
-    else if (e.code === 'Space') { keys.shoot = true; }
-    else if (e.code === 'KeyJ' || e.code === 'KeyZ') { keys.sword = true; if (getGameState() === 'PLAYING') performSwordAttack(); }
+    else if (e.code === 'Space' || e.code === 'KeyJ' || e.code === 'KeyZ') {
+      keys.sword = true;
+      if (getGameState() === 'PLAYING') performSwordAttack();
+    }
   });
 
   window.addEventListener('keyup', (e) => {
     if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.left = false;
     if (e.code === 'KeyD' || e.code === 'ArrowRight') keys.right = false;
-    if (e.code === 'Space') keys.shoot = false;
-    if (e.code === 'KeyJ' || e.code === 'KeyZ') keys.sword = false;
+    if (e.code === 'Space' || e.code === 'KeyJ' || e.code === 'KeyZ') keys.sword = false;
   });
 
   ['touchstart', 'touchend', 'mousedown', 'keydown'].forEach((eventType) => {

@@ -205,9 +205,11 @@ export class ClassicMode {
     const minX = GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN;
     const maxX = GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN - this.player.width;
 
-    if (keys.left) { this.player.x -= GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'LEFT'; this.shootShuriken(); }
-    if (keys.right) { this.player.x += GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'RIGHT'; this.shootShuriken(); }
-    if (keys.shoot) { this.shootShuriken(); }
+    if (keys.left) { this.player.x -= GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'LEFT'; }
+    if (keys.right) { this.player.x += GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'RIGHT'; }
+
+    // Auto-fire shuriken continuously in player's facing direction
+    this.shootShuriken();
 
     this.player.x = Math.max(minX, Math.min(maxX, this.player.x));
 
