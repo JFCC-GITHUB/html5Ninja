@@ -2,6 +2,20 @@
 // MAIN GAME ROUTER MODULE
 // ==========================================
 import { GAME_CONFIG, SoundSystem, bindButton, setupControls, getSprites } from './common.js';
+import { parseTOML } from './tomlParser.js';
+
+// Asynchronously load & merge TOML config
+try {
+  fetch('config.toml').then((res) => res.text()).then((tomlText) => {
+    const parsed = parseTOML(tomlText);
+    if (parsed.player) {
+      if (parsed.player.initial_hp) GAME_CONFIG.PLAYER.INITIAL_HP = parsed.player.initial_hp;
+      if (parsed.player.speed) GAME_CONFIG.PLAYER.SPEED = parsed.player.speed;
+      if (parsed.player.width) GAME_CONFIG.PLAYER.WIDTH = parsed.player.width;
+      if (parsed.player.height) GAME_CONFIG.PLAYER.HEIGHT = parsed.player.height;
+    }
+  }).catch((e) => console.warn('TOML Load Warning:', e));
+} catch (e) {}
 import { ClassicMode } from './modes/classicMode.js';
 import { TowerDefenseMode } from './modes/towerDefenseMode.js';
 
