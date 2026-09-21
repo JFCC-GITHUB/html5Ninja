@@ -1,0 +1,463 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8x ninja_main_scene"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/SoundSystem.gd" id="2_sound"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="SoundSystem" type="Node" parent="."]
+script = ExtResource("2_sound")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="UILayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopPanel" type="PanelContainer" parent="UILayer/HUD"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UILayer/HUD/TopPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBox" type="HBoxContainer" parent="UILayer/HUD/TopPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HpLabel" type="Label" parent="UILayer/HUD/TopPanel/MarginContainer/HBox"]
+layout_mode = 2
+text = "HP:"
+
+[node name="HpHearts" type="HBoxContainer" parent="UILayer/HUD"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 8.0
+offset_right = 120.0
+offset_bottom = 32.0
+
+[node name="TowerHpContainer" type="HBoxContainer" parent="UILayer/HUD"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 8.0
+offset_right = 230.0
+offset_bottom = 32.0
+
+[node name="TowerHpLabel" type="Label" parent="UILayer/HUD/TowerHpContainer"]
+layout_mode = 2
+text = "TOWER:"
+
+[node name="TowerHpVal" type="Label" parent="UILayer/HUD/TowerHpContainer"]
+layout_mode = 2
+text = "100%"
+
+[node name="LevelContainer" type="HBoxContainer" parent="UILayer/HUD"]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 8.0
+offset_right = 400.0
+offset_bottom = 32.0
+
+[node name="LevelLabel" type="Label" parent="UILayer/HUD/LevelContainer"]
+layout_mode = 2
+text = "LV:"
+
+[node name="LevelVal" type="Label" parent="UILayer/HUD/LevelContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="ExpBarContainer" type="ColorRect" parent="UILayer/HUD/LevelContainer"]
+custom_minimum_size = Vector2(70, 10)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+
+[node name="ExpBarFill" type="ColorRect" parent="UILayer/HUD/LevelContainer/ExpBarContainer"]
+layout_mode = 0
+offset_right = 0.0
+offset_bottom = 10.0
+color = Color(0.18, 0.8, 0.44, 1)
+
+[node name="WaveContainer" type="HBoxContainer" parent="UILayer/HUD"]
+layout_mode = 0
+offset_left = 410.0
+offset_top = 8.0
+offset_right = 500.0
+offset_bottom = 32.0
+
+[node name="WaveLabel" type="Label" parent="UILayer/HUD/WaveContainer"]
+layout_mode = 2
+text = "WAVE:"
+
+[node name="WaveVal" type="Label" parent="UILayer/HUD/WaveContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="ScoreContainer" type="HBoxContainer" parent="UILayer/HUD"]
+layout_mode = 0
+offset_left = 520.0
+offset_top = 8.0
+offset_right = 640.0
+offset_bottom = 32.0
+
+[node name="ScoreLabel" type="Label" parent="UILayer/HUD/ScoreContainer"]
+layout_mode = 2
+text = "SCORE:"
+
+[node name="ScoreVal" type="Label" parent="UILayer/HUD/ScoreContainer"]
+layout_mode = 2
+text = "0"
+
+[node name="HighScoreContainer" type="HBoxContainer" parent="UILayer/HUD"]
+layout_mode = 0
+offset_left = 650.0
+offset_top = 8.0
+offset_right = 770.0
+offset_bottom = 32.0
+
+[node name="HighScoreLabel" type="Label" parent="UILayer/HUD/HighScoreContainer"]
+layout_mode = 2
+text = "BEST:"
+
+[node name="HighScoreVal" type="Label" parent="UILayer/HUD/HighScoreContainer"]
+layout_mode = 2
+text = "0"
+
+[node name="BtnPause" type="Button" parent="UILayer/HUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 5.0
+offset_right = -10.0
+offset_bottom = 35.0
+grow_horizontal = 0
+text = "⏸"
+
+[node name="MenuScreen" type="ColorRect" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.06, 0.1, 0.95)
+
+[node name="OverlayContent" type="VBoxContainer" parent="UILayer/MenuScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -250.0
+offset_right = 260.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="UILayer/MenuScreen/OverlayContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.3, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "忍者手裏劍"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="UILayer/MenuScreen/OverlayContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.77, 0.06, 1)
+text = "SHURIKEN HERO v2.2.0 (Godot Port)"
+horizontal_alignment = 1
+
+[node name="Creators" type="Label" parent="UILayer/MenuScreen/OverlayContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.74, 0.61, 1)
+text = "Creators: JFCC & Jules"
+horizontal_alignment = 1
+
+[node name="MenuBox" type="VBoxContainer" parent="UILayer/MenuScreen/OverlayContent"]
+layout_mode = 2
+
+[node name="ModeHeader" type="Label" parent="UILayer/MenuScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "選擇模式 (Game Mode)"
+horizontal_alignment = 1
+
+[node name="ModeButtons" type="HBoxContainer" parent="UILayer/MenuScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnClassic" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/ModeButtons"]
+layout_mode = 2
+text = "經典防守"
+
+[node name="BtnDefense" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/ModeButtons"]
+layout_mode = 2
+text = "箭塔防禦"
+
+[node name="DiffHeader" type="Label" parent="UILayer/MenuScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "選擇難度 (Difficulty)"
+horizontal_alignment = 1
+
+[node name="DifficultyButtons" type="GridContainer" parent="UILayer/MenuScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+columns = 6
+
+[node name="BtnGod" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons"]
+layout_mode = 2
+text = "上帝"
+metadata/diff = "GOD"
+
+[node name="BtnVeryEasy" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons"]
+layout_mode = 2
+text = "極簡"
+metadata/diff = "VERY_EASY"
+
+[node name="BtnEasy" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons"]
+layout_mode = 2
+text = "簡單"
+metadata/diff = "EASY"
+
+[node name="BtnNormal" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons"]
+layout_mode = 2
+text = "普通"
+metadata/diff = "NORMAL"
+
+[node name="BtnHard" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons"]
+layout_mode = 2
+text = "困難"
+metadata/diff = "HARD"
+
+[node name="BtnNightmare" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons"]
+layout_mode = 2
+text = "噩夢"
+metadata/diff = "NIGHTMARE"
+
+[node name="DiffDetailPanel" type="VBoxContainer" parent="UILayer/MenuScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+
+[node name="DiffTitle" type="Label" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DiffDetailPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.77, 0.06, 1)
+text = "經典防守 (Classic Defense) - 普通難度"
+
+[node name="DiffDesc" type="Label" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DiffDetailPanel"]
+layout_mode = 2
+text = "標準挑戰！敵人屬性平衡，適合所有玩家。"
+
+[node name="DiffStats" type="Label" parent="UILayer/MenuScreen/OverlayContent/MenuBox/DiffDetailPanel"]
+layout_mode = 2
+text = "初始血量: HPx3 | 敵人速度: 100% | 敵人生命: 100% | 分數加成: x1.5"
+
+[node name="BtnStart" type="Button" parent="UILayer/MenuScreen/OverlayContent/MenuBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "開始遊戲 (START)"
+
+[node name="PauseScreen" type="ColorRect" parent="UILayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.06, 0.1, 0.88)
+
+[node name="OverlayContent" type="VBoxContainer" parent="UILayer/PauseScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="PauseTitle" type="Label" parent="UILayer/PauseScreen/OverlayContent"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "遊戲暫停 (PAUSED)"
+horizontal_alignment = 1
+
+[node name="MenuBox" type="VBoxContainer" parent="UILayer/PauseScreen/OverlayContent"]
+layout_mode = 2
+
+[node name="BtnResume" type="Button" parent="UILayer/PauseScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "繼續遊戲 (Resume)"
+
+[node name="BtnRestartPause" type="Button" parent="UILayer/PauseScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "重新開始 (Restart)"
+
+[node name="BtnMenuPause" type="Button" parent="UILayer/PauseScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "返回主選單 (Main Menu)"
+
+[node name="GameOverScreen" type="ColorRect" parent="UILayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.06, 0.1, 0.9)
+
+[node name="OverlayContent" type="VBoxContainer" parent="UILayer/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -120.0
+offset_right = 180.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="GameOverTitle" type="Label" parent="UILayer/GameOverScreen/OverlayContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.3, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="MenuBox" type="VBoxContainer" parent="UILayer/GameOverScreen/OverlayContent"]
+layout_mode = 2
+
+[node name="ScoreHBox" type="HBoxContainer" parent="UILayer/GameOverScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="FinalScoreLabel" type="Label" parent="UILayer/GameOverScreen/OverlayContent/MenuBox/ScoreHBox"]
+layout_mode = 2
+text = "最終得分："
+
+[node name="FinalScoreVal" type="Label" parent="UILayer/GameOverScreen/OverlayContent/MenuBox/ScoreHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.8, 0.44, 1)
+text = "0"
+
+[node name="NewRecordTag" type="Label" parent="UILayer/GameOverScreen/OverlayContent/MenuBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.61, 0.07, 1)
+text = "刷新最高紀錄！"
+horizontal_alignment = 1
+
+[node name="BestHBox" type="HBoxContainer" parent="UILayer/GameOverScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="FinalBestLabel" type="Label" parent="UILayer/GameOverScreen/OverlayContent/MenuBox/BestHBox"]
+layout_mode = 2
+text = "歷史最高："
+
+[node name="FinalBestVal" type="Label" parent="UILayer/GameOverScreen/OverlayContent/MenuBox/BestHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.77, 0.06, 1)
+text = "0"
+
+[node name="BtnRestart" type="Button" parent="UILayer/GameOverScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "再試一次 (Play Again)"
+
+[node name="BtnMenuGameover" type="Button" parent="UILayer/GameOverScreen/OverlayContent/MenuBox"]
+layout_mode = 2
+text = "返回主選單 (Main Menu)"
+
+[node name="TouchControls" type="Control" parent="UILayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TouchLeft" type="ColorRect" parent="UILayer/TouchControls"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 320.0
+grow_vertical = 2
+color = Color(1, 1, 1, 0.05)
+
+[node name="Label" type="Label" parent="UILayer/TouchControls/TouchLeft"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -40.0
+offset_right = 50.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "左移 & 射擊"
+
+[node name="TouchRight" type="ColorRect" parent="UILayer/TouchControls"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(1, 1, 1, 0.05)
+
+[node name="Label" type="Label" parent="UILayer/TouchControls/TouchRight"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -40.0
+offset_right = 50.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "右移 & 射擊"
+
+[node name="TouchSword" type="Button" parent="UILayer/TouchControls"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -55.0
+offset_right = 50.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "斬擊"
