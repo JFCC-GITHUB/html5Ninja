@@ -31,7 +31,7 @@ const NINJA_IDLE_MATRIX = [
   "....BBBBBBBBBB....", "....BDDDDDBBBB....", "...BBDDDDDDBBBB...", "...BBDDDDDDBBBB...",
   "...BDDDDDDDDBBB...", "...BDDDDDDDDBBB...", "...BDDDDDDDDBBB...", "....BDDDDDDDDB....",
   "....BBBB..BBBB....", "....BBBB..BBBB....", "....BBBB..BBBB....", "....BBBB..BBBB....",
-  "....BBBB..BBBB....", "...BBBBB..BBBBB...", "...BBBBB..BBBBB...", ".................."
+  "....BBBB..BBBB....", "...BBBBB..BBBBB...", "...BBBBB..BBBBB..."
 ];
 const NINJA_RUN_MATRIX = [
   "......RRRRRR......", ".....RRRRRRRR.....", "....BBBBBBBBBB....", "...BBBBBBBBBBBB...",
@@ -39,13 +39,13 @@ const NINJA_RUN_MATRIX = [
   "....BBBBBBBBBB....", "....BDDDDDBBBB....", "...BBDDDDDDBBBB...", "...BBDDDDDDBBBB...",
   "...BDDDDDDDDBBB...", "...BDDDDDDDDBBB...", "....BDDDDDDDDB....", ".....BBBBBBBB.....",
   "....BBBB...BBBB...", "...BBBB.....BBBB..", "..BBBB.......BBBB.", "..BBBB.......BBBB.",
-  ".BBBBB.......BBBBB", ".BBBBB.......BBBBB", ".................."
+  ".BBBBB.......BBBBB", ".BBBBB.......BBBBB"
 ];
 
 function createNinjaSprites() {
   const width = GAME_CONFIG.PLAYER.WIDTH; // 48
   const height = GAME_CONFIG.PLAYER.HEIGHT; // 64
-  const pSize = height / 24; // 2.6666666666666665
+  const pSize = height / 23; // 2.7826
 
   const idleLeft = createCanvas(width, height); drawPixelMatrix(idleLeft.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
   const idleRight = createCanvas(width, height); idleRight.ctx.translate(width, 0); idleRight.ctx.scale(-1, 1); drawPixelMatrix(idleRight.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
