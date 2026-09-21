@@ -290,9 +290,11 @@ export class TowerDefenseMode {
       const minX = GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN;
       const maxX = GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.PLAYER.MOVE_BOUNDS_MARGIN - this.player.width;
 
-      if (keys.left) { this.player.x -= GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'LEFT'; this.shootShuriken(); }
-      if (keys.right) { this.player.x += GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'RIGHT'; this.shootShuriken(); }
-      if (keys.shoot) { this.shootShuriken(); }
+      if (keys.left) { this.player.x -= GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'LEFT'; }
+      if (keys.right) { this.player.x += GAME_CONFIG.PLAYER.SPEED; this.player.isMoving = true; this.player.facing = 'RIGHT'; }
+
+      // Auto-fire shuriken continuously in player's facing direction
+      this.shootShuriken();
 
       this.player.x = Math.max(minX, Math.min(maxX, this.player.x));
     }
@@ -351,10 +353,10 @@ export class TowerDefenseMode {
       // Tower arrow collisions
       for (let aIdx = this.towerArrows.length - 1; aIdx >= 0; aIdx--) {
         const arrow = this.towerArrows[aIdx];
-        if (checkAABBCollision({ x: arrow.x - 8, y: arrow.y - 3, width: 16, height: 6 }, enemy)) {
+        if (checkAABBCollision({ x: arrow.x - 16, y: arrow.y - 12, width: 32, height: 24 }, enemy)) {
           this.towerArrows.splice(aIdx, 1);
           enemy.hp -= arrowDamage;
-          createParticles(this.particles, arrow.x, arrow.y, '#e67e22', 8);
+          createParticles(this.particles, arrow.x, arrow.y, '#e67e22', 12);
           if (enemy.hp <= 0) {
             SoundSystem.playEnemyHit();
             createParticles(this.particles, enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, GAME_CONFIG.ENEMY_TYPES[enemy.type].color, GAME_CONFIG.PARTICLES.DEATH_COUNT);
