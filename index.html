@@ -166,8 +166,16 @@ body {
 .game-subtitle {
   font-size: 0.9rem;
   color: #f1c40f;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   letter-spacing: 3px;
+}
+
+.creator-tag {
+  font-size: 0.8rem;
+  color: #1abc9c;
+  margin-bottom: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 .gameover-title {
@@ -224,9 +232,21 @@ body {
   box-shadow: 0 1px 0 #1a252f;
 }
 
+.btn-mode {
+  flex: 1;
+  background: #16a085;
+  border-color: #1abc9c;
+}
+
+.btn-mode.active {
+  background: #f39c12;
+  border-color: #f1c40f;
+  box-shadow: 0 3px 0 #b7950b;
+}
+
 .btn-diff {
   flex: 1;
-  min-width: 70px;
+  min-width: 65px;
   padding: 6px 4px;
   font-size: 0.75rem;
   background: #34495e;
@@ -400,6 +420,10 @@ body {
           <span class="hud-label">HP:</span>
           <div id="hp-hearts"></div>
         </div>
+        <div id="tower-hp-container" class="hud-item hidden">
+          <span class="hud-label">TOWER:</span>
+          <span id="tower-hp-val" style="color:#e74c3c;">100%</span>
+        </div>
         <div id="level-container" class="hud-item">
           <span class="hud-label">LV:</span>
           <span id="level-val" class="level-badge">1</span>
@@ -424,29 +448,17 @@ body {
 
       <div id="menu-screen" class="overlay-screen">
         <h1 class="game-title">🥷 忍者手裏劍 🥷</h1>
-        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v1.3.0</span></p>
+        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v1.4.0</span></p>
+        <p class="creator-tag">Creators: JFCC & Jules</p>
 
         <div class="menu-box">
-          <div id="character-preview-container" style="display:flex; justify-content:space-around; align-items:center; width:100%; background:rgba(0,0,0,0.4); border:1px solid #f39c12; border-radius:8px; padding:8px 4px; margin-bottom:4px;">
-            <div style="text-align:center;">
-              <div style="font-size:0.75rem; color:#2ecc71; font-weight:bold; margin-bottom:2px;">主角 (HERO)</div>
-              <canvas id="preview-hero" width="40" height="50" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:0.75rem; color:#f1c40f; font-weight:bold; margin-bottom:2px;">疾風忍</div>
-              <canvas id="preview-fast" width="32" height="42" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:0.75rem; color:#e74c3c; font-weight:bold; margin-bottom:2px;">普通忍</div>
-              <canvas id="preview-normal" width="36" height="48" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
-            </div>
-            <div style="text-align:center;">
-              <div style="font-size:0.75rem; color:#9b59b6; font-weight:bold; margin-bottom:2px;">重裝忍</div>
-              <canvas id="preview-tank" width="48" height="58" style="image-rendering:pixelated; background:rgba(255,255,255,0.05); border-radius:4px; border:1px solid rgba(255,255,255,0.2);"></canvas>
-            </div>
+          <h2 style="font-size:1.1rem; color:#f1c40f;">選擇模式 (Game Mode)</h2>
+          <div class="difficulty-buttons">
+            <button class="btn btn-mode active" data-mode="CLASSIC">🛡️ 經典防守</button>
+            <button class="btn btn-mode" data-mode="DEFENSE">🏹 箭塔防禦</button>
           </div>
 
-          <h2 style="font-size:1.1rem; color:#f1c40f; margin-top:2px;">選擇難度 (Difficulty)</h2>
+          <h2 style="font-size:1.1rem; color:#f1c40f; margin-top:4px;">選擇難度 (Difficulty)</h2>
           <div class="difficulty-buttons">
             <button class="btn btn-diff btn-god" data-diff="GOD">⚡ 上帝</button>
             <button class="btn btn-diff" data-diff="VERY_EASY">極簡</button>
@@ -469,7 +481,7 @@ body {
           <h3>🎮 操作說明與遊戲特色</h3>
           <p><strong>電腦：</strong> A / D 移動連射 | Space 射擊 | J / Z 武士刀斬擊</p>
           <p><strong>手機：</strong> 點擊/按住左右區域移動連射 | 中央 ⚔️ 斬擊</p>
-          <p><strong>等級與波次：</strong> 等級提升解鎖強大巨大化斬擊與多方向360度圓形斬擊；波次越高等級越強，怪獸血量與種類越加豐富！</p>
+          <p><strong>箭塔防禦模式：</strong> 守護中央高聳箭塔！玩家倒下1秒後復活，箭塔摧毀則失敗；LV.6起箭塔自動發射箭矢支援！</p>
         </div>
       </div>
 
