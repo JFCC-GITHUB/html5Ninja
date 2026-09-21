@@ -8,18 +8,18 @@ export const GAME_CONFIG = {
   PLAYER: {
     INITIAL_HP: 3,
     INVINCIBILITY_DURATION_MS: 1500,
-    SPEED: 4,
-    WIDTH: 36,
-    HEIGHT: 48,
-    MOVE_BOUNDS_MARGIN: 100,
+    SPEED: 4.5,
+    WIDTH: 48,
+    HEIGHT: 64,
+    MOVE_BOUNDS_MARGIN: 80,
     SHOOT_COOLDOWN_MS: 180,
     SWORD_COOLDOWN_MS: 280,
-    BASE_SWORD_RANGE: 70,
+    BASE_SWORD_RANGE: 90,
     SWORD_DURATION_MS: 200,
   },
   SHURIKEN: {
     SPEED: 9,
-    BASE_SIZE: 16,
+    BASE_SIZE: 20,
     MAX_COUNT: 12,
   },
   GAME_MODES: {
@@ -30,6 +30,14 @@ export const GAME_CONFIG = {
       desc: '中央防守經典玩法！擊退陸續襲來的各路忍者。',
       scoreMultiplier: 1.0,
       initialSpawnInterval: 1800,
+    },
+    DEFENSE: {
+      id: 'DEFENSE',
+      title: '箭塔防禦 (Tower Defense)',
+      badge: '🏹 箭塔',
+      desc: '守護中央高聳箭塔！玩家死後1秒復活，箭塔摧毀即宣告失敗！LV.6起箭塔開啟自動伏擊箭矢射擊！',
+      scoreMultiplier: 1.5,
+      initialSpawnInterval: 1600,
     }
   },
   DIFFICULTIES: {
@@ -66,16 +74,23 @@ export const GAME_CONFIG = {
     NIGHTMARE: {
       title: '噩夢模式 (Nightmare)',
       desc: '極限地獄！敵人群聚狂暴襲來，容錯率極低！',
-      stats: '初始血量: ❤️x1 | 敵人速度: 150% | 敵人生命: 170% | 分數加成: x3.0',
+      stats: '初始血量: ❤️x1 | 敵人速度: 150% | 敵人生命: 170% | 分數加成: x0.6',
       enemySpeedMultiplier: 1.5, enemyHpMultiplier: 1.7, enemySpawnRateMultiplier: 0.6, playerHp: 1, startLevel: 1, scoreMultiplier: 3.0
     }
   },
   ENEMY_TYPES: {
-    NORMAL: { id: 'NORMAL', name: '普通忍', width: 32, height: 44, baseSpeed: 1.8, hp: 1, expValue: 20, scoreValue: 100, color: '#e74c3c', spawnWeight: 45 },
-    FAST: { id: 'FAST', name: '疾風忍', width: 28, height: 38, baseSpeed: 3.2, hp: 1, expValue: 35, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
-    TANK: { id: 'TANK', name: '重裝忍', width: 44, height: 56, baseSpeed: 1.0, hp: 3, expValue: 60, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 },
-    SHADOW: { id: 'SHADOW', name: '影忍', width: 30, height: 40, baseSpeed: 4.2, hp: 2, expValue: 80, scoreValue: 500, color: '#34495e', spawnWeight: 10, reqLevel: 3 },
-    BOSS: { id: 'BOSS', name: '鬼將', width: 52, height: 64, baseSpeed: 1.2, hp: 6, expValue: 150, scoreValue: 800, color: '#2c3e50', spawnWeight: 5, reqLevel: 5 }
+    NORMAL: { id: 'NORMAL', name: '普通忍', width: 42, height: 58, baseSpeed: 1.8, hp: 1, expValue: 20, scoreValue: 100, color: '#e74c3c', spawnWeight: 45 },
+    FAST: { id: 'FAST', name: '疾風忍', width: 36, height: 50, baseSpeed: 3.2, hp: 1, expValue: 35, scoreValue: 200, color: '#f1c40f', spawnWeight: 25 },
+    TANK: { id: 'TANK', name: '重裝忍', width: 58, height: 74, baseSpeed: 1.0, hp: 3, expValue: 60, scoreValue: 350, color: '#8e44ad', spawnWeight: 15 },
+    SHADOW: { id: 'SHADOW', name: '影忍', width: 40, height: 54, baseSpeed: 4.2, hp: 2, expValue: 80, scoreValue: 500, color: '#34495e', spawnWeight: 10, reqLevel: 3 },
+    BOSS: { id: 'BOSS', name: '鬼將', width: 68, height: 84, baseSpeed: 1.2, hp: 6, expValue: 150, scoreValue: 800, color: '#2c3e50', spawnWeight: 5, reqLevel: 5 }
+  },
+  TOWER: {
+    MAX_HP: 500,
+    WIDTH: 60,
+    HEIGHT: 180,
+    AUTO_SHOOT_LEVEL: 6,
+    AUTO_SHOOT_COOLDOWN_MS: 800,
   },
   SPAWN: {
     INITIAL_INTERVAL_MS: 1800,
