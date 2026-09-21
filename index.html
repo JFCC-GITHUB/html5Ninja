@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
   <title>忍者手裏劍 - Pixel Ninja Defense</title>
   <style>
 * {
@@ -448,7 +449,7 @@ body {
 
       <div id="menu-screen" class="overlay-screen">
         <h1 class="game-title">🥷 忍者手裏劍 🥷</h1>
-        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v2.0.0</span></p>
+        <p class="game-subtitle">SHURIKEN HERO <span style="font-size:0.75rem; color:#2ecc71; margin-left:6px; letter-spacing:1px;">v2.1.0</span></p>
         <p class="creator-tag">Creators: JFCC & Jules</p>
 
         <div class="menu-box">
@@ -519,5 +520,16 @@ body {
   </div>
 
   <script type="module" src="js/game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('PWA Service Worker registered:', reg.scope);
+        }).catch((err) => {
+          console.warn('Service Worker registration failed:', err);
+        });
+      });
+    }
+  </script>
 </body>
 </html>
