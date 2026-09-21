@@ -43,7 +43,10 @@ const NINJA_RUN_MATRIX = [
 ];
 
 function createNinjaSprites() {
-  const pSize = 2; const width = 36; const height = 48;
+  const width = GAME_CONFIG.PLAYER.WIDTH; // 48
+  const height = GAME_CONFIG.PLAYER.HEIGHT; // 64
+  const pSize = height / 24; // 2.6666666666666665
+
   const idleLeft = createCanvas(width, height); drawPixelMatrix(idleLeft.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
   const idleRight = createCanvas(width, height); idleRight.ctx.translate(width, 0); idleRight.ctx.scale(-1, 1); drawPixelMatrix(idleRight.ctx, NINJA_IDLE_MATRIX, NINJA_PALETTE, pSize);
   const runLeft = createCanvas(width, height); drawPixelMatrix(runLeft.ctx, NINJA_RUN_MATRIX, NINJA_PALETTE, pSize);
