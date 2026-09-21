@@ -219,8 +219,14 @@ export class TowerDefenseMode {
   }
 
   towerAutoShoot() {
+    // Start shooting arrows after Level 5 (at Level 6+)
+    if (this.level < GAME_CONFIG.TOWER.AUTO_SHOOT_LEVEL) return;
+
     const now = Date.now();
-    if (now - this.lastTowerShootTime < GAME_CONFIG.TOWER.AUTO_SHOOT_COOLDOWN_MS) return;
+    // Dynamic shooting cooldown: becomes faster with every level above 5
+    const dynamicCooldown = Math.max(200, GAME_CONFIG.TOWER.AUTO_SHOOT_COOLDOWN_MS - (this.level - 6) * 120);
+
+    if (now - this.lastTowerShootTime < dynamicCooldown) return;
 
     let nearestLeft = null;
     let nearestRight = null;
