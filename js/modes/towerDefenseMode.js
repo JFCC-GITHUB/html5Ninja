@@ -219,7 +219,6 @@ export class TowerDefenseMode {
   }
 
   towerAutoShoot() {
-    if (this.level < GAME_CONFIG.TOWER.AUTO_SHOOT_LEVEL) return;
     const now = Date.now();
     if (now - this.lastTowerShootTime < GAME_CONFIG.TOWER.AUTO_SHOOT_COOLDOWN_MS) return;
 
@@ -230,9 +229,9 @@ export class TowerDefenseMode {
     for (const enemy of this.enemies) {
       const eCenterX = enemy.x + enemy.width / 2;
       if (eCenterX < towerCenterX) {
-        if (!nearestLeft || eCenterX > nearestLeft.x) nearestLeft = enemy;
+        if (!nearestLeft || eCenterX > (nearestLeft.x + nearestLeft.width / 2)) nearestLeft = enemy;
       } else {
-        if (!nearestRight || eCenterX < nearestRight.x) nearestRight = enemy;
+        if (!nearestRight || eCenterX < (nearestRight.x + nearestRight.width / 2)) nearestRight = enemy;
       }
     }
 
@@ -240,23 +239,24 @@ export class TowerDefenseMode {
       this.lastTowerShootTime = now;
       SoundSystem.playShurikenThrow();
       const towerTopY = this.tower.y + 20;
+      const arrowSpeed = 11;
 
-      if (nearestLeft) {
+      const fireArrowToTarget = (target) => {
+        const targetX = target.x + target.width / 2;
+        const targetY = target.y + target.height / 2;
+        const dx = targetX - towerCenterX;
+        const dy = targetY - towerTopY;
+        const dist = Math.hypot(dx, dy) || 1;
         this.towerArrows.push({
           x: towerCenterX,
           y: towerTopY,
-          vx: -10,
-          vy: 0,
+          vx: (dx / dist) * arrowSpeed,
+          vy: (dy / dist) * arrowSpeed,
         });
-      }
-      if (nearestRight) {
-        this.towerArrows.push({
-          x: towerCenterX,
-          y: towerTopY,
-          vx: 10,
-          vy: 0,
-        });
-      }
+      };
+
+      if (nearestLeft) fireArrowToTarget(nearestLeft);
+      if (nearestRight) fireArrowToTarget(nearestRight);
     }
   }
 
@@ -319,8 +319,12 @@ export class TowerDefenseMode {
 
     // Tower arrows update
     for (let i = this.towerArrows.length - 1; i >= 0; i--) {
-      const arrow = this.towerArrows[i]; arrow.x += arrow.vx;
-      if (arrow.x < -50 || arrow.x > GAME_CONFIG.CANVAS_WIDTH + 50) this.towerArrows.splice(i, 1);
+      const arrow = this.towerArrows[i];
+      arrow.x += arrow.vx;
+      arrow.y += arrow.vy;
+      if (arrow.x < -50 || arrow.x > GAME_CONFIG.CANVAS_WIDTH + 50 || arrow.y < -50 || arrow.y > GAME_CONFIG.CANVAS_HEIGHT + 50) {
+        this.towerArrows.splice(i, 1);
+      }
     }
 
     const shurikenDamage = 1 + Math.floor((this.level - 1) * 0.8);
