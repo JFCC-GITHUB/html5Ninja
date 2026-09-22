@@ -155,6 +155,18 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.05, 0.06, 0.1, 0.95)
 
+[node name="LangButton" type="Button" parent="UILayer/MenuScreen"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = 50.0
+grow_horizontal = 0
+text = "English"
+
 [node name="OverlayContent" type="VBoxContainer" parent="UILayer/MenuScreen"]
 layout_mode = 1
 anchors_preset = 8
