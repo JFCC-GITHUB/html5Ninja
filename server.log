@@ -160,3 +160,32 @@ BrokenPipeError: [Errno 32] Broken pipe
 127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.audio.worklet.js HTTP/1.1" 200 -
 127.0.0.1 - - [21/Sep/2026 14:36:28] code 404, message File not found
 127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [22/Sep/2026 04:26:38] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 04:26:39] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 04:26:39] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 04:26:39] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 04:26:39] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:05] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:05] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:05] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:05] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:05] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:08] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:08] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:08] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:08] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:08] code 404, message File not found
+127.0.0.1 - - [22/Sep/2026 08:14:08] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [22/Sep/2026 08:14:08] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:10] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:10] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:10] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:10] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:10] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:12] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:12] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:12] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:12] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [22/Sep/2026 08:14:12] code 404, message File not found
+127.0.0.1 - - [22/Sep/2026 08:14:12] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [22/Sep/2026 08:14:12] "GET /index.audio.worklet.js HTTP/1.1" 200 -

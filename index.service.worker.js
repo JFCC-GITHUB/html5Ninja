@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1790001383|6772144';
+const CACHE_VERSION = '1790064678|11332960';
 /** @type {string} */
 const CACHE_PREFIX = 'Pixel Ninja Defe-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;

@@ -16,7 +16,8 @@ window/size/viewport_width=960
 window/size/viewport_height=540
 window/size/resizable=true
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
+window/stretch/aspect="expand"
+window/handheld/orientation="sensor"
 
 [rendering]
 
