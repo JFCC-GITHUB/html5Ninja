@@ -1,0 +1,12 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1789999559
+export_presets.cfg::TextFile::-1::1789998709::0::1::::<><>::
+::res://fonts/::1789999717
+NotoSansTC-Regular.ttf::FontFile::226860525481863210::1789999559::1789999717::1::::<><>::
+::res://scenes/::1789998801
+Main.tscn::PackedScene::-1::1790000150::0::1::::<><>::res://scripts/Main.gd<>res://scripts/SoundSystem.gd
+::res://scripts/::1789998778
+Config.gd::GDScript::-1::1790000354::0::1::::Config<>RefCounted<>::
+Main.gd::GDScript::-1::1790001370::0::1::::<>Node2D<>::
+PixelGenerator.gd::GDScript::-1::1789998735::0::1::::PixelGenerator<>RefCounted<>::
+SoundSystem.gd::GDScript::-1::1789998847::0::1::::SoundSystem<>Node<>::

@@ -1,0 +1,162 @@
+127.0.0.1 - - [21/Sep/2026 13:59:35] "HEAD /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:16] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:16] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:16] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:17] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:17] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:20] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:21] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:21] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:21] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:01:21] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:01:21] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:01:21] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:40] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:40] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:40] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:40] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:40] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:08:42] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:45] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:45] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:45] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:45] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:45] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:12:47] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:05] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:05] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:05] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:05] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:05] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:16:07] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:42] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:42] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:42] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:42] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:42] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:19:44] "GET /index.audio.worklet.js HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:23:05] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:05] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:05] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:05] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:05] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:23:07] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 54568)
+Traceback (most recent call last):
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 1326, in finish_request
+    self.RequestHandlerClass(request, client_address, self,
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 676, in __init__
+    super().__init__(*args, **kwargs)
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 766, in __init__
+    self.handle()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 440, in handle
+    self.handle_one_request()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 428, in handle_one_request
+    method()
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 683, in do_GET
+    self.copyfile(f, self.wfile)
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/http/server.py", line 882, in copyfile
+    shutil.copyfileobj(source, outputfile)
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/shutil.py", line 204, in copyfileobj
+    fdst_write(buf)
+  File "/home/jules/.pyenv/versions/3.12.13/lib/python3.12/socketserver.py", line 845, in write
+    self._sock.sendall(b)
+BrokenPipeError: [Errno 32] Broken pipe
+----------------------------------------
+127.0.0.1 - - [21/Sep/2026 14:23:07] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:15] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:15] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:15] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:15] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:15] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:18] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:18] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:18] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:18] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:26:18] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:26:18] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:26:18] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:57] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:57] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:57] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:57] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:57] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:29:59] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:45] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:45] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:45] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:45] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:45] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:47] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:47] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:47] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:47] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:32:47] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:32:47] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [21/Sep/2026 14:32:47] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:25] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:25] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:25] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:26] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:26] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Sep/2026 14:36:28] code 404, message File not found
+127.0.0.1 - - [21/Sep/2026 14:36:28] "GET /index.worker.js HTTP/1.1" 404 -
