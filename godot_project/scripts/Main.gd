@@ -31,6 +31,7 @@ var is_player_dead_in_defense: bool = false
 var view_width: float = 960.0
 var view_height: float = 540.0
 var is_portrait: bool = false
+var ui_scale_factor: float = 1.0
 
 # Game Entities
 var player: Dictionary = {}
@@ -156,19 +157,23 @@ func _update_layout_for_viewport():
 	view_height = vp_size.y
 	is_portrait = view_height > view_width
 
-	# Adjust Menu Overlay Content Width and Touch Zones
+	# Calculate dynamic UI scale factor for mobile screens
 	if is_portrait:
-		menu_overlay_content.custom_minimum_size = Vector2(min(view_width - 20.0, 480.0), 0)
-		touch_left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		touch_right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		ui_scale_factor = clamp(view_width / 390.0, 1.0, 2.2)
+		menu_overlay_content.custom_minimum_size = Vector2(min(view_width - 16.0, 600.0), 0)
 		touch_left.size = Vector2(view_width * 0.45, view_height)
 		touch_right.size = Vector2(view_width * 0.45, view_height)
 		touch_right.position = Vector2(view_width * 0.55, 0)
+		touch_sword.custom_minimum_size = Vector2(140.0 * ui_scale_factor, 60.0 * ui_scale_factor)
 	else:
-		menu_overlay_content.custom_minimum_size = Vector2(520.0, 0)
+		ui_scale_factor = clamp(view_height / 540.0, 1.0, 1.8)
+		menu_overlay_content.custom_minimum_size = Vector2(560.0, 0)
 		touch_left.size = Vector2(320.0, view_height)
 		touch_right.size = Vector2(320.0, view_height)
 		touch_right.position = Vector2(view_width - 320.0, 0)
+
+	# Apply dynamic font scaling across UI Controls
+	_apply_font_scaling_recursively(ui_layer, ui_scale_factor)
 
 	# Adjust entities ground position if playing
 	var ground_y = view_height - 40.0
@@ -188,6 +193,18 @@ func _apply_font_recursively(node: Node, font: Font):
 		node.add_theme_font_override("font", font)
 	for child in node.get_children():
 		_apply_font_recursively(child, font)
+
+func _apply_font_scaling_recursively(node: Node, scale_mult: float):
+	if node is Label or node is Button:
+		var base_sz = node.get_meta("base_font_sz", 16)
+		if not node.has_meta("base_font_sz"):
+			base_sz = node.get_theme_font_size("font_size")
+			if base_sz <= 0: base_sz = 16
+			node.set_meta("base_font_sz", base_sz)
+		node.add_theme_font_size_override("font_size", int(round(base_sz * scale_mult)))
+
+	for child in node.get_children():
+		_apply_font_scaling_recursively(child, scale_mult)
 
 func _generate_textures():
 	tex_ninja_idle_r = PixelGenerator.create_ninja_texture(false, false)

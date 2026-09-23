@@ -245,3 +245,32 @@ BrokenPipeError: [Errno 32] Broken pipe
 127.0.0.1 - - [22/Sep/2026 10:04:23] code 404, message File not found
 127.0.0.1 - - [22/Sep/2026 10:04:23] "GET /index.worker.js HTTP/1.1" 404 -
 127.0.0.1 - - [22/Sep/2026 10:04:23] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:13] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:13] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:13] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:13] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:13] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] code 404, message File not found
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.audio.worklet.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:15] "GET /index.audio.worklet.js HTTP/1.1" 304 -
+127.0.0.1 - - [23/Sep/2026 08:03:17] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:17] "GET /index.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:17] "GET /index.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:18] "GET /index.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:18] "GET /index.pck HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.service.worker.js HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.offline.html HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.js HTTP/1.1" 304 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.html HTTP/1.1" 304 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] code 404, message File not found
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.worker.js HTTP/1.1" 404 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.apple-touch-icon.png HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2026 08:03:20] "GET /index.audio.worklet.js HTTP/1.1" 200 -
