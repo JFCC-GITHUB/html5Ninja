@@ -6,6 +6,7 @@ enum GameState { MENU, PLAYING, PAUSED, GAMEOVER }
 var state: GameState = GameState.MENU
 var selected_mode: String = "CLASSIC"
 var selected_difficulty: String = "NORMAL"
+var current_lang: String = "zh"
 
 var score: int = 0
 var high_score: int = 0
@@ -25,6 +26,11 @@ var is_sword_attacking: bool = false
 var sword_attack_timer: float = 0.0
 var player_respawn_timer: float = 0.0
 var is_player_dead_in_defense: bool = false
+
+# Dynamic Virtual Bounds for Responsive Canvas
+var view_width: float = 960.0
+var view_height: float = 540.0
+var is_portrait: bool = false
 
 # Game Entities
 var player: Dictionary = {}
@@ -66,37 +72,122 @@ var custom_font: FontFile
 @onready var high_score_val: Label = $UILayer/HUD/HighScoreContainer/HighScoreVal
 
 # Menu UI References
-@onready var diff_title: Label = $UILayer/MenuScreen/OverlayContent/MenuBox/DiffDetailPanel/DiffTitle
-@onready var diff_desc: Label = $UILayer/MenuScreen/OverlayContent/MenuBox/DiffDetailPanel/DiffDesc
-@onready var diff_stats: Label = $UILayer/MenuScreen/OverlayContent/MenuBox/DiffDetailPanel/DiffStats
-@onready var btn_classic: Button = $UILayer/MenuScreen/OverlayContent/MenuBox/ModeButtons/BtnClassic
-@onready var btn_defense: Button = $UILayer/MenuScreen/OverlayContent/MenuBox/ModeButtons/BtnDefense
+@onready var menu_overlay_content: VBoxContainer = $UILayer/MenuScreen/OverlayContent
+@onready var menu_box_container: PanelContainer = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer
+@onready var title_ninja_left: TextureRect = $UILayer/MenuScreen/OverlayContent/TitleHBox/TitleNinjaLeft
+@onready var title_ninja_right: TextureRect = $UILayer/MenuScreen/OverlayContent/TitleHBox/TitleNinjaRight
+@onready var diff_title: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffTitle
+@onready var diff_desc: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDesc
+@onready var diff_stats: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffStats
+@onready var btn_classic: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeButtons/BtnClassic
+@onready var btn_defense: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeButtons/BtnDefense
+@onready var btn_start: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/BtnStart
+@onready var lang_button: Button = $UILayer/MenuScreen/LangButton
 
 # GameOver UI References
-@onready var final_score_val: Label = $UILayer/GameOverScreen/OverlayContent/MenuBox/FinalScoreVal
-@onready var final_best_val: Label = $UILayer/GameOverScreen/OverlayContent/MenuBox/FinalBestVal
+@onready var final_score_val: Label = $UILayer/GameOverScreen/OverlayContent/MenuBox/ScoreHBox/FinalScoreVal
+@onready var final_best_val: Label = $UILayer/GameOverScreen/OverlayContent/MenuBox/BestHBox/FinalBestVal
 @onready var new_record_tag: Label = $UILayer/GameOverScreen/OverlayContent/MenuBox/NewRecordTag
+
+# Touch Control References
+@onready var touch_left: ColorRect = $UILayer/TouchControls/TouchLeft
+@onready var touch_right: ColorRect = $UILayer/TouchControls/TouchRight
+@onready var touch_sword: Button = $UILayer/TouchControls/TouchSword
 
 # Key inputs
 var key_left: bool = false
 var key_right: bool = false
 
 func _ready():
+	get_viewport().size_changed.connect(_on_viewport_resized)
 	_setup_custom_font()
 	_generate_textures()
+	_apply_menu_box_styling()
 	_load_high_score()
-	_update_difficulty_panel()
+	_update_language_ui()
 	_connect_ui_signals()
+	_update_layout_for_viewport()
 	_set_state(GameState.MENU)
+
+func _apply_menu_box_styling():
+	title_ninja_left.texture = tex_ninja_idle_r
+	title_ninja_right.texture = tex_ninja_idle_l
+
+	# Style Menu Box Panel with orange border and dark semi-transparent fill
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.09, 0.15, 0.92)
+	sb.border_width_left = 3
+	sb.border_width_top = 3
+	sb.border_width_right = 3
+	sb.border_width_bottom = 3
+	sb.border_color = Color("#f39c12")
+	sb.corner_radius_top_left = 12
+	sb.corner_radius_top_right = 12
+	sb.corner_radius_bottom_right = 12
+	sb.corner_radius_bottom_left = 12
+	sb.content_margin_left = 16
+	sb.content_margin_top = 16
+	sb.content_margin_right = 16
+	sb.content_margin_bottom = 16
+	menu_box_container.add_theme_stylebox_override("panel", sb)
+
+	# Style Start Button as Red
+	var start_sb = StyleBoxFlat.new()
+	start_sb.bg_color = Color("#e74c3c")
+	start_sb.border_width_left = 2
+	start_sb.border_width_top = 2
+	start_sb.border_width_right = 2
+	start_sb.border_width_bottom = 2
+	start_sb.border_color = Color("#ff6b6b")
+	start_sb.corner_radius_top_left = 8
+	start_sb.corner_radius_top_right = 8
+	start_sb.corner_radius_bottom_right = 8
+	start_sb.corner_radius_bottom_left = 8
+	btn_start.add_theme_stylebox_override("normal", start_sb)
+	btn_start.add_theme_stylebox_override("hover", start_sb)
+	btn_start.add_theme_stylebox_override("pressed", start_sb)
+
+func _on_viewport_resized():
+	_update_layout_for_viewport()
+
+func _update_layout_for_viewport():
+	var vp_size = get_viewport_rect().size
+	view_width = vp_size.x
+	view_height = vp_size.y
+	is_portrait = view_height > view_width
+
+	# Adjust Menu Overlay Content Width and Touch Zones
+	if is_portrait:
+		menu_overlay_content.custom_minimum_size = Vector2(min(view_width - 20.0, 480.0), 0)
+		touch_left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		touch_right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		touch_left.size = Vector2(view_width * 0.45, view_height)
+		touch_right.size = Vector2(view_width * 0.45, view_height)
+		touch_right.position = Vector2(view_width * 0.55, 0)
+	else:
+		menu_overlay_content.custom_minimum_size = Vector2(520.0, 0)
+		touch_left.size = Vector2(320.0, view_height)
+		touch_right.size = Vector2(320.0, view_height)
+		touch_right.position = Vector2(view_width - 320.0, 0)
+
+	# Adjust entities ground position if playing
+	var ground_y = view_height - 40.0
+	if player.has("y"):
+		player["y"] = ground_y - player["height"]
+	if tower.has("y"):
+		tower["y"] = ground_y - tower["height"]
 
 func _setup_custom_font():
 	if ResourceLoader.exists("res://fonts/NotoSansTC-Regular.ttf"):
 		custom_font = load("res://fonts/NotoSansTC-Regular.ttf")
 		if custom_font:
-			var theme = Theme.new()
-			theme.default_font = custom_font
-			theme.default_font_size = 14
-			ui_layer.get_children().map(func(c): if c is Control: c.theme = theme)
+			_apply_font_recursively(ui_layer, custom_font)
+
+func _apply_font_recursively(node: Node, font: Font):
+	if node is Control:
+		node.add_theme_font_override("font", font)
+	for child in node.get_children():
+		_apply_font_recursively(child, font)
 
 func _generate_textures():
 	tex_ninja_idle_r = PixelGenerator.create_ninja_texture(false, false)
@@ -134,13 +225,16 @@ func _connect_ui_signals():
 	btn_classic.pressed.connect(func(): _select_mode("CLASSIC"))
 	btn_defense.pressed.connect(func(): _select_mode("DEFENSE"))
 
-	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBox/DifficultyButtons
+	if lang_button:
+		lang_button.pressed.connect(_toggle_language)
+
+	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DifficultyButtons
 	for btn in diff_grid.get_children():
 		if btn is Button and btn.has_meta("diff"):
 			var d_key = btn.get_meta("diff")
 			btn.pressed.connect(func(): _select_difficulty(d_key))
 
-	$UILayer/MenuScreen/OverlayContent/MenuBox/BtnStart.pressed.connect(start_game)
+	btn_start.pressed.connect(start_game)
 	$UILayer/HUD/BtnPause.pressed.connect(toggle_pause)
 	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnResume.pressed.connect(toggle_pause)
 	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnRestartPause.pressed.connect(start_game)
@@ -150,35 +244,127 @@ func _connect_ui_signals():
 	$UILayer/GameOverScreen/OverlayContent/MenuBox/BtnMenuGameover.pressed.connect(func(): _set_state(GameState.MENU))
 
 	# Touch Controls
-	var touch_l = $UILayer/TouchControls/TouchLeft
-	var touch_r = $UILayer/TouchControls/TouchRight
-	var touch_s = $UILayer/TouchControls/TouchSword
-
-	touch_l.gui_input.connect(func(event):
+	touch_left.gui_input.connect(func(event):
 		if event is InputEventScreenTouch or event is InputEventMouseButton:
 			key_left = event.pressed
 	)
-	touch_r.gui_input.connect(func(event):
+	touch_right.gui_input.connect(func(event):
 		if event is InputEventScreenTouch or event is InputEventMouseButton:
 			key_right = event.pressed
 	)
-	touch_s.pressed.connect(func(): perform_sword_attack())
+	touch_sword.pressed.connect(func(): perform_sword_attack())
+
+func _toggle_language():
+	current_lang = "en" if current_lang == "zh" else "zh"
+	sound_system.play_click()
+	_update_language_ui()
+
+func _update_language_ui():
+	var u = Config.UI_TEXT[current_lang]
+	if lang_button:
+		lang_button.text = u["lang_toggle"]
+
+	$UILayer/MenuScreen/OverlayContent/TitleHBox/Title.text = u["title"]
+	$UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeHeader.text = u["mode_header"]
+	$UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffHeader.text = u["diff_header"]
+	btn_start.text = u["start_game"]
+
+	btn_classic.text = u["mode_classic"]
+	btn_defense.text = u["mode_defense"]
+
+	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DifficultyButtons
+	for btn in diff_grid.get_children():
+		if btn is Button and btn.has_meta("diff"):
+			var d_key = btn.get_meta("diff")
+			btn.text = u["diff_" + d_key.lower()]
+
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpLabel.text = u["hp_label"]
+	$UILayer/HUD/TowerHpContainer/TowerHpLabel.text = u["tower_label"]
+	$UILayer/HUD/LevelContainer/LevelLabel.text = u["level_label"]
+	$UILayer/HUD/WaveContainer/WaveLabel.text = u["wave_label"]
+	$UILayer/HUD/ScoreContainer/ScoreLabel.text = u["score_label"]
+	$UILayer/HUD/HighScoreContainer/HighScoreLabel.text = u["best_label"]
+
+	$UILayer/PauseScreen/OverlayContent/PauseTitle.text = u["paused_title"]
+	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnResume.text = u["resume"]
+	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnRestartPause.text = u["restart"]
+	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnMenuPause.text = u["main_menu"]
+
+	$UILayer/GameOverScreen/OverlayContent/GameOverTitle.text = u["game_over"]
+	$UILayer/GameOverScreen/OverlayContent/MenuBox/ScoreHBox/FinalScoreLabel.text = u["final_score"]
+	$UILayer/GameOverScreen/OverlayContent/MenuBox/BestHBox/FinalBestLabel.text = u["final_best"]
+	$UILayer/GameOverScreen/OverlayContent/MenuBox/NewRecordTag.text = u["new_record"]
+	$UILayer/GameOverScreen/OverlayContent/MenuBox/BtnRestart.text = u["play_again"]
+	$UILayer/GameOverScreen/OverlayContent/MenuBox/BtnMenuGameover.text = u["main_menu"]
+
+	$UILayer/TouchControls/TouchLeft/Label.text = u["touch_left"]
+	$UILayer/TouchControls/TouchRight/Label.text = u["touch_right"]
+	touch_sword.text = u["touch_sword"]
+
+	_update_difficulty_panel()
 
 func _select_mode(m: String):
 	sound_system.play_click()
 	selected_mode = m
-	btn_classic.modulate = Color(1, 1, 1, 1) if m == "CLASSIC" else Color(0.6, 0.6, 0.6, 1)
-	btn_defense.modulate = Color(1, 1, 1, 1) if m == "DEFENSE" else Color(0.6, 0.6, 0.6, 1)
+	_update_button_states()
 	_update_difficulty_panel()
 
 func _select_difficulty(d: String):
 	sound_system.play_click()
 	selected_difficulty = d
+	_update_button_states()
 	_update_difficulty_panel()
 
+func _update_button_states():
+	# Mode Buttons
+	var mode_active_sb = StyleBoxFlat.new()
+	mode_active_sb.bg_color = Color("#f39c12")
+	mode_active_sb.border_color = Color("#f1c40f")
+	mode_active_sb.corner_radius_top_left = 6
+	mode_active_sb.corner_radius_top_right = 6
+	mode_active_sb.corner_radius_bottom_right = 6
+	mode_active_sb.corner_radius_bottom_left = 6
+
+	var mode_inactive_sb = StyleBoxFlat.new()
+	mode_inactive_sb.bg_color = Color("#16a085")
+	mode_inactive_sb.border_color = Color("#1abc9c")
+	mode_inactive_sb.corner_radius_top_left = 6
+	mode_inactive_sb.corner_radius_top_right = 6
+	mode_inactive_sb.corner_radius_bottom_right = 6
+	mode_inactive_sb.corner_radius_bottom_left = 6
+
+	btn_classic.add_theme_stylebox_override("normal", mode_active_sb if selected_mode == "CLASSIC" else mode_inactive_sb)
+	btn_defense.add_theme_stylebox_override("normal", mode_active_sb if selected_mode == "DEFENSE" else mode_inactive_sb)
+
+	# Difficulty Buttons
+	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DifficultyButtons
+	for btn in diff_grid.get_children():
+		if btn is Button and btn.has_meta("diff"):
+			var d_key = btn.get_meta("diff")
+			var is_act = (d_key == selected_difficulty)
+			var sb = StyleBoxFlat.new()
+			sb.corner_radius_top_left = 6
+			sb.corner_radius_top_right = 6
+			sb.corner_radius_bottom_right = 6
+			sb.corner_radius_bottom_left = 6
+
+			if d_key == "GOD":
+				sb.bg_color = Color("#9b59b6") if is_act else Color("#8e44ad")
+				sb.border_color = Color("#f1c40f") if is_act else Color("#9b59b6")
+			else:
+				sb.bg_color = Color("#e67e22") if is_act else Color("#34495e")
+				sb.border_color = Color("#f1c40f") if is_act else Color("#7f8c8d")
+
+			sb.border_width_left = 2
+			sb.border_width_top = 2
+			sb.border_width_right = 2
+			sb.border_width_bottom = 2
+			btn.add_theme_stylebox_override("normal", sb)
+
 func _update_difficulty_panel():
-	var mode_cfg = Config.GAME_MODES[selected_mode]
-	var diff_cfg = Config.DIFFICULTIES[selected_difficulty]
+	_update_button_states()
+	var mode_cfg = Config.GAME_MODES[current_lang][selected_mode]
+	var diff_cfg = Config.DIFFICULTIES[current_lang][selected_difficulty]
 	diff_title.text = mode_cfg["title"] + " - " + diff_cfg["title"]
 	diff_desc.text = mode_cfg["desc"] + "\n" + diff_cfg["desc"]
 	diff_stats.text = diff_cfg["stats"]
@@ -201,17 +387,19 @@ func toggle_pause():
 
 func start_game():
 	sound_system.play_click()
-	var diff_cfg = Config.DIFFICULTIES[selected_difficulty]
-	var mode_cfg = Config.GAME_MODES[selected_mode]
+	_update_layout_for_viewport()
+
+	var diff_num = Config.DIFFICULTIES_NUMERIC[selected_difficulty]
+	var mode_num = Config.GAME_MODES_NUMERIC[selected_mode]
 
 	score = 0
-	level = diff_cfg.get("startLevel", 1)
+	level = diff_num.get("startLevel", 1)
 	current_wave = 1
 	current_exp = 0
 	exp_to_next_level = 100
 	game_start_time = Time.get_ticks_msec() / 1000.0
 	last_spawn_time = game_start_time
-	current_spawn_interval = mode_cfg["initialSpawnInterval"] / 1000.0
+	current_spawn_interval = mode_num["initialSpawnInterval"] / 1000.0
 	last_shoot_time = 0.0
 	last_sword_time = 0.0
 	last_tower_shoot_time = 0.0
@@ -226,13 +414,15 @@ func start_game():
 	particles.clear()
 	floating_texts.clear()
 
+	var ground_y = view_height - 40.0
+
 	player = {
-		"x": Config.CANVAS_WIDTH / 2.0 - Config.PLAYER["WIDTH"] / 2.0,
-		"y": Config.CANVAS_HEIGHT - Config.PLAYER["HEIGHT"] - 40.0,
+		"x": view_width / 2.0 - Config.PLAYER["WIDTH"] / 2.0,
+		"y": ground_y - Config.PLAYER["HEIGHT"],
 		"width": Config.PLAYER["WIDTH"],
 		"height": Config.PLAYER["HEIGHT"],
-		"hp": diff_cfg["playerHp"],
-		"maxHp": diff_cfg["playerHp"],
+		"hp": diff_num["playerHp"],
+		"maxHp": diff_num["playerHp"],
 		"facing": "right",
 		"moving": false,
 		"invincibleTimer": 0.0
@@ -240,8 +430,8 @@ func start_game():
 
 	if selected_mode == "DEFENSE":
 		tower = {
-			"x": Config.CANVAS_WIDTH / 2.0 - Config.TOWER["WIDTH"] / 2.0,
-			"y": Config.CANVAS_HEIGHT - Config.TOWER["HEIGHT"] - 40.0,
+			"x": view_width / 2.0 - Config.TOWER["WIDTH"] / 2.0,
+			"y": ground_y - Config.TOWER["HEIGHT"],
 			"width": Config.TOWER["WIDTH"],
 			"height": Config.TOWER["HEIGHT"],
 			"hp": Config.TOWER["MAX_HP"],
@@ -295,7 +485,7 @@ func add_exp(amt: int):
 	_update_level_display()
 
 func add_score(pts: int):
-	var mult = Config.DIFFICULTIES[selected_difficulty]["scoreMultiplier"] * Config.GAME_MODES[selected_mode]["scoreMultiplier"]
+	var mult = Config.DIFFICULTIES_NUMERIC[selected_difficulty]["scoreMultiplier"] * Config.GAME_MODES_NUMERIC[selected_mode]["scoreMultiplier"]
 	score += int(round(pts * mult))
 	score_val.text = str(score)
 
@@ -339,7 +529,7 @@ func _update_game(delta: float):
 			player["facing"] = "left"
 			player["moving"] = true
 		elif move_right:
-			player["x"] = min(Config.CANVAS_WIDTH - Config.PLAYER["MOVE_BOUNDS_MARGIN"] - player["width"], player["x"] + move_speed)
+			player["x"] = min(view_width - Config.PLAYER["MOVE_BOUNDS_MARGIN"] - player["width"], player["x"] + move_speed)
 			player["facing"] = "right"
 			player["moving"] = true
 
@@ -357,8 +547,8 @@ func _update_game(delta: float):
 	# Wave & Spawn Progression
 	var elapsed = now - game_start_time
 	current_wave = 1 + int(elapsed / (Config.SPAWN["DIFFICULTY_RAMP_INTERVAL_MS"] / 1000.0))
-	var base_interval = Config.GAME_MODES[selected_mode]["initialSpawnInterval"]
-	var rate_mult = Config.DIFFICULTIES[selected_difficulty]["enemySpawnRateMultiplier"]
+	var base_interval = Config.GAME_MODES_NUMERIC[selected_mode]["initialSpawnInterval"]
+	var rate_mult = Config.DIFFICULTIES_NUMERIC[selected_difficulty]["enemySpawnRateMultiplier"]
 	var raw_interval = max(Config.SPAWN["MIN_INTERVAL_MS"], base_interval - (current_wave - 1) * Config.SPAWN["INTERVAL_DECREASE_STEP"])
 	current_spawn_interval = (raw_interval / 1000.0) * rate_mult
 
@@ -376,7 +566,7 @@ func _update_game(delta: float):
 	var new_shurikens = []
 	for s in shurikens:
 		s["x"] += s["vx"] * delta
-		if s["x"] >= -50 and s["x"] <= Config.CANVAS_WIDTH + 50:
+		if s["x"] >= -50 and s["x"] <= view_width + 50:
 			new_shurikens.append(s)
 	shurikens = new_shurikens
 
@@ -384,13 +574,13 @@ func _update_game(delta: float):
 	var new_arrows = []
 	for a in tower_arrows:
 		a["x"] += a["vx"] * delta
-		if a["x"] >= -50 and a["x"] <= Config.CANVAS_WIDTH + 50:
+		if a["x"] >= -50 and a["x"] <= view_width + 50:
 			new_arrows.append(a)
 	tower_arrows = new_arrows
 
 	# Update Enemies & Collisions
-	var diff_cfg = Config.DIFFICULTIES[selected_difficulty]
-	var enemy_speed_mult = diff_cfg["enemySpeedMultiplier"]
+	var diff_num = Config.DIFFICULTIES_NUMERIC[selected_difficulty]
+	var enemy_speed_mult = diff_num["enemySpeedMultiplier"]
 	var new_enemies = []
 
 	for e in enemies:
@@ -491,7 +681,7 @@ func _update_game(delta: float):
 
 		# Remove enemies reaching edges (Classic mode center defense)
 		if selected_mode == "CLASSIC":
-			if (e["vx"] > 0 and e["x"] > Config.CANVAS_WIDTH + 50) or (e["vx"] < 0 and e["x"] < -100):
+			if (e["vx"] > 0 and e["x"] > view_width + 50) or (e["vx"] < 0 and e["x"] < -100):
 				continue
 
 		new_enemies.append(e)
@@ -563,15 +753,16 @@ func spawn_enemy():
 	var side = "left" if randf() < 0.5 else "right"
 	var type_key = _pick_enemy_type()
 	var type = Config.ENEMY_TYPES[type_key]
-	var spawn_x = -type["width"] - 20.0 if side == "left" else Config.CANVAS_WIDTH + 20.0
+	var spawn_x = -type["width"] - 20.0 if side == "left" else view_width + 20.0
 	var vx = type["baseSpeed"] if side == "left" else -type["baseSpeed"]
-	var diff_hp_mult = Config.DIFFICULTIES[selected_difficulty]["enemyHpMultiplier"]
+	var diff_hp_mult = Config.DIFFICULTIES_NUMERIC[selected_difficulty]["enemyHpMultiplier"]
 	var hp_val = max(1, int(round(type["hp"] * diff_hp_mult)))
+	var ground_y = view_height - 40.0
 
 	enemies.append({
 		"type": type_key,
 		"x": spawn_x,
-		"y": Config.CANVAS_HEIGHT - type["height"] - 40.0,
+		"y": ground_y - type["height"],
 		"width": type["width"],
 		"height": type["height"],
 		"vx": vx,
@@ -632,10 +823,10 @@ func game_over():
 
 func _draw():
 	# Background
-	draw_rect(Rect2(0, 0, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT), Color("#111116"))
+	draw_rect(Rect2(0, 0, view_width, view_height), Color("#111116"))
 	# Ground
-	draw_rect(Rect2(0, Config.CANVAS_HEIGHT - 40, Config.CANVAS_WIDTH, 40), Color("#1a1c29"))
-	draw_line(Vector2(0, Config.CANVAS_HEIGHT - 40), Vector2(Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT - 40), Color("#f39c12"), 2.0)
+	draw_rect(Rect2(0, view_height - 40, view_width, 40), Color("#1a1c29"))
+	draw_line(Vector2(0, view_height - 40), Vector2(view_width, view_height - 40), Color("#f39c12"), 2.0)
 
 	if state == GameState.MENU: return
 
