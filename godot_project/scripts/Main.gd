@@ -15,7 +15,7 @@ var current_wave: int = 1
 var current_exp: int = 0
 var exp_to_next_level: int = 100
 
-var game_start_time: float = 0.0
+var game_time: float = 0.0
 var last_spawn_time: float = 0.0
 var current_spawn_interval: float = 1800.0
 var last_shoot_time: float = 0.0
@@ -47,6 +47,8 @@ var tex_ninja_idle_r: ImageTexture
 var tex_ninja_idle_l: ImageTexture
 var tex_ninja_run_r: ImageTexture
 var tex_ninja_run_l: ImageTexture
+var tex_heart_filled: ImageTexture
+var tex_heart_empty: ImageTexture
 var tex_shuriken: ImageTexture
 var tex_tower: ImageTexture
 var tex_arrow: ImageTexture
@@ -63,14 +65,14 @@ var custom_font: FontFile
 @onready var touch_controls: Control = $UILayer/TouchControls
 
 # HUD UI References
-@onready var hp_hearts: HBoxContainer = $UILayer/HUD/HpHearts
-@onready var tower_hp_container: HBoxContainer = $UILayer/HUD/TowerHpContainer
-@onready var tower_hp_val: Label = $UILayer/HUD/TowerHpContainer/TowerHpVal
-@onready var level_val: Label = $UILayer/HUD/LevelContainer/LevelVal
-@onready var wave_val: Label = $UILayer/HUD/WaveContainer/WaveVal
-@onready var exp_bar_fill: ColorRect = $UILayer/HUD/LevelContainer/ExpBarContainer/ExpBarFill
-@onready var score_val: Label = $UILayer/HUD/ScoreContainer/ScoreVal
-@onready var high_score_val: Label = $UILayer/HUD/HighScoreContainer/HighScoreVal
+@onready var hp_hearts: HBoxContainer = $UILayer/HUD/TopPanel/MarginContainer/HBox/HpContainer/HpHearts
+@onready var tower_hp_container: HBoxContainer = $UILayer/HUD/TopPanel/MarginContainer/HBox/TowerHpContainer
+@onready var tower_hp_val: Label = $UILayer/HUD/TopPanel/MarginContainer/HBox/TowerHpContainer/TowerHpVal
+@onready var level_val: Label = $UILayer/HUD/TopPanel/MarginContainer/HBox/LevelContainer/LevelVal
+@onready var wave_val: Label = $UILayer/HUD/TopPanel/MarginContainer/HBox/WaveContainer/WaveVal
+@onready var exp_bar_fill: ColorRect = $UILayer/HUD/TopPanel/MarginContainer/HBox/LevelContainer/ExpBarContainer/ExpBarFill
+@onready var score_val: Label = $UILayer/HUD/TopPanel/MarginContainer/HBox/ScoreContainer/ScoreVal
+@onready var high_score_val: Label = $UILayer/HUD/TopPanel/MarginContainer/HBox/HighScoreContainer/HighScoreVal
 
 # Menu UI References
 @onready var menu_overlay_content: VBoxContainer = $UILayer/MenuScreen/OverlayContent
@@ -144,9 +146,43 @@ func _apply_menu_box_styling():
 	start_sb.corner_radius_top_right = 8
 	start_sb.corner_radius_bottom_right = 8
 	start_sb.corner_radius_bottom_left = 8
-	btn_start.add_theme_stylebox_override("normal", start_sb)
-	btn_start.add_theme_stylebox_override("hover", start_sb)
-	btn_start.add_theme_stylebox_override("pressed", start_sb)
+
+	var start_hover_sb = start_sb.duplicate()
+	start_hover_sb.bg_color = Color("#ff6b6b")
+
+	for s_name in ["normal", "hover", "pressed", "focus"]:
+		btn_start.add_theme_stylebox_override(s_name, start_hover_sb if s_name == "hover" else start_sb)
+
+	# Style Pause, Language, Overlay & Touch Buttons
+	var default_blue_sb = StyleBoxFlat.new()
+	default_blue_sb.bg_color = Color("#2980b9")
+	default_blue_sb.border_color = Color("#3498db")
+	default_blue_sb.border_width_left = 2
+	default_blue_sb.border_width_top = 2
+	default_blue_sb.border_width_right = 2
+	default_blue_sb.border_width_bottom = 2
+	default_blue_sb.corner_radius_top_left = 6
+	default_blue_sb.corner_radius_top_right = 6
+	default_blue_sb.corner_radius_bottom_right = 6
+	default_blue_sb.corner_radius_bottom_left = 6
+
+	var pause_btn = $UILayer/HUD/BtnPause
+	var btn_resume = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnResume
+	var btn_restart_p = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnRestartPause
+	var btn_menu_p = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnMenuPause
+	var btn_restart_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnRestart
+	var btn_menu_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnMenuGameover
+
+	var all_other_buttons = [
+		pause_btn, lang_button, touch_sword,
+		btn_resume, btn_restart_p, btn_menu_p,
+		btn_restart_g, btn_menu_g
+	]
+
+	for btn in all_other_buttons:
+		if btn:
+			for s_name in ["normal", "hover", "pressed", "focus"]:
+				btn.add_theme_stylebox_override(s_name, default_blue_sb)
 
 func _on_viewport_resized():
 	_update_layout_for_viewport()
@@ -211,6 +247,8 @@ func _generate_textures():
 	tex_ninja_idle_l = PixelGenerator.create_ninja_texture(false, true)
 	tex_ninja_run_r = PixelGenerator.create_ninja_texture(true, false)
 	tex_ninja_run_l = PixelGenerator.create_ninja_texture(true, true)
+	tex_heart_filled = PixelGenerator.create_heart_texture(true)
+	tex_heart_empty = PixelGenerator.create_heart_texture(false)
 	tex_shuriken = PixelGenerator.create_shuriken_texture()
 	tex_tower = PixelGenerator.create_tower_texture(int(Config.TOWER["WIDTH"]), int(Config.TOWER["HEIGHT"]))
 	tex_arrow = PixelGenerator.create_arrow_texture()
@@ -295,12 +333,12 @@ func _update_language_ui():
 			var d_key = btn.get_meta("diff")
 			btn.text = u["diff_" + d_key.lower()]
 
-	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpLabel.text = u["hp_label"]
-	$UILayer/HUD/TowerHpContainer/TowerHpLabel.text = u["tower_label"]
-	$UILayer/HUD/LevelContainer/LevelLabel.text = u["level_label"]
-	$UILayer/HUD/WaveContainer/WaveLabel.text = u["wave_label"]
-	$UILayer/HUD/ScoreContainer/ScoreLabel.text = u["score_label"]
-	$UILayer/HUD/HighScoreContainer/HighScoreLabel.text = u["best_label"]
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpContainer/HpLabel.text = u["hp_label"]
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/TowerHpContainer/TowerHpLabel.text = u["tower_label"]
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/LevelContainer/LevelLabel.text = u["level_label"]
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/WaveContainer/WaveLabel.text = u["wave_label"]
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/ScoreContainer/ScoreLabel.text = u["score_label"]
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HighScoreContainer/HighScoreLabel.text = u["best_label"]
 
 	$UILayer/PauseScreen/OverlayContent/PauseTitle.text = u["paused_title"]
 	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnResume.text = u["resume"]
@@ -337,6 +375,10 @@ func _update_button_states():
 	var mode_active_sb = StyleBoxFlat.new()
 	mode_active_sb.bg_color = Color("#f39c12")
 	mode_active_sb.border_color = Color("#f1c40f")
+	mode_active_sb.border_width_left = 2
+	mode_active_sb.border_width_top = 2
+	mode_active_sb.border_width_right = 2
+	mode_active_sb.border_width_bottom = 2
 	mode_active_sb.corner_radius_top_left = 6
 	mode_active_sb.corner_radius_top_right = 6
 	mode_active_sb.corner_radius_bottom_right = 6
@@ -345,13 +387,18 @@ func _update_button_states():
 	var mode_inactive_sb = StyleBoxFlat.new()
 	mode_inactive_sb.bg_color = Color("#16a085")
 	mode_inactive_sb.border_color = Color("#1abc9c")
+	mode_inactive_sb.border_width_left = 2
+	mode_inactive_sb.border_width_top = 2
+	mode_inactive_sb.border_width_right = 2
+	mode_inactive_sb.border_width_bottom = 2
 	mode_inactive_sb.corner_radius_top_left = 6
 	mode_inactive_sb.corner_radius_top_right = 6
 	mode_inactive_sb.corner_radius_bottom_right = 6
 	mode_inactive_sb.corner_radius_bottom_left = 6
 
-	btn_classic.add_theme_stylebox_override("normal", mode_active_sb if selected_mode == "CLASSIC" else mode_inactive_sb)
-	btn_defense.add_theme_stylebox_override("normal", mode_active_sb if selected_mode == "DEFENSE" else mode_inactive_sb)
+	for s_name in ["normal", "hover", "pressed", "focus"]:
+		btn_classic.add_theme_stylebox_override(s_name, mode_active_sb if selected_mode == "CLASSIC" else mode_inactive_sb)
+		btn_defense.add_theme_stylebox_override(s_name, mode_active_sb if selected_mode == "DEFENSE" else mode_inactive_sb)
 
 	# Difficulty Buttons
 	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DifficultyButtons
@@ -376,7 +423,8 @@ func _update_button_states():
 			sb.border_width_top = 2
 			sb.border_width_right = 2
 			sb.border_width_bottom = 2
-			btn.add_theme_stylebox_override("normal", sb)
+			for s_name in ["normal", "hover", "pressed", "focus"]:
+				btn.add_theme_stylebox_override(s_name, sb)
 
 func _update_difficulty_panel():
 	_update_button_states()
@@ -414,12 +462,12 @@ func start_game():
 	current_wave = 1
 	current_exp = 0
 	exp_to_next_level = 100
-	game_start_time = Time.get_ticks_msec() / 1000.0
-	last_spawn_time = game_start_time
+	game_time = 0.0
+	last_spawn_time = 0.0
 	current_spawn_interval = mode_num["initialSpawnInterval"] / 1000.0
-	last_shoot_time = 0.0
-	last_sword_time = 0.0
-	last_tower_shoot_time = 0.0
+	last_shoot_time = -10.0
+	last_sword_time = -10.0
+	last_tower_shoot_time = -10.0
 	is_sword_attacking = false
 	sword_attack_timer = 0.0
 	is_player_dead_in_defense = false
@@ -467,11 +515,14 @@ func start_game():
 func _update_hp_display():
 	for c in hp_hearts.get_children():
 		c.queue_free()
-	for i in range(player["maxHp"]):
-		var lbl = Label.new()
-		lbl.text = "HP" if i < player["hp"] else "--"
-		if custom_font: lbl.add_theme_font_override("font", custom_font)
-		hp_hearts.add_child(lbl)
+	var max_hp = player.get("maxHp", 3)
+	var cur_hp = player.get("hp", 0)
+	for i in range(max_hp):
+		var heart_rect = TextureRect.new()
+		heart_rect.texture = tex_heart_filled if i < cur_hp else tex_heart_empty
+		heart_rect.custom_minimum_size = Vector2(16, 16)
+		heart_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		hp_hearts.add_child(heart_rect)
 
 func _update_tower_hp_display():
 	if selected_mode == "DEFENSE":
@@ -516,7 +567,7 @@ func _process(delta):
 	queue_redraw()
 
 func _update_game(delta: float):
-	var now = Time.get_ticks_msec() / 1000.0
+	game_time += delta
 
 	# Key inputs
 	var move_left = Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT) or key_left
@@ -550,8 +601,9 @@ func _update_game(delta: float):
 			player["facing"] = "right"
 			player["moving"] = true
 
-		if do_shoot:
-			shoot_shuriken()
+		# Auto shoot continuously on cooldown
+		shoot_shuriken()
+
 		if do_sword:
 			perform_sword_attack()
 
@@ -562,21 +614,20 @@ func _update_game(delta: float):
 			is_sword_attacking = false
 
 	# Wave & Spawn Progression
-	var elapsed = now - game_start_time
-	current_wave = 1 + int(elapsed / (Config.SPAWN["DIFFICULTY_RAMP_INTERVAL_MS"] / 1000.0))
+	current_wave = 1 + int(game_time / (Config.SPAWN["DIFFICULTY_RAMP_INTERVAL_MS"] / 1000.0))
 	var base_interval = Config.GAME_MODES_NUMERIC[selected_mode]["initialSpawnInterval"]
 	var rate_mult = Config.DIFFICULTIES_NUMERIC[selected_difficulty]["enemySpawnRateMultiplier"]
 	var raw_interval = max(Config.SPAWN["MIN_INTERVAL_MS"], base_interval - (current_wave - 1) * Config.SPAWN["INTERVAL_DECREASE_STEP"])
 	current_spawn_interval = (raw_interval / 1000.0) * rate_mult
 
-	if now - last_spawn_time >= current_spawn_interval:
-		last_spawn_time = now
+	if game_time - last_spawn_time >= current_spawn_interval:
+		last_spawn_time = game_time
 		spawn_enemy()
 
 	# Tower Auto Shooting (Defense Mode & Level 6+)
 	if selected_mode == "DEFENSE" and level >= Config.TOWER["AUTO_SHOOT_LEVEL"]:
-		if now - last_tower_shoot_time >= Config.TOWER["AUTO_SHOOT_COOLDOWN_MS"] / 1000.0:
-			last_tower_shoot_time = now
+		if game_time - last_tower_shoot_time >= Config.TOWER["AUTO_SHOOT_COOLDOWN_MS"] / 1000.0:
+			last_tower_shoot_time = game_time
 			tower_shoot_arrow()
 
 	# Update Shurikens
@@ -725,10 +776,9 @@ func _update_game(delta: float):
 	floating_texts = new_texts
 
 func shoot_shuriken():
-	var now = Time.get_ticks_msec() / 1000.0
-	if now - last_shoot_time < Config.PLAYER["SHOOT_COOLDOWN_MS"] / 1000.0: return
+	if game_time - last_shoot_time < Config.PLAYER["SHOOT_COOLDOWN_MS"] / 1000.0: return
 	if shurikens.size() >= Config.SHURIKEN["MAX_COUNT"]: return
-	last_shoot_time = now
+	last_shoot_time = game_time
 	sound_system.play_shuriken_throw()
 	var sz = _get_shuriken_size()
 	var dir = -1.0 if player["facing"] == "left" else 1.0
@@ -740,9 +790,8 @@ func shoot_shuriken():
 	})
 
 func perform_sword_attack():
-	var now = Time.get_ticks_msec() / 1000.0
-	if now - last_sword_time < Config.PLAYER["SWORD_COOLDOWN_MS"] / 1000.0: return
-	last_sword_time = now
+	if game_time - last_sword_time < Config.PLAYER["SWORD_COOLDOWN_MS"] / 1000.0: return
+	last_sword_time = game_time
 	is_sword_attacking = true
 	sword_attack_timer = Config.PLAYER["SWORD_DURATION_MS"] / 1000.0
 	sound_system.play_sword_slash()
