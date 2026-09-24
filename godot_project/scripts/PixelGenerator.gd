@@ -56,6 +56,32 @@ static func create_ninja_texture(is_running: bool = false, is_left: bool = false
 
 	return ImageTexture.create_from_image(img)
 
+static func create_heart_texture(is_filled: bool = true) -> ImageTexture:
+	var width = 16
+	var height = 16
+	var img = Image.create(width, height, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+
+	var col = Color("#e74c3c") if is_filled else Color("#444444")
+	var grid = [
+		[0,1,1,0,0,1,1,0],
+		[1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1],
+		[1,1,1,1,1,1,1,1],
+		[0,1,1,1,1,1,1,0],
+		[0,0,1,1,1,1,0,0],
+		[0,0,0,1,1,0,0,0]
+	]
+
+	for r in range(grid.size()):
+		for c in range(grid[r].size()):
+			if grid[r][c] == 1:
+				for dx in range(2):
+					for dy in range(2):
+						img.set_pixel(c * 2 + dx, r * 2 + dy, col)
+
+	return ImageTexture.create_from_image(img)
+
 static func create_shuriken_texture() -> ImageTexture:
 	var img = Image.create(16, 16, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
