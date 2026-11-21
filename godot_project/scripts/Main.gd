@@ -221,6 +221,7 @@ func _update_layout_for_viewport():
 	pa_box.offset_right = half_p
 
 	_layout_touch_controls()
+	_compact_hud()
 
 	if player.has("y"):
 		player["y"] = ground_y - player["height"]
@@ -230,6 +231,20 @@ func _update_layout_for_viewport():
 		tower["x"] = view_width / 2.0 - tower["width"] / 2.0
 	for en in enemies:
 		en["y"] = ground_y - en["height"]
+
+func _compact_hud():
+	var margin: MarginContainer = $UILayer/HUD/TopPanel/MarginContainer
+	margin.add_theme_constant_override("margin_right", int(54 * ui_scale_factor))
+	margin.add_theme_constant_override("margin_left", 8)
+	$UILayer/HUD/TopPanel/MarginContainer/HBox.add_theme_constant_override("separation", 8)
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpContainer/HpLabel.visible = false
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HighScoreContainer.visible = false
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/WaveContainer.visible = false
+	touch_controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for lbl in $UILayer/HUD/TopPanel.find_children("*", "Label", true, false):
+		lbl.add_theme_font_size_override("font_size", int(round(13 * ui_scale_factor)))
+	exp_bar_fill.get_parent().custom_minimum_size.x = 50.0
+	$UILayer/HUD/BtnPause.text = "II"
 
 func _touch_circle_center() -> Vector2:
 	return Vector2(view_width / 2.0, ctrl_top + (view_height - ctrl_top) * 0.5)
@@ -584,7 +599,7 @@ func _update_level_display():
 	level_val.text = str(level)
 	wave_val.text = str(current_wave)
 	var pct = clamp(float(current_exp) / float(exp_to_next_level), 0.0, 1.0)
-	exp_bar_fill.custom_minimum_size.x = pct * 70.0
+	exp_bar_fill.size.x = pct * 50.0
 
 func add_exp(amt: int):
 	current_exp += amt
@@ -1014,9 +1029,9 @@ func _draw_touch_controls(f: Font):
 		draw_circle(pc, pad_r, Color(0.16, 0.5, 0.73, 0.55 if on else 0.28))
 		draw_arc(pc, pad_r, 0, TAU, 48, Color(1, 1, 1, 0.45), 3.0)
 		draw_colored_polygon(PackedVector2Array([
-			pc + Vector2(-dir * pad_r * 0.3, 0),
-			pc + Vector2(dir * pad_r * 0.25, -pad_r * 0.35),
-			pc + Vector2(dir * pad_r * 0.25, pad_r * 0.35)]), Color(1, 1, 1, 0.92))
+			pc + Vector2(dir * pad_r * 0.3, 0),
+			pc + Vector2(-dir * pad_r * 0.25, -pad_r * 0.35),
+			pc + Vector2(-dir * pad_r * 0.25, pad_r * 0.35)]), Color(1, 1, 1, 0.92))
 		draw_string(f, pc + Vector2(-100, pad_r + 26), pad[3], HORIZONTAL_ALIGNMENT_CENTER, 200, 16, label_col)
 
 	draw_circle(c, r, Color(0.75, 0.22, 0.17, 0.75 if sword_held else 0.5))
