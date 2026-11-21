@@ -106,8 +106,8 @@ const TOWER = {
 const ENEMY_TYPES = {
 	"NORMAL": {
 		"id": "NORMAL",
-		"width": 48.0,
-		"height": 60.0,
+		"width": 42.0,
+		"height": 52.0,
 		"baseSpeed": 80.0,
 		"hp": 1,
 		"expValue": 10,
@@ -118,8 +118,8 @@ const ENEMY_TYPES = {
 	},
 	"FAST": {
 		"id": "FAST",
-		"width": 40.0,
-		"height": 56.0,
+		"width": 34.0,
+		"height": 48.0,
 		"baseSpeed": 160.0,
 		"hp": 1,
 		"expValue": 15,
@@ -130,8 +130,8 @@ const ENEMY_TYPES = {
 	},
 	"TANK": {
 		"id": "TANK",
-		"width": 56.0,
-		"height": 68.0,
+		"width": 72.0,
+		"height": 88.0,
 		"baseSpeed": 45.0,
 		"hp": 3,
 		"expValue": 35,
@@ -142,8 +142,8 @@ const ENEMY_TYPES = {
 	},
 	"SHADOW": {
 		"id": "SHADOW",
-		"width": 44.0,
-		"height": 60.0,
+		"width": 38.0,
+		"height": 52.0,
 		"baseSpeed": 220.0,
 		"hp": 1,
 		"expValue": 25,
@@ -154,8 +154,8 @@ const ENEMY_TYPES = {
 	},
 	"BOSS": {
 		"id": "BOSS",
-		"width": 60.0,
-		"height": 72.0,
+		"width": 96.0,
+		"height": 116.0,
 		"baseSpeed": 35.0,
 		"hp": 10,
 		"expValue": 100,
