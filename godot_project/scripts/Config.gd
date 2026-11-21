@@ -79,7 +79,7 @@ const UI_TEXT = {
 
 const PLAYER = {
 	"WIDTH": 48.0,
-	"HEIGHT": 48.0,
+	"HEIGHT": 72.0,
 	"SPEED": 320.0,
 	"SHOOT_COOLDOWN_MS": 200.0,
 	"SWORD_COOLDOWN_MS": 300.0,
@@ -90,7 +90,7 @@ const PLAYER = {
 }
 
 const SHURIKEN = {
-	"BASE_SIZE": 16.0,
+	"BASE_SIZE": 18.0,
 	"SPEED": 520.0,
 	"MAX_COUNT": 30
 }
@@ -106,7 +106,7 @@ const TOWER = {
 const ENEMY_TYPES = {
 	"NORMAL": {
 		"id": "NORMAL",
-		"width": 42.0,
+		"width": 36.0,
 		"height": 42.0,
 		"baseSpeed": 80.0,
 		"hp": 1,
@@ -118,8 +118,8 @@ const ENEMY_TYPES = {
 	},
 	"FAST": {
 		"id": "FAST",
-		"width": 36.0,
-		"height": 36.0,
+		"width": 30.0,
+		"height": 35.0,
 		"baseSpeed": 160.0,
 		"hp": 1,
 		"expValue": 15,
@@ -130,8 +130,8 @@ const ENEMY_TYPES = {
 	},
 	"TANK": {
 		"id": "TANK",
-		"width": 58.0,
-		"height": 58.0,
+		"width": 48.0,
+		"height": 56.0,
 		"baseSpeed": 45.0,
 		"hp": 3,
 		"expValue": 35,
@@ -142,8 +142,8 @@ const ENEMY_TYPES = {
 	},
 	"SHADOW": {
 		"id": "SHADOW",
-		"width": 38.0,
-		"height": 38.0,
+		"width": 33.0,
+		"height": 39.0,
 		"baseSpeed": 220.0,
 		"hp": 1,
 		"expValue": 25,
@@ -154,8 +154,8 @@ const ENEMY_TYPES = {
 	},
 	"BOSS": {
 		"id": "BOSS",
-		"width": 80.0,
-		"height": 80.0,
+		"width": 60.0,
+		"height": 70.0,
 		"baseSpeed": 35.0,
 		"hp": 10,
 		"expValue": 100,

@@ -43,17 +43,24 @@ var particles: Array = []
 var floating_texts: Array = []
 
 # Textures
-var tex_ninja_idle_r: ImageTexture
-var tex_ninja_idle_l: ImageTexture
-var tex_ninja_run_r: ImageTexture
-var tex_ninja_run_l: ImageTexture
-var tex_heart_filled: ImageTexture
-var tex_heart_empty: ImageTexture
-var tex_shuriken: ImageTexture
-var tex_tower: ImageTexture
-var tex_arrow: ImageTexture
+var tex_ninja_idle_r: Texture2D
+var tex_ninja_idle_l: Texture2D
+var tex_ninja_run_r: Texture2D
+var tex_ninja_run_l: Texture2D
+var tex_heart_filled: Texture2D
+var tex_heart_empty: Texture2D
+var tex_shuriken: Texture2D
+var tex_tower: Texture2D
+var tex_arrow: Texture2D
 var enemy_textures: Dictionary = {}
 var custom_font: FontFile
+var tex_background: Texture2D
+
+# Portrait layout (set in _update_layout_for_viewport)
+const PLAYFIELD_RATIO := 0.62
+var ground_y: float = 523.0
+var ctrl_top: float = 607.0
+var sword_held: bool = false
 
 # Node References
 @onready var sound_system: SoundSystem = $SoundSystem
@@ -191,35 +198,80 @@ func _update_layout_for_viewport():
 	var vp_size = get_viewport_rect().size
 	view_width = vp_size.x
 	view_height = vp_size.y
-	is_portrait = view_height > view_width
+	is_portrait = view_height >= view_width
 
-	# Calculate dynamic UI scale factor for mobile screens
-	if is_portrait:
-		ui_scale_factor = clamp(view_width / 390.0, 1.0, 2.2)
-		menu_overlay_content.custom_minimum_size = Vector2(min(view_width - 16.0, 600.0), 0)
-		touch_left.size = Vector2(view_width * 0.45, view_height)
-		touch_right.size = Vector2(view_width * 0.45, view_height)
-		touch_right.position = Vector2(view_width * 0.55, 0)
-		touch_sword.custom_minimum_size = Vector2(140.0 * ui_scale_factor, 60.0 * ui_scale_factor)
-	else:
-		ui_scale_factor = clamp(view_height / 540.0, 1.0, 1.8)
-		menu_overlay_content.custom_minimum_size = Vector2(560.0, 0)
-		touch_left.size = Vector2(320.0, view_height)
-		touch_right.size = Vector2(320.0, view_height)
-		touch_right.position = Vector2(view_width - 320.0, 0)
-
-	# Apply dynamic font scaling across UI Controls
+	ui_scale_factor = clamp(view_width / 390.0, 1.0, 1.5)
 	_apply_font_scaling_recursively(ui_layer, ui_scale_factor)
 
-	# Adjust entities ground position if playing
-	var ground_y = view_height - 40.0
+	# Play field occupies the upper part; controls sit below the ground line
+	ground_y = view_height * PLAYFIELD_RATIO
+	ctrl_top = ground_y + 84.0 * ui_scale_factor
+
+	menu_overlay_content.custom_minimum_size = Vector2(min(view_width - 24.0, 600.0), 0)
+	for lbl in [diff_title, diff_desc, diff_stats]:
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	var half_go = min(200.0, view_width / 2.0 - 12.0)
+	var go_box = $UILayer/GameOverScreen/OverlayContent
+	go_box.offset_left = -half_go
+	go_box.offset_right = half_go
+	var half_p = min(160.0, view_width / 2.0 - 12.0)
+	var pa_box = $UILayer/PauseScreen/OverlayContent
+	pa_box.offset_left = -half_p
+	pa_box.offset_right = half_p
+
+	_layout_touch_controls()
+	_compact_hud()
+
 	if player.has("y"):
 		player["y"] = ground_y - player["height"]
 		player["x"] = clamp(player["x"], 0.0, max(0.0, view_width - player["width"]))
-	for en in enemies:
-		en["y"] = ground_y - en["height"]
 	if tower.has("y"):
 		tower["y"] = ground_y - tower["height"]
+		tower["x"] = view_width / 2.0 - tower["width"] / 2.0
+	for en in enemies:
+		en["y"] = ground_y - en["height"]
+
+func _compact_hud():
+	var margin: MarginContainer = $UILayer/HUD/TopPanel/MarginContainer
+	margin.add_theme_constant_override("margin_right", int(54 * ui_scale_factor))
+	margin.add_theme_constant_override("margin_left", 8)
+	$UILayer/HUD/TopPanel/MarginContainer/HBox.add_theme_constant_override("separation", 8)
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpContainer/HpLabel.visible = false
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/HighScoreContainer.visible = false
+	$UILayer/HUD/TopPanel/MarginContainer/HBox/WaveContainer.visible = false
+	touch_controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for lbl in $UILayer/HUD/TopPanel.find_children("*", "Label", true, false):
+		lbl.add_theme_font_size_override("font_size", int(round(13 * ui_scale_factor)))
+	exp_bar_fill.get_parent().custom_minimum_size.x = 50.0
+	$UILayer/HUD/BtnPause.text = "II"
+
+func _touch_circle_center() -> Vector2:
+	return Vector2(view_width / 2.0, ctrl_top + (view_height - ctrl_top) * 0.5)
+
+func _sword_radius() -> float:
+	return clamp(view_width * 0.12, 36.0, 56.0)
+
+func _layout_touch_controls():
+	var zone_h = view_height - ctrl_top
+	var zone_w = view_width * 0.36
+	touch_left.position = Vector2(0, ctrl_top)
+	touch_left.size = Vector2(zone_w, zone_h)
+	touch_right.position = Vector2(view_width - zone_w, ctrl_top)
+	touch_right.size = Vector2(zone_w, zone_h)
+	# Zones are invisible hit areas; visuals are drawn in _draw_touch_controls
+	for z in [touch_left, touch_right]:
+		z.color = Color(0, 0, 0, 0)
+		for c in z.get_children():
+			c.visible = false
+	var c = _touch_circle_center()
+	var r = _sword_radius()
+	touch_sword.position = Vector2(c.x - r, c.y - r)
+	touch_sword.size = Vector2(r * 2.0, r * 2.0)
+	var empty = StyleBoxEmpty.new()
+	for s_name in ["normal", "hover", "pressed", "focus", "disabled"]:
+		touch_sword.add_theme_stylebox_override(s_name, empty)
+	touch_sword.text = ""
 
 func _setup_custom_font():
 	if ResourceLoader.exists("res://fonts/NotoSansTC-Regular.ttf"):
@@ -246,23 +298,19 @@ func _apply_font_scaling_recursively(node: Node, scale_mult: float):
 		_apply_font_scaling_recursively(child, scale_mult)
 
 func _generate_textures():
-	tex_ninja_idle_r = PixelGenerator.create_ninja_texture(false, false)
-	tex_ninja_idle_l = PixelGenerator.create_ninja_texture(false, true)
-	tex_ninja_run_r = PixelGenerator.create_ninja_texture(true, false)
-	tex_ninja_run_l = PixelGenerator.create_ninja_texture(true, true)
-	tex_heart_filled = PixelGenerator.create_heart_texture(true)
-	tex_heart_empty = PixelGenerator.create_heart_texture(false)
-	tex_shuriken = PixelGenerator.create_shuriken_texture()
-	tex_tower = PixelGenerator.create_tower_texture(int(Config.TOWER["WIDTH"]), int(Config.TOWER["HEIGHT"]))
-	tex_arrow = PixelGenerator.create_arrow_texture()
-
+	tex_background = load("res://art/background.png")
+	tex_ninja_idle_r = load("res://art/ninja_idle_r.png")
+	tex_ninja_idle_l = load("res://art/ninja_idle_l.png")
+	tex_ninja_run_r = load("res://art/ninja_run_r.png")
+	tex_ninja_run_l = load("res://art/ninja_run_l.png")
+	tex_heart_filled = load("res://art/heart_full.png")
+	tex_heart_empty = load("res://art/heart_empty.png")
+	tex_shuriken = load("res://art/shuriken.png")
+	tex_tower = load("res://art/tower.png")
+	tex_arrow = load("res://art/tower_arrow.png")
 	for k in Config.ENEMY_TYPES.keys():
-		var type = Config.ENEMY_TYPES[k]
-		var sub_c = Color("#c0392b") if k == "NORMAL" else (Color("#f39c12") if k == "FAST" else (Color("#9b59b6") if k == "TANK" else (Color("#2c3e50") if k == "SHADOW" else Color("#e74c3c"))))
-		enemy_textures[k] = {
-			"right": PixelGenerator.create_enemy_texture(type["color"], sub_c, int(type["width"]), int(type["height"]), false),
-			"left": PixelGenerator.create_enemy_texture(type["color"], sub_c, int(type["width"]), int(type["height"]), true)
-		}
+		var base = "res://art/enemy_%s_" % k.to_lower()
+		enemy_textures[k] = {"right": load(base + "r.png"), "left": load(base + "l.png")}
 
 func _load_high_score():
 	high_score = 0
@@ -311,6 +359,8 @@ func _connect_ui_signals():
 			key_right = event.pressed
 	)
 	touch_sword.pressed.connect(func(): perform_sword_attack())
+	touch_sword.button_down.connect(func(): sword_held = true)
+	touch_sword.button_up.connect(func(): sword_held = false)
 
 func _toggle_language():
 	current_lang = "en" if current_lang == "zh" else "zh"
@@ -484,7 +534,6 @@ func start_game():
 	particles.clear()
 	floating_texts.clear()
 
-	var ground_y = view_height - 40.0
 
 	player = {
 		"x": view_width / 2.0 - Config.PLAYER["WIDTH"] / 2.0,
@@ -526,7 +575,7 @@ func _update_hp_display():
 	if max_hp > 10:
 		var icon = TextureRect.new()
 		icon.texture = tex_heart_filled
-		icon.custom_minimum_size = Vector2(16, 16)
+		icon.custom_minimum_size = Vector2(18, 16)
 		hp_hearts.add_child(icon)
 		var lbl = Label.new()
 		lbl.text = "x" + str(max(cur_hp, 0))
@@ -537,7 +586,7 @@ func _update_hp_display():
 	for i in range(max_hp):
 		var heart_rect = TextureRect.new()
 		heart_rect.texture = tex_heart_filled if i < cur_hp else tex_heart_empty
-		heart_rect.custom_minimum_size = Vector2(16, 16)
+		heart_rect.custom_minimum_size = Vector2(18, 16)
 		heart_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hp_hearts.add_child(heart_rect)
 
@@ -550,7 +599,7 @@ func _update_level_display():
 	level_val.text = str(level)
 	wave_val.text = str(current_wave)
 	var pct = clamp(float(current_exp) / float(exp_to_next_level), 0.0, 1.0)
-	exp_bar_fill.custom_minimum_size.x = pct * 70.0
+	exp_bar_fill.size.x = pct * 50.0
 
 func add_exp(amt: int):
 	current_exp += amt
@@ -717,7 +766,7 @@ func _update_game(delta: float):
 		# Check Tower Arrow Collisions
 		for a in tower_arrows:
 			if a.get("hit", false): continue
-			var a_rect = Rect2(a["x"] - 12, a["y"] - 4, 24, 8)
+			var a_rect = Rect2(a["x"] - 18, a["y"] - 4.5, 36, 9)
 			var e_rect = Rect2(e["x"], e["y"], e["width"], e["height"])
 			if a_rect.intersects(e_rect):
 				a["hit"] = true
@@ -844,7 +893,6 @@ func spawn_enemy():
 	var vx = type["baseSpeed"] if side == "left" else -type["baseSpeed"]
 	var diff_hp_mult = Config.DIFFICULTIES_NUMERIC[selected_difficulty]["enemyHpMultiplier"]
 	var hp_val = max(1, int(round(type["hp"] * diff_hp_mult)))
-	var ground_y = view_height - 40.0
 
 	enemies.append({
 		"type": type_key,
@@ -909,20 +957,14 @@ func game_over():
 	new_record_tag.visible = is_new
 
 func _draw():
-	# Background
-	draw_rect(Rect2(0, 0, view_width, view_height), Color("#111116"))
-	# Ground
-	draw_rect(Rect2(0, view_height - 40, view_width, 40), Color("#1a1c29"))
-	draw_line(Vector2(0, view_height - 40), Vector2(view_width, view_height - 40), Color("#f39c12"), 2.0)
-
+	var f: Font = custom_font if custom_font else ThemeDB.fallback_font
+	draw_texture_rect(tex_background, Rect2(0, 0, view_width, view_height), false)
 	if state == GameState.MENU: return
 
-	# Draw Tower
-	if selected_mode == "DEFENSE":
-		draw_texture(tex_tower, Vector2(tower["x"], tower["y"]))
+	if selected_mode == "DEFENSE" and not tower.is_empty():
+		draw_texture_rect(tex_tower, Rect2(tower["x"], tower["y"], tower["width"], tower["height"]), false)
 
-	# Draw Player
-	if not is_player_dead_in_defense:
+	if not is_player_dead_in_defense and not player.is_empty():
 		var p_tex = tex_ninja_run_r if player["moving"] and player["facing"] == "right" else (
 			tex_ninja_run_l if player["moving"] and player["facing"] == "left" else (
 				tex_ninja_idle_r if player["facing"] == "right" else tex_ninja_idle_l
@@ -930,50 +972,68 @@ func _draw():
 		)
 		var is_inv = (player["invincibleTimer"] > 0.0 and fmod(player["invincibleTimer"] * 10.0, 1.0) > 0.5)
 		if not is_inv:
-			draw_texture(p_tex, Vector2(player["x"], player["y"]))
+			draw_texture_rect(p_tex, Rect2(player["x"], player["y"], player["width"], player["height"]), false)
 
-		# Draw Sword Slash Visual
 		if is_sword_attacking:
 			var s_range = _get_sword_range()
 			var p_center_x = player["x"] + player["width"] / 2.0
 			var p_center_y = player["y"] + player["height"] / 2.0
-			var arc_color = Color(0.9, 0.2, 0.2, 0.6)
 			if selected_difficulty == "GOD":
-				draw_circle(Vector2(p_center_x, p_center_y), s_range, Color(1, 0.8, 0.2, 0.4))
+				draw_circle(Vector2(p_center_x, p_center_y), s_range, Color(1, 0.8, 0.2, 0.35))
 			else:
 				var start_a = -PI / 3.0 if player["facing"] == "right" else PI - PI / 3.0
 				var end_a = PI / 3.0 if player["facing"] == "right" else PI + PI / 3.0
-				draw_arc(Vector2(p_center_x, p_center_y), s_range, start_a, end_a, 16, arc_color, 8.0)
+				draw_arc(Vector2(p_center_x, p_center_y), s_range, start_a, end_a, 16, Color(1, 0.85, 0.3, 0.9), 6.0)
 
-	# Draw Enemies
 	for e in enemies:
 		var side_str = "right" if e["vx"] > 0 else "left"
 		var tex = enemy_textures[e["type"]][side_str]
-		draw_texture(tex, Vector2(e["x"], e["y"]))
-		# HP Bar if hp > 1
+		draw_texture_rect(tex, Rect2(e["x"], e["y"], e["width"], e["height"]), false)
 		if e["maxHp"] > 1:
-			var bar_w = e["width"]
-			var hp_pct = float(e["hp"]) / float(e["maxHp"])
-			draw_rect(Rect2(e["x"], e["y"] - 8, bar_w, 4), Color("#000000"))
-			draw_rect(Rect2(e["x"], e["y"] - 8, bar_w * hp_pct, 4), Color("#e74c3c"))
+			var hp_pct = clamp(float(e["hp"]) / float(e["maxHp"]), 0.0, 1.0)
+			draw_rect(Rect2(e["x"], e["y"] - 8, e["width"], 4), Color("#000000"))
+			draw_rect(Rect2(e["x"], e["y"] - 8, e["width"] * hp_pct, 4), Color("#2ecc71"))
 
-	# Draw Shurikens
 	for s in shurikens:
-		draw_texture(tex_shuriken, Vector2(s["x"], s["y"]))
+		draw_texture_rect(tex_shuriken, Rect2(s["x"], s["y"], s["size"], s["size"]), false)
 
-	# Draw Tower Arrows
 	for a in tower_arrows:
 		draw_set_transform(Vector2(a["x"], a["y"]), Vector2(a["vx"], a["vy"]).angle(), Vector2.ONE)
-		draw_texture(tex_arrow, Vector2(-12, -4))
+		draw_texture_rect(tex_arrow, Rect2(-18, -4.5, 36, 9), false)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
-	# Draw Particles
 	for p in particles:
-		draw_rect(Rect2(p["x"], p["y"], 3, 3), p["color"])
+		draw_rect(Rect2(p["x"], p["y"], 4, 4), p["color"])
 
-	# Draw Floating Text
-	var active_font = custom_font if custom_font else ThemeDB.fallback_font
 	for ft in floating_texts:
 		var c = ft["color"]
 		c.a = clamp(ft["life"], 0.0, 1.0)
-		draw_string(active_font, Vector2(ft["x"] - 30, ft["y"]), ft["text"], HORIZONTAL_ALIGNMENT_CENTER, -1, 14, c)
+		draw_string(f, Vector2(ft["x"] - 60, ft["y"]), ft["text"], HORIZONTAL_ALIGNMENT_CENTER, 120, 14, c)
+
+	if state == GameState.PLAYING:
+		_draw_touch_controls(f)
+
+func _draw_touch_controls(f: Font):
+	var u = Config.UI_TEXT[current_lang]
+	var c = _touch_circle_center()
+	var r = _sword_radius()
+	var pad_r = clamp(view_width * 0.13, 40.0, 60.0)
+	var lc = Vector2(view_width * 0.2, c.y)
+	var rc = Vector2(view_width * 0.8, c.y)
+	var label_col = Color(0.8, 0.83, 0.85, 0.9)
+
+	for pad in [[lc, key_left, -1.0, u["touch_left"]], [rc, key_right, 1.0, u["touch_right"]]]:
+		var pc: Vector2 = pad[0]
+		var on: bool = pad[1]
+		var dir: float = pad[2]
+		draw_circle(pc, pad_r, Color(0.16, 0.5, 0.73, 0.55 if on else 0.28))
+		draw_arc(pc, pad_r, 0, TAU, 48, Color(1, 1, 1, 0.45), 3.0)
+		draw_colored_polygon(PackedVector2Array([
+			pc + Vector2(dir * pad_r * 0.3, 0),
+			pc + Vector2(-dir * pad_r * 0.25, -pad_r * 0.35),
+			pc + Vector2(-dir * pad_r * 0.25, pad_r * 0.35)]), Color(1, 1, 1, 0.92))
+		draw_string(f, pc + Vector2(-100, pad_r + 26), pad[3], HORIZONTAL_ALIGNMENT_CENTER, 200, 16, label_col)
+
+	draw_circle(c, r, Color(0.75, 0.22, 0.17, 0.75 if sword_held else 0.5))
+	draw_arc(c, r, 0, TAU, 48, Color(1, 0.6, 0.55, 0.7), 3.0)
+	draw_string(f, c + Vector2(-r, 7), u["touch_sword"], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, 18, Color.WHITE)
