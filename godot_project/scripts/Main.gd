@@ -80,8 +80,8 @@ var custom_font: FontFile
 @onready var title_ninja_left: TextureRect = $UILayer/MenuScreen/OverlayContent/TitleHBox/TitleNinjaLeft
 @onready var title_ninja_right: TextureRect = $UILayer/MenuScreen/OverlayContent/TitleHBox/TitleNinjaRight
 @onready var diff_title: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffTitle
-@onready var diff_desc: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDesc
-@onready var diff_stats: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffStats
+@onready var diff_desc: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffDesc
+@onready var diff_stats: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffStats
 @onready var btn_classic: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeButtons/BtnClassic
 @onready var btn_defense: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeButtons/BtnDefense
 @onready var btn_start: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/BtnStart
@@ -215,6 +215,9 @@ func _update_layout_for_viewport():
 	var ground_y = view_height - 40.0
 	if player.has("y"):
 		player["y"] = ground_y - player["height"]
+		player["x"] = clamp(player["x"], 0.0, max(0.0, view_width - player["width"]))
+	for en in enemies:
+		en["y"] = ground_y - en["height"]
 	if tower.has("y"):
 		tower["y"] = ground_y - tower["height"]
 
@@ -300,11 +303,11 @@ func _connect_ui_signals():
 
 	# Touch Controls
 	touch_left.gui_input.connect(func(event):
-		if event is InputEventScreenTouch or event is InputEventMouseButton:
+		if event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT):
 			key_left = event.pressed
 	)
 	touch_right.gui_input.connect(func(event):
-		if event is InputEventScreenTouch or event is InputEventMouseButton:
+		if event is InputEventScreenTouch or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT):
 			key_right = event.pressed
 	)
 	touch_sword.pressed.connect(func(): perform_sword_attack())
@@ -331,7 +334,7 @@ func _update_language_ui():
 	for btn in diff_grid.get_children():
 		if btn is Button and btn.has_meta("diff"):
 			var d_key = btn.get_meta("diff")
-			btn.text = u["diff_" + d_key.lower()]
+			btn.text = u["diff_" + d_key.to_lower()]
 
 	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpContainer/HpLabel.text = u["hp_label"]
 	$UILayer/HUD/TopPanel/MarginContainer/HBox/TowerHpContainer/TowerHpLabel.text = u["tower_label"]
@@ -436,6 +439,8 @@ func _update_difficulty_panel():
 
 func _set_state(new_state: GameState):
 	state = new_state
+	key_left = false
+	key_right = false
 	menu_screen.visible = (state == GameState.MENU)
 	pause_screen.visible = (state == GameState.PAUSED)
 	gameover_screen.visible = (state == GameState.GAMEOVER)
@@ -514,9 +519,21 @@ func start_game():
 
 func _update_hp_display():
 	for c in hp_hearts.get_children():
+		hp_hearts.remove_child(c)
 		c.queue_free()
 	var max_hp = player.get("maxHp", 3)
 	var cur_hp = player.get("hp", 0)
+	if max_hp > 10:
+		var icon = TextureRect.new()
+		icon.texture = tex_heart_filled
+		icon.custom_minimum_size = Vector2(16, 16)
+		hp_hearts.add_child(icon)
+		var lbl = Label.new()
+		lbl.text = "x" + str(max(cur_hp, 0))
+		if custom_font:
+			lbl.add_theme_font_override("font", custom_font)
+		hp_hearts.add_child(lbl)
+		return
 	for i in range(max_hp):
 		var heart_rect = TextureRect.new()
 		heart_rect.texture = tex_heart_filled if i < cur_hp else tex_heart_empty
@@ -558,7 +575,7 @@ func add_score(pts: int):
 	score_val.text = str(score)
 
 func _unhandled_input(event):
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("ui_cancel") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_P):
 		toggle_pause()
 
 func _process(delta):
@@ -567,12 +584,12 @@ func _process(delta):
 	queue_redraw()
 
 func _update_game(delta: float):
+	delta = min(delta, 0.05)
 	game_time += delta
 
 	# Key inputs
 	var move_left = Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT) or key_left
 	var move_right = Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT) or key_right
-	var do_shoot = Input.is_key_pressed(KEY_SPACE) or move_left or move_right
 	var do_sword = Input.is_key_pressed(KEY_J) or Input.is_key_pressed(KEY_Z)
 
 	# Handle Player Invincibility
@@ -585,6 +602,7 @@ func _update_game(delta: float):
 		if player_respawn_timer <= 0.0:
 			is_player_dead_in_defense = false
 			player["hp"] = player["maxHp"]
+			player["x"] = view_width / 2.0 - player["width"] / 2.0
 			player["invincibleTimer"] = Config.PLAYER["INVINCIBILITY_DURATION_MS"] / 1000.0
 			_update_hp_display()
 
@@ -614,11 +632,14 @@ func _update_game(delta: float):
 			is_sword_attacking = false
 
 	# Wave & Spawn Progression
-	current_wave = 1 + int(game_time / (Config.SPAWN["DIFFICULTY_RAMP_INTERVAL_MS"] / 1000.0))
+	var new_wave = 1 + int(game_time / (Config.SPAWN["DIFFICULTY_RAMP_INTERVAL_MS"] / 1000.0))
+	if new_wave != current_wave:
+		current_wave = new_wave
+		_update_level_display()
 	var base_interval = Config.GAME_MODES_NUMERIC[selected_mode]["initialSpawnInterval"]
 	var rate_mult = Config.DIFFICULTIES_NUMERIC[selected_difficulty]["enemySpawnRateMultiplier"]
 	var raw_interval = max(Config.SPAWN["MIN_INTERVAL_MS"], base_interval - (current_wave - 1) * Config.SPAWN["INTERVAL_DECREASE_STEP"])
-	current_spawn_interval = (raw_interval / 1000.0) * rate_mult
+	current_spawn_interval = max(Config.SPAWN["MIN_INTERVAL_MS"] / 1000.0, (raw_interval / 1000.0) * rate_mult)
 
 	if game_time - last_spawn_time >= current_spawn_interval:
 		last_spawn_time = game_time
@@ -642,7 +663,8 @@ func _update_game(delta: float):
 	var new_arrows = []
 	for a in tower_arrows:
 		a["x"] += a["vx"] * delta
-		if a["x"] >= -50 and a["x"] <= view_width + 50:
+		a["y"] += a["vy"] * delta
+		if a["x"] >= -50 and a["x"] <= view_width + 50 and a["y"] >= -50 and a["y"] <= view_height + 50:
 			new_arrows.append(a)
 	tower_arrows = new_arrows
 
@@ -655,7 +677,7 @@ func _update_game(delta: float):
 		e["x"] += e["vx"] * enemy_speed_mult * delta
 
 		# Check Sword Slash Attack Hit
-		if is_sword_attacking:
+		if is_sword_attacking and not e.get("slashed", false):
 			var s_range = _get_sword_range()
 			var p_center_x = player["x"] + player["width"] / 2.0
 			var is_god = (selected_difficulty == "GOD")
@@ -668,6 +690,7 @@ func _update_game(delta: float):
 				in_range = true
 
 			if in_range:
+				e["slashed"] = true
 				var dmg = 10 if is_god else 2
 				e["hp"] -= dmg
 				sound_system.play_enemy_hit()
@@ -687,14 +710,14 @@ func _update_game(delta: float):
 			var e_rect = Rect2(e["x"], e["y"], e["width"], e["height"])
 			if s_rect.intersects(e_rect):
 				s["hit"] = true
-				e["hp"] -= 1
+				e["hp"] -= 1 + int((level - 1) * 0.5)
 				sound_system.play_enemy_hit()
 				_add_particles(e["x"] + e["width"] / 2.0, e["y"] + e["height"] / 2.0, Color("#f39c12"), Config.PARTICLES["HIT_COUNT"])
 
 		# Check Tower Arrow Collisions
 		for a in tower_arrows:
 			if a.get("hit", false): continue
-			var a_rect = Rect2(a["x"], a["y"], 24, 8)
+			var a_rect = Rect2(a["x"] - 12, a["y"] - 4, 24, 8)
 			var e_rect = Rect2(e["x"], e["y"], e["width"], e["height"])
 			if a_rect.intersects(e_rect):
 				a["hit"] = true
@@ -708,7 +731,6 @@ func _update_game(delta: float):
 
 		# Check Enemy Death
 		if e["hp"] <= 0:
-			sound_system.play_enemy_hit()
 			_add_particles(e["x"] + e["width"] / 2.0, e["y"] + e["height"] / 2.0, e["color"], Config.PARTICLES["DEATH_COUNT"])
 			add_score(e["scoreValue"])
 			add_exp(e["expValue"])
@@ -738,7 +760,7 @@ func _update_game(delta: float):
 			var t_rect = Rect2(tower["x"], tower["y"], tower["width"], tower["height"])
 			var e_rect = Rect2(e["x"], e["y"], e["width"], e["height"])
 			if t_rect.intersects(e_rect):
-				tower["hp"] -= e["hp"] * 10
+				tower["hp"] -= min(25, 5 * e["maxHp"])
 				_update_tower_hp_display()
 				_add_particles(e["x"] + e["width"] / 2.0, e["y"] + e["height"] / 2.0, Color("#e74c3c"), 15)
 				sound_system.play_player_hurt()
@@ -793,27 +815,26 @@ func perform_sword_attack():
 	if game_time - last_sword_time < Config.PLAYER["SWORD_COOLDOWN_MS"] / 1000.0: return
 	last_sword_time = game_time
 	is_sword_attacking = true
+	for en in enemies:
+		en["slashed"] = false
 	sword_attack_timer = Config.PLAYER["SWORD_DURATION_MS"] / 1000.0
 	sound_system.play_sword_slash()
 
 func tower_shoot_arrow():
 	if enemies.size() == 0: return
-	# Find nearest enemy
 	var t_center_x = tower["x"] + tower["width"] / 2.0
 	var target_e = enemies[0]
-	var min_dist = abs(target_e["x"] - t_center_x)
+	var min_dist = abs(target_e["x"] + target_e["width"] / 2.0 - t_center_x)
 	for e in enemies:
-		var d = abs(e["x"] - t_center_x)
+		var d = abs(e["x"] + e["width"] / 2.0 - t_center_x)
 		if d < min_dist:
 			min_dist = d
 			target_e = e
 
-	var dir = 1.0 if target_e["x"] > t_center_x else -1.0
-	tower_arrows.append({
-		"x": t_center_x,
-		"y": tower["y"] + 30.0,
-		"vx": dir * Config.SHURIKEN["SPEED"] * 1.2
-	})
+	var start = Vector2(t_center_x, tower["y"] + 30.0)
+	var target = Vector2(target_e["x"] + target_e["width"] / 2.0, target_e["y"] + target_e["height"] / 2.0)
+	var vel = (target - start).normalized() * Config.SHURIKEN["SPEED"] * 1.2
+	tower_arrows.append({"x": start.x, "y": start.y, "vx": vel.x, "vy": vel.y})
 
 func spawn_enemy():
 	var side = "left" if randf() < 0.5 else "right"
@@ -942,7 +963,9 @@ func _draw():
 
 	# Draw Tower Arrows
 	for a in tower_arrows:
-		draw_texture(tex_arrow, Vector2(a["x"], a["y"]))
+		draw_set_transform(Vector2(a["x"], a["y"]), Vector2(a["vx"], a["vy"]).angle(), Vector2.ONE)
+		draw_texture(tex_arrow, Vector2(-12, -4))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 	# Draw Particles
 	for p in particles:

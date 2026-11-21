@@ -29,7 +29,7 @@ func play_tone(freq: float, duration: float = 0.1, vol: float = 0.25):
 		var t = float(i) / sample_rate
 		var wave = sin(2.0 * PI * freq * t)
 		var env = 1.0 - (float(i) / num_samples)
-		var sample_val = int(clamp((wave * env * vol * 127.0) + 128.0, 0.0, 255.0))
+		var sample_val = int(clamp(wave * env * vol * 127.0, -128.0, 127.0)) & 0xFF
 		data[i] = sample_val
 	stream.data = data
 	var p = _get_next_player()
