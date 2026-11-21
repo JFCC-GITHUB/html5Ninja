@@ -909,7 +909,7 @@ func _pick_enemy_type() -> String:
 	return "NORMAL"
 
 func _get_shuriken_size() -> float:
-	return Config.SHURIKEN["BASE_SIZE"] + (level - 1) * 1.5
+	return Config.SHURIKEN["BASE_SIZE"] + min(level - 1, 5) * 1.2
 
 func _get_sword_range() -> float:
 	if selected_difficulty == "GOD": return 300.0
