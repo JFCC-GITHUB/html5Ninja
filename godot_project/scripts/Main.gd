@@ -119,77 +119,91 @@ func _ready():
 	_update_layout_for_viewport()
 	_set_state(GameState.MENU)
 
+const GOLD := Color("#d4a237")
+const DIFF_COLORS := {
+	"GOD": Color("#f1c40f"), "VERY_EASY": Color("#58d68d"), "EASY": Color("#5dade2"),
+	"NORMAL": Color("#f39c12"), "HARD": Color("#e74c3c"), "NIGHTMARE": Color("#af7ac5"),
+}
+
+func _box(bg: Color, border: Color, radius: int, bw: int) -> StyleBoxFlat:
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(bw)
+	sb.set_corner_radius_all(radius)
+	return sb
+
+func _set_btn_styles(btn: Button, normal_sb: StyleBox, hover_sb: StyleBox, pressed_sb: StyleBox):
+	btn.add_theme_stylebox_override("normal", normal_sb)
+	btn.add_theme_stylebox_override("hover", hover_sb)
+	btn.add_theme_stylebox_override("pressed", pressed_sb)
+	btn.add_theme_stylebox_override("focus", normal_sb)
+
 func _apply_menu_box_styling():
 	title_ninja_left.texture = tex_ninja_idle_r
 	title_ninja_right.texture = tex_ninja_idle_l
 
-	# Style Menu Box Panel with orange border and dark semi-transparent fill
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(0.08, 0.09, 0.15, 0.92)
-	sb.border_width_left = 3
-	sb.border_width_top = 3
-	sb.border_width_right = 3
-	sb.border_width_bottom = 3
-	sb.border_color = Color("#f39c12")
-	sb.corner_radius_top_left = 12
-	sb.corner_radius_top_right = 12
-	sb.corner_radius_bottom_right = 12
-	sb.corner_radius_bottom_left = 12
-	sb.content_margin_left = 16
-	sb.content_margin_top = 16
-	sb.content_margin_right = 16
-	sb.content_margin_bottom = 16
-	menu_box_container.add_theme_stylebox_override("panel", sb)
+	# Transparent menu backdrop so the dusk background shows through
+	menu_screen.color = Color(0, 0, 0, 0)
 
-	# Style Start Button as Red
-	var start_sb = StyleBoxFlat.new()
-	start_sb.bg_color = Color("#e74c3c")
-	start_sb.border_width_left = 2
-	start_sb.border_width_top = 2
-	start_sb.border_width_right = 2
-	start_sb.border_width_bottom = 2
-	start_sb.border_color = Color("#ff6b6b")
-	start_sb.corner_radius_top_left = 8
-	start_sb.corner_radius_top_right = 8
-	start_sb.corner_radius_bottom_right = 8
-	start_sb.corner_radius_bottom_left = 8
+	# Title: bigger, outlined
+	var title = $UILayer/MenuScreen/OverlayContent/TitleHBox/Title
+	title.set_meta("base_font_sz", 34)
+	title.add_theme_constant_override("outline_size", 8)
+	title.add_theme_color_override("font_outline_color", Color("#2a0a0a"))
+	title.add_theme_color_override("font_color", Color("#ff6b5b"))
 
-	var start_hover_sb = start_sb.duplicate()
-	start_hover_sb.bg_color = Color("#ff6b6b")
+	for sub in [$UILayer/MenuScreen/OverlayContent/Subtitle, $UILayer/MenuScreen/OverlayContent/Creators]:
+		sub.add_theme_constant_override("outline_size", 6)
+		sub.add_theme_color_override("font_outline_color", Color("#0b0a12"))
 
-	for s_name in ["normal", "hover", "pressed", "focus"]:
-		btn_start.add_theme_stylebox_override(s_name, start_hover_sb if s_name == "hover" else start_sb)
+	# Panel: deep indigo with gold border and drop shadow
+	var panel = _box(Color(0.07, 0.06, 0.13, 0.9), GOLD, 16, 2)
+	panel.shadow_size = 10
+	panel.shadow_color = Color(0, 0, 0, 0.55)
+	panel.content_margin_left = 18
+	panel.content_margin_top = 16
+	panel.content_margin_right = 18
+	panel.content_margin_bottom = 18
+	menu_box_container.add_theme_stylebox_override("panel", panel)
 
-	# Style Pause, Language, Overlay & Touch Buttons
-	var default_blue_sb = StyleBoxFlat.new()
-	default_blue_sb.bg_color = Color("#2980b9")
-	default_blue_sb.border_color = Color("#3498db")
-	default_blue_sb.border_width_left = 2
-	default_blue_sb.border_width_top = 2
-	default_blue_sb.border_width_right = 2
-	default_blue_sb.border_width_bottom = 2
-	default_blue_sb.corner_radius_top_left = 6
-	default_blue_sb.corner_radius_top_right = 6
-	default_blue_sb.corner_radius_bottom_right = 6
-	default_blue_sb.corner_radius_bottom_left = 6
+	for hdr in [$UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeHeader, $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffHeader]:
+		hdr.set_meta("base_font_sz", 16)
+		hdr.add_theme_color_override("font_color", Color("#f7dc6f"))
+		hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
+	diff_title.add_theme_color_override("font_color", Color("#f7dc6f"))
+	diff_title.set_meta("base_font_sz", 17)
+	diff_desc.add_theme_color_override("font_color", Color("#e8e0f5"))
+	diff_desc.set_meta("base_font_sz", 14)
+	diff_stats.add_theme_color_override("font_color", Color("#a9dfbf"))
+	diff_stats.set_meta("base_font_sz", 13)
+
+	# Start button: red, gold border, raised shadow
+	var start_n = _box(Color("#e74c3c"), Color("#ffd27a"), 14, 3)
+	start_n.shadow_size = 4
+	start_n.shadow_offset = Vector2(0, 5)
+	start_n.shadow_color = Color("#6e1d14")
+	var start_h = _box(Color("#ff6b5b"), Color("#ffe6a0"), 14, 3)
+	start_h.shadow_size = 4
+	start_h.shadow_offset = Vector2(0, 5)
+	start_h.shadow_color = Color("#6e1d14")
+	var start_p = _box(Color("#c0392b"), Color("#ffd27a"), 14, 3)
+	_set_btn_styles(btn_start, start_n, start_h, start_p)
+	btn_start.set_meta("base_font_sz", 22)
+	btn_start.add_theme_color_override("font_color", Color.WHITE)
+
+	# Other buttons (pause/game over/lang): blue rounded
+	var default_blue_sb = _box(Color("#2980b9"), Color("#3498db"), 8, 2)
 	var pause_btn = $UILayer/HUD/BtnPause
 	var btn_resume = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnResume
 	var btn_restart_p = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnRestartPause
 	var btn_menu_p = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnMenuPause
 	var btn_restart_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnRestart
 	var btn_menu_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnMenuGameover
-
-	var all_other_buttons = [
-		pause_btn, lang_button, touch_sword,
-		btn_resume, btn_restart_p, btn_menu_p,
-		btn_restart_g, btn_menu_g
-	]
-
-	for btn in all_other_buttons:
+	for btn in [pause_btn, lang_button, touch_sword, btn_resume, btn_restart_p, btn_menu_p, btn_restart_g, btn_menu_g]:
 		if btn:
-			for s_name in ["normal", "hover", "pressed", "focus"]:
-				btn.add_theme_stylebox_override(s_name, default_blue_sb)
+			_set_btn_styles(btn, default_blue_sb, default_blue_sb, default_blue_sb)
 
 func _on_viewport_resized():
 	_update_layout_for_viewport()
@@ -424,60 +438,29 @@ func _select_difficulty(d: String):
 	_update_difficulty_panel()
 
 func _update_button_states():
-	# Mode Buttons
-	var mode_active_sb = StyleBoxFlat.new()
-	mode_active_sb.bg_color = Color("#f39c12")
-	mode_active_sb.border_color = Color("#f1c40f")
-	mode_active_sb.border_width_left = 2
-	mode_active_sb.border_width_top = 2
-	mode_active_sb.border_width_right = 2
-	mode_active_sb.border_width_bottom = 2
-	mode_active_sb.corner_radius_top_left = 6
-	mode_active_sb.corner_radius_top_right = 6
-	mode_active_sb.corner_radius_bottom_right = 6
-	mode_active_sb.corner_radius_bottom_left = 6
+	# Mode cards: icon + filled tile when active
+	for pair in [[btn_classic, "CLASSIC", tex_shuriken], [btn_defense, "DEFENSE", tex_tower]]:
+		var btn: Button = pair[0]
+		var act = (selected_mode == pair[1])
+		var sb = _box(Color("#e67e22") if act else Color("#2b2140"), Color("#ffd27a") if act else Color("#6c5a8a"), 12, 3 if act else 2)
+		_set_btn_styles(btn, sb, sb, sb)
+		btn.icon = pair[2]
+		btn.expand_icon = true
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		btn.add_theme_color_override("font_color", Color.WHITE if act else Color("#c9bfe0"))
+		btn.custom_minimum_size.y = 56
 
-	var mode_inactive_sb = StyleBoxFlat.new()
-	mode_inactive_sb.bg_color = Color("#16a085")
-	mode_inactive_sb.border_color = Color("#1abc9c")
-	mode_inactive_sb.border_width_left = 2
-	mode_inactive_sb.border_width_top = 2
-	mode_inactive_sb.border_width_right = 2
-	mode_inactive_sb.border_width_bottom = 2
-	mode_inactive_sb.corner_radius_top_left = 6
-	mode_inactive_sb.corner_radius_top_right = 6
-	mode_inactive_sb.corner_radius_bottom_right = 6
-	mode_inactive_sb.corner_radius_bottom_left = 6
-
-	for s_name in ["normal", "hover", "pressed", "focus"]:
-		btn_classic.add_theme_stylebox_override(s_name, mode_active_sb if selected_mode == "CLASSIC" else mode_inactive_sb)
-		btn_defense.add_theme_stylebox_override(s_name, mode_active_sb if selected_mode == "DEFENSE" else mode_inactive_sb)
-
-	# Difficulty Buttons
+	# Difficulty chips: colored per difficulty, filled when active
 	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DifficultyButtons
 	for btn in diff_grid.get_children():
 		if btn is Button and btn.has_meta("diff"):
 			var d_key = btn.get_meta("diff")
-			var is_act = (d_key == selected_difficulty)
-			var sb = StyleBoxFlat.new()
-			sb.corner_radius_top_left = 6
-			sb.corner_radius_top_right = 6
-			sb.corner_radius_bottom_right = 6
-			sb.corner_radius_bottom_left = 6
-
-			if d_key == "GOD":
-				sb.bg_color = Color("#9b59b6") if is_act else Color("#8e44ad")
-				sb.border_color = Color("#f1c40f") if is_act else Color("#9b59b6")
-			else:
-				sb.bg_color = Color("#e67e22") if is_act else Color("#34495e")
-				sb.border_color = Color("#f1c40f") if is_act else Color("#7f8c8d")
-
-			sb.border_width_left = 2
-			sb.border_width_top = 2
-			sb.border_width_right = 2
-			sb.border_width_bottom = 2
-			for s_name in ["normal", "hover", "pressed", "focus"]:
-				btn.add_theme_stylebox_override(s_name, sb)
+			var col: Color = DIFF_COLORS.get(d_key, Color("#7f8c8d"))
+			var act = (d_key == selected_difficulty)
+			var bg = col if act else Color(col.r * 0.22, col.g * 0.22, col.b * 0.22, 0.95)
+			var sb = _box(bg, Color.WHITE if act else col, 10, 3 if act else 2)
+			_set_btn_styles(btn, sb, sb, sb)
+			btn.add_theme_color_override("font_color", Color("#1a1028") if act else col)
 
 func _update_difficulty_panel():
 	_update_button_states()
@@ -959,7 +942,9 @@ func game_over():
 func _draw():
 	var f: Font = custom_font if custom_font else ThemeDB.fallback_font
 	draw_texture_rect(tex_background, Rect2(0, 0, view_width, view_height), false)
-	if state == GameState.MENU: return
+	if state == GameState.MENU:
+		draw_rect(Rect2(0, 0, view_width, view_height), Color(0.02, 0.02, 0.06, 0.5))
+		return
 
 	if selected_mode == "DEFENSE" and not tower.is_empty():
 		draw_texture_rect(tex_tower, Rect2(tower["x"], tower["y"], tower["width"], tower["height"]), false)
