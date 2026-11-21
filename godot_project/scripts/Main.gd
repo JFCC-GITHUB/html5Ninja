@@ -80,8 +80,8 @@ var custom_font: FontFile
 @onready var title_ninja_left: TextureRect = $UILayer/MenuScreen/OverlayContent/TitleHBox/TitleNinjaLeft
 @onready var title_ninja_right: TextureRect = $UILayer/MenuScreen/OverlayContent/TitleHBox/TitleNinjaRight
 @onready var diff_title: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffTitle
-@onready var diff_desc: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDesc
-@onready var diff_stats: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffStats
+@onready var diff_desc: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffDesc
+@onready var diff_stats: Label = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DiffDetailPanel/DiffStats
 @onready var btn_classic: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeButtons/BtnClassic
 @onready var btn_defense: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeButtons/BtnDefense
 @onready var btn_start: Button = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/BtnStart
@@ -334,7 +334,7 @@ func _update_language_ui():
 	for btn in diff_grid.get_children():
 		if btn is Button and btn.has_meta("diff"):
 			var d_key = btn.get_meta("diff")
-			btn.text = u["diff_" + d_key.lower()]
+			btn.text = u["diff_" + d_key.to_lower()]
 
 	$UILayer/HUD/TopPanel/MarginContainer/HBox/HpContainer/HpLabel.text = u["hp_label"]
 	$UILayer/HUD/TopPanel/MarginContainer/HBox/TowerHpContainer/TowerHpLabel.text = u["tower_label"]
