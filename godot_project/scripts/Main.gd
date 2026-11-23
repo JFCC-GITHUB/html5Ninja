@@ -119,26 +119,6 @@ func _ready():
 	_update_layout_for_viewport()
 	_set_state(GameState.MENU)
 
-const GOLD := Color("#d4a237")
-const DIFF_COLORS := {
-	"GOD": Color("#f1c40f"), "VERY_EASY": Color("#58d68d"), "EASY": Color("#5dade2"),
-	"NORMAL": Color("#f39c12"), "HARD": Color("#e74c3c"), "NIGHTMARE": Color("#af7ac5"),
-}
-
-func _box(bg: Color, border: Color, radius: int, bw: int) -> StyleBoxFlat:
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = bg
-	sb.border_color = border
-	sb.set_border_width_all(bw)
-	sb.set_corner_radius_all(radius)
-	return sb
-
-func _set_btn_styles(btn: Button, normal_sb: StyleBox, hover_sb: StyleBox, pressed_sb: StyleBox):
-	btn.add_theme_stylebox_override("normal", normal_sb)
-	btn.add_theme_stylebox_override("hover", hover_sb)
-	btn.add_theme_stylebox_override("pressed", pressed_sb)
-	btn.add_theme_stylebox_override("focus", normal_sb)
-
 func _apply_menu_box_styling():
 	title_ninja_left.texture = tex_ninja_idle_r
 	title_ninja_right.texture = tex_ninja_idle_l
@@ -158,7 +138,7 @@ func _apply_menu_box_styling():
 		sub.add_theme_color_override("font_outline_color", Color("#0b0a12"))
 
 	# Panel: deep indigo with gold border and drop shadow
-	var panel = _box(Color(0.07, 0.06, 0.13, 0.9), GOLD, 16, 2)
+	var panel = UIStyle.box(Color(0.07, 0.06, 0.13, 0.9), UIStyle.GOLD, 16, 2)
 	panel.shadow_size = 10
 	panel.shadow_color = Color(0, 0, 0, 0.55)
 	panel.content_margin_left = 18
@@ -180,21 +160,21 @@ func _apply_menu_box_styling():
 	diff_stats.set_meta("base_font_sz", 13)
 
 	# Start button: red, gold border, raised shadow
-	var start_n = _box(Color("#e74c3c"), Color("#ffd27a"), 14, 3)
+	var start_n = UIStyle.box(Color("#e74c3c"), Color("#ffd27a"), 14, 3)
 	start_n.shadow_size = 4
 	start_n.shadow_offset = Vector2(0, 5)
 	start_n.shadow_color = Color("#6e1d14")
-	var start_h = _box(Color("#ff6b5b"), Color("#ffe6a0"), 14, 3)
+	var start_h = UIStyle.box(Color("#ff6b5b"), Color("#ffe6a0"), 14, 3)
 	start_h.shadow_size = 4
 	start_h.shadow_offset = Vector2(0, 5)
 	start_h.shadow_color = Color("#6e1d14")
-	var start_p = _box(Color("#c0392b"), Color("#ffd27a"), 14, 3)
-	_set_btn_styles(btn_start, start_n, start_h, start_p)
+	var start_p = UIStyle.box(Color("#c0392b"), Color("#ffd27a"), 14, 3)
+	UIStyle.set_btn_styles(btn_start, start_n, start_h, start_p)
 	btn_start.set_meta("base_font_sz", 22)
 	btn_start.add_theme_color_override("font_color", Color.WHITE)
 
 	# Other buttons (pause/game over/lang): blue rounded
-	var default_blue_sb = _box(Color("#2980b9"), Color("#3498db"), 8, 2)
+	var default_blue_sb = UIStyle.box(Color("#2980b9"), Color("#3498db"), 8, 2)
 	var pause_btn = $UILayer/HUD/BtnPause
 	var btn_resume = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnResume
 	var btn_restart_p = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnRestartPause
@@ -203,7 +183,7 @@ func _apply_menu_box_styling():
 	var btn_menu_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnMenuGameover
 	for btn in [pause_btn, lang_button, touch_sword, btn_resume, btn_restart_p, btn_menu_p, btn_restart_g, btn_menu_g]:
 		if btn:
-			_set_btn_styles(btn, default_blue_sb, default_blue_sb, default_blue_sb)
+			UIStyle.set_btn_styles(btn, default_blue_sb, default_blue_sb, default_blue_sb)
 
 func _on_viewport_resized():
 	_update_layout_for_viewport()
@@ -442,8 +422,8 @@ func _update_button_states():
 	for pair in [[btn_classic, "CLASSIC", tex_shuriken], [btn_defense, "DEFENSE", tex_tower]]:
 		var btn: Button = pair[0]
 		var act = (selected_mode == pair[1])
-		var sb = _box(Color("#e67e22") if act else Color("#2b2140"), Color("#ffd27a") if act else Color("#6c5a8a"), 12, 3 if act else 2)
-		_set_btn_styles(btn, sb, sb, sb)
+		var sb = UIStyle.box(Color("#e67e22") if act else Color("#2b2140"), Color("#ffd27a") if act else Color("#6c5a8a"), 12, 3 if act else 2)
+		UIStyle.set_btn_styles(btn, sb, sb, sb)
 		btn.icon = pair[2]
 		btn.expand_icon = true
 		btn.icon_alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -455,11 +435,11 @@ func _update_button_states():
 	for btn in diff_grid.get_children():
 		if btn is Button and btn.has_meta("diff"):
 			var d_key = btn.get_meta("diff")
-			var col: Color = DIFF_COLORS.get(d_key, Color("#7f8c8d"))
+			var col: Color = UIStyle.DIFF_COLORS.get(d_key, Color("#7f8c8d"))
 			var act = (d_key == selected_difficulty)
 			var bg = col if act else Color(col.r * 0.22, col.g * 0.22, col.b * 0.22, 0.95)
-			var sb = _box(bg, Color.WHITE if act else col, 10, 3 if act else 2)
-			_set_btn_styles(btn, sb, sb, sb)
+			var sb = UIStyle.box(bg, Color.WHITE if act else col, 10, 3 if act else 2)
+			UIStyle.set_btn_styles(btn, sb, sb, sb)
 			btn.add_theme_color_override("font_color", Color("#1a1028") if act else col)
 
 func _update_difficulty_panel():
