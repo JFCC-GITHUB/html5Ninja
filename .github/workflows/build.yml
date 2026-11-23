@@ -1,0 +1,32 @@
+name: Build check
+on:
+  pull_request:
+  push:
+    branches: [main]
+env:
+  GODOT_VERSION: "4.7-stable" # keep in sync with config/features in godot_project/project.godot
+jobs:
+  export-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot and web export templates
+        run: |
+          base=https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}
+          curl -fsSL -o godot.zip $base/Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          curl -fsSL -o tpl.tpz $base/Godot_v${GODOT_VERSION}_export_templates.tpz
+          unzip -q godot.zip && unzip -q tpl.tpz
+          v=${GODOT_VERSION/-/.}
+          mkdir -p ~/.local/share/godot/export_templates/$v ~/.local/bin
+          mv templates/* ~/.local/share/godot/export_templates/$v/
+          mv Godot_v${GODOT_VERSION}_linux.x86_64 ~/.local/bin/godot
+      - name: Export (fails the PR if the project does not build)
+        run: |
+          mkdir -p out
+          godot --headless --path godot_project --import
+          godot --headless --path godot_project --export-release "Web" ../out/index.html
+          test -s out/index.wasm && test -s out/index.pck
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: out
