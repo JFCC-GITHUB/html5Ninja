@@ -31,3 +31,20 @@ python3 -m http.server 8000
 ```bash
 ./build.sh   # 匯出到根目錄的 index.* 並為 index.pck 加上內容雜湊以避免快取
 ```
+
+## 🔤 字型
+
+`godot_project/fonts/NotoSansTC-Regular.ttf` 是只含實際用到字元的子集（約 230KB，原檔 12MB）。新增或修改介面文字後，請重新產生：
+
+```bash
+cd godot_project/fonts
+python3 - <<'PY'
+import glob
+t="".join(open(f,encoding='utf8').read() for f in glob.glob('../scripts/*.gd')+glob.glob('../scenes/*.tscn'))
+open('subset-chars.txt','w',encoding='utf8').write("".join(sorted({c for c in t if ord(c)>0x7f}))+"\n")
+PY
+# 需先取得完整版 NotoSansTC-Regular.ttf（Google Fonts）
+uvx --from fonttools --with brotli pyftsubset NotoSansTC-Regular.ttf --text-file=subset-chars.txt \
+  --unicodes="U+0020-007E,U+3000-303F,U+FF00-FFEF,U+2010-206F" --layout-features='*' --output-file=sub.ttf
+mv sub.ttf NotoSansTC-Regular.ttf
+```
