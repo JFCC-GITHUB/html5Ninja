@@ -32,6 +32,8 @@ python3 -m http.server 8000
 ./build.sh   # 匯出到根目錄的 index.* 並為 index.pck 加上內容雜湊以避免快取
 ```
 
+`index.*` 是建置產物，不進 git（已列入 `.gitignore`）。推到 `main` 後由 GitHub Actions 自動建置並部署到 GitHub Pages（Settings → Pages → Source 需設為 GitHub Actions）。
+
 ## 🔤 字型
 
 `godot_project/fonts/NotoSansTC-Regular.ttf` 是只含實際用到字元的子集（約 230KB，原檔 12MB）。新增或修改介面文字後，請重新產生：

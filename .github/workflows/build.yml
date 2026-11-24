@@ -8,6 +8,8 @@ env:
 jobs:
   export-web:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot and web export templates
@@ -20,13 +22,26 @@ jobs:
           mkdir -p ~/.local/share/godot/export_templates/$v ~/.local/bin
           mv templates/* ~/.local/share/godot/export_templates/$v/
           mv Godot_v${GODOT_VERSION}_linux.x86_64 ~/.local/bin/godot
-      - name: Export (fails the PR if the project does not build)
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Export with build.sh (fails the PR if the project does not build)
         run: |
-          mkdir -p out
           godot --headless --path godot_project --import
-          godot --headless --path godot_project --export-release "Web" ../out/index.html
-          test -s out/index.wasm && test -s out/index.pck
-      - uses: actions/upload-artifact@v4
+          ./build.sh
+          mkdir dist && cp index.* dist/
+          test -s dist/index.wasm && test -s dist/index.pck
+      - uses: actions/upload-pages-artifact@v3
         with:
-          name: web-build
-          path: out
+          path: dist
+  deploy:
+    if: github.event_name == 'push'
+    needs: export-web
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
