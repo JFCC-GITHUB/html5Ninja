@@ -459,6 +459,7 @@ func _set_state(new_state: GameState):
 	gameover_screen.visible = (state == GameState.GAMEOVER)
 	hud.visible = (state == GameState.PLAYING or state == GameState.PAUSED)
 	touch_controls.visible = (state == GameState.PLAYING)
+	sound_system.set_music_mode({GameState.MENU: "menu", GameState.PLAYING: "play", GameState.PAUSED: "paused", GameState.GAMEOVER: "stop"}[state])
 
 func toggle_pause():
 	if state == GameState.PLAYING:
