@@ -189,6 +189,9 @@ func play_sword_slash() -> void: _play("slash", -1.0, 0.05)
 func play_level_up() -> void: _play("level")
 func play_game_over() -> void: _play("over")
 
+func set_music_enabled(on: bool) -> void:
+	music_player.stream_paused = not on
+
 func ensure_music() -> void:
 	if not music_player.playing and music_player.stream:
 		music_player.play()

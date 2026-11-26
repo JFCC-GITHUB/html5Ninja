@@ -38,7 +38,9 @@ const UI_TEXT = {
 		"play_again": "再試一次 (Play Again)",
 		"touch_left": "左移 & 射擊",
 		"touch_right": "右移 & 射擊",
-		"touch_sword": "斬擊"
+		"touch_sword": "斬擊",
+		"music_on": "音樂：開",
+		"music_off": "音樂：關"
 	},
 	"en": {
 		"lang_toggle": "繁體中文",
@@ -73,7 +75,9 @@ const UI_TEXT = {
 		"play_again": "Play Again",
 		"touch_left": "Left / Shoot",
 		"touch_right": "Right / Shoot",
-		"touch_sword": "Slash"
+		"touch_sword": "Slash",
+		"music_on": "Music: ON",
+		"music_off": "Music: OFF"
 	}
 }
 
