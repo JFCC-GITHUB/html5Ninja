@@ -105,6 +105,7 @@ var sword_held: bool = false
 @onready var touch_sword: Button = $UILayer/TouchControls/TouchSword
 
 # Key inputs
+var music_on: bool = true
 var key_left: bool = false
 var key_right: bool = false
 
@@ -181,7 +182,9 @@ func _apply_menu_box_styling():
 	var btn_menu_p = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnMenuPause
 	var btn_restart_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnRestart
 	var btn_menu_g = $UILayer/GameOverScreen/OverlayContent/MenuBox/BtnMenuGameover
-	for btn in [pause_btn, lang_button, touch_sword, btn_resume, btn_restart_p, btn_menu_p, btn_restart_g, btn_menu_g]:
+	var music_btn_menu = $UILayer/MenuScreen/MusicButton
+	var music_btn_pause = $UILayer/PauseScreen/OverlayContent/MenuBox/BtnMusicPause
+	for btn in [pause_btn, lang_button, music_btn_menu, music_btn_pause, touch_sword, btn_resume, btn_restart_p, btn_menu_p, btn_restart_g, btn_menu_g]:
 		if btn:
 			UIStyle.set_btn_styles(btn, default_blue_sb, default_blue_sb, default_blue_sb)
 
@@ -204,6 +207,10 @@ func _update_layout_for_viewport():
 	menu_overlay_content.custom_minimum_size = Vector2(min(view_width - 24.0, 600.0), 0)
 	for lbl in [diff_title, diff_desc, diff_stats]:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	var half_menu = min(300.0, view_width / 2.0 - 12.0)
+	menu_overlay_content.offset_left = -half_menu
+	menu_overlay_content.offset_right = half_menu
 
 	var half_go = min(200.0, view_width / 2.0 - 12.0)
 	var go_box = $UILayer/GameOverScreen/OverlayContent
@@ -327,6 +334,8 @@ func _connect_ui_signals():
 
 	if lang_button:
 		lang_button.pressed.connect(_toggle_language)
+	$UILayer/MenuScreen/MusicButton.pressed.connect(toggle_music)
+	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnMusicPause.pressed.connect(toggle_music)
 
 	var diff_grid = $UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/DifficultyButtons
 	for btn in diff_grid.get_children():
@@ -356,6 +365,17 @@ func _connect_ui_signals():
 	touch_sword.button_down.connect(func(): sword_held = true)
 	touch_sword.button_up.connect(func(): sword_held = false)
 
+func toggle_music():
+	music_on = not music_on
+	sound_system.set_music_enabled(music_on)
+	sound_system.play_click()
+	_update_music_buttons()
+
+func _update_music_buttons():
+	var t: String = Config.UI_TEXT[current_lang]["music_on" if music_on else "music_off"]
+	$UILayer/MenuScreen/MusicButton.text = t
+	$UILayer/PauseScreen/OverlayContent/MenuBox/BtnMusicPause.text = t
+
 func _toggle_language():
 	current_lang = "en" if current_lang == "zh" else "zh"
 	sound_system.play_click()
@@ -365,6 +385,7 @@ func _update_language_ui():
 	var u = Config.UI_TEXT[current_lang]
 	if lang_button:
 		lang_button.text = u["lang_toggle"]
+	_update_music_buttons()
 
 	$UILayer/MenuScreen/OverlayContent/TitleHBox/Title.text = u["title"]
 	$UILayer/MenuScreen/OverlayContent/MenuBoxContainer/MenuBox/ModeHeader.text = u["mode_header"]
@@ -590,6 +611,8 @@ func add_score(pts: int):
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_cancel") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_P):
 		toggle_pause()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_M:
+		toggle_music()
 
 func _process(delta):
 	if state == GameState.PLAYING:
