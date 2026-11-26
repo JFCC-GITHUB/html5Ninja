@@ -205,6 +205,10 @@ func _update_layout_for_viewport():
 	for lbl in [diff_title, diff_desc, diff_stats]:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
+	var half_menu = min(300.0, view_width / 2.0 - 12.0)
+	menu_overlay_content.offset_left = -half_menu
+	menu_overlay_content.offset_right = half_menu
+
 	var half_go = min(200.0, view_width / 2.0 - 12.0)
 	var go_box = $UILayer/GameOverScreen/OverlayContent
 	go_box.offset_left = -half_go
