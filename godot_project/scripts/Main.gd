@@ -109,7 +109,12 @@ var music_on: bool = true
 var key_left: bool = false
 var key_right: bool = false
 
+var renderer: GameRenderer
+
 func _ready():
+	renderer = GameRenderer.new()
+	renderer.g = self
+	add_child(renderer)
 	get_viewport().size_changed.connect(_on_viewport_resized)
 	_setup_custom_font()
 	_generate_textures()
@@ -617,7 +622,7 @@ func _unhandled_input(event):
 func _process(delta):
 	if state == GameState.PLAYING:
 		_update_game(delta)
-	queue_redraw()
+	renderer.queue_redraw()
 
 func _update_game(delta: float):
 	delta = min(delta, 0.05)
@@ -942,87 +947,3 @@ func game_over():
 	final_score_val.text = str(score)
 	final_best_val.text = str(high_score)
 	new_record_tag.visible = is_new
-
-func _draw():
-	var f: Font = custom_font if custom_font else ThemeDB.fallback_font
-	draw_texture_rect(tex_background, Rect2(0, 0, view_width, view_height), false)
-	if state == GameState.MENU:
-		draw_rect(Rect2(0, 0, view_width, view_height), Color(0.02, 0.02, 0.06, 0.5))
-		return
-
-	if selected_mode == "DEFENSE" and not tower.is_empty():
-		draw_texture_rect(tex_tower, Rect2(tower["x"], tower["y"], tower["width"], tower["height"]), false)
-
-	if not is_player_dead_in_defense and not player.is_empty():
-		var p_tex = tex_ninja_run_r if player["moving"] and player["facing"] == "right" else (
-			tex_ninja_run_l if player["moving"] and player["facing"] == "left" else (
-				tex_ninja_idle_r if player["facing"] == "right" else tex_ninja_idle_l
-			)
-		)
-		var is_inv = (player["invincibleTimer"] > 0.0 and fmod(player["invincibleTimer"] * 10.0, 1.0) > 0.5)
-		if not is_inv:
-			draw_texture_rect(p_tex, Rect2(player["x"], player["y"], player["width"], player["height"]), false)
-
-		if is_sword_attacking:
-			var s_range = _get_sword_range()
-			var p_center_x = player["x"] + player["width"] / 2.0
-			var p_center_y = player["y"] + player["height"] / 2.0
-			if selected_difficulty == "GOD":
-				draw_circle(Vector2(p_center_x, p_center_y), s_range, Color(1, 0.8, 0.2, 0.35))
-			else:
-				var start_a = -PI / 3.0 if player["facing"] == "right" else PI - PI / 3.0
-				var end_a = PI / 3.0 if player["facing"] == "right" else PI + PI / 3.0
-				draw_arc(Vector2(p_center_x, p_center_y), s_range, start_a, end_a, 16, Color(1, 0.85, 0.3, 0.9), 6.0)
-
-	for e in enemies:
-		var side_str = "right" if e["vx"] > 0 else "left"
-		var tex = enemy_textures[e["type"]][side_str]
-		draw_texture_rect(tex, Rect2(e["x"], e["y"], e["width"], e["height"]), false)
-		if e["maxHp"] > 1:
-			var hp_pct = clamp(float(e["hp"]) / float(e["maxHp"]), 0.0, 1.0)
-			draw_rect(Rect2(e["x"], e["y"] - 8, e["width"], 4), Color("#000000"))
-			draw_rect(Rect2(e["x"], e["y"] - 8, e["width"] * hp_pct, 4), Color("#2ecc71"))
-
-	for s in shurikens:
-		draw_texture_rect(tex_shuriken, Rect2(s["x"], s["y"], s["size"], s["size"]), false)
-
-	for a in tower_arrows:
-		draw_set_transform(Vector2(a["x"], a["y"]), Vector2(a["vx"], a["vy"]).angle(), Vector2.ONE)
-		draw_texture_rect(tex_arrow, Rect2(-18, -4.5, 36, 9), false)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-	for p in particles:
-		draw_rect(Rect2(p["x"], p["y"], 4, 4), p["color"])
-
-	for ft in floating_texts:
-		var c = ft["color"]
-		c.a = clamp(ft["life"], 0.0, 1.0)
-		draw_string(f, Vector2(ft["x"] - 60, ft["y"]), ft["text"], HORIZONTAL_ALIGNMENT_CENTER, 120, 14, c)
-
-	if state == GameState.PLAYING:
-		_draw_touch_controls(f)
-
-func _draw_touch_controls(f: Font):
-	var u = Config.UI_TEXT[current_lang]
-	var c = _touch_circle_center()
-	var r = _sword_radius()
-	var pad_r = clamp(view_width * 0.13, 40.0, 60.0)
-	var lc = Vector2(view_width * 0.2, c.y)
-	var rc = Vector2(view_width * 0.8, c.y)
-	var label_col = Color(0.8, 0.83, 0.85, 0.9)
-
-	for pad in [[lc, key_left, -1.0, u["touch_left"]], [rc, key_right, 1.0, u["touch_right"]]]:
-		var pc: Vector2 = pad[0]
-		var on: bool = pad[1]
-		var dir: float = pad[2]
-		draw_circle(pc, pad_r, Color(0.16, 0.5, 0.73, 0.55 if on else 0.28))
-		draw_arc(pc, pad_r, 0, TAU, 48, Color(1, 1, 1, 0.45), 3.0)
-		draw_colored_polygon(PackedVector2Array([
-			pc + Vector2(dir * pad_r * 0.3, 0),
-			pc + Vector2(-dir * pad_r * 0.25, -pad_r * 0.35),
-			pc + Vector2(-dir * pad_r * 0.25, pad_r * 0.35)]), Color(1, 1, 1, 0.92))
-		draw_string(f, pc + Vector2(-100, pad_r + 26), pad[3], HORIZONTAL_ALIGNMENT_CENTER, 200, 16, label_col)
-
-	draw_circle(c, r, Color(0.75, 0.22, 0.17, 0.75 if sword_held else 0.5))
-	draw_arc(c, r, 0, TAU, 48, Color(1, 0.6, 0.55, 0.7), 3.0)
-	draw_string(f, c + Vector2(-r, 7), u["touch_sword"], HORIZONTAL_ALIGNMENT_CENTER, r * 2.0, 18, Color.WHITE)
