@@ -249,7 +249,7 @@ func _compact_hud():
 	touch_controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for lbl in $UILayer/HUD/TopPanel.find_children("*", "Label", true, false):
 		lbl.add_theme_font_size_override("font_size", int(round(13 * ui_scale_factor)))
-	exp_bar_fill.get_parent().custom_minimum_size.x = 50.0
+	exp_bar_fill.get_parent().custom_minimum_size.x = 36.0
 	$UILayer/HUD/BtnPause.text = "II"
 
 func _touch_circle_center() -> Vector2:
