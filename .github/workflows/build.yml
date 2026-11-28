@@ -1,32 +1,56 @@
-name: Build check
+name: Build
 on:
   pull_request:
   push:
     branches: [main]
+    tags: ["v*"]
 env:
   GODOT_VERSION: "4.7-stable" # keep in sync with config/features in godot_project/project.godot
 jobs:
-  export-web:
+  export:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Install Godot and web export templates
+      - name: Install Godot and export templates
         run: |
           base=https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}
-          curl -fsSL -o godot.zip $base/Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          curl -fsSL -o tpl.tpz $base/Godot_v${GODOT_VERSION}_export_templates.tpz
+          curl -fsSL --retry 3 --retry-delay 5 --max-time 600 -o godot.zip $base/Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          curl -fsSL --retry 3 --retry-delay 5 --max-time 900 -o tpl.tpz $base/Godot_v${GODOT_VERSION}_export_templates.tpz
           unzip -q godot.zip && unzip -q tpl.tpz
           v=${GODOT_VERSION/-/.}
           mkdir -p ~/.local/share/godot/export_templates/$v ~/.local/bin
           mv templates/* ~/.local/share/godot/export_templates/$v/
           mv Godot_v${GODOT_VERSION}_linux.x86_64 ~/.local/bin/godot
-      - name: Export (fails the PR if the project does not build)
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Export web, Windows and Linux (fails the job if the project does not build)
         run: |
-          mkdir -p out
           godot --headless --path godot_project --import
-          godot --headless --path godot_project --export-release "Web" ../out/index.html
-          test -s out/index.wasm && test -s out/index.pck
+          ./build.sh
+          test -s index.wasm && test -s index.pck
+          mkdir -p dist/linux dist/windows release
+          godot --headless --path godot_project --export-release "Linux" ../dist/linux/ShurikenHero.x86_64
+          godot --headless --path godot_project --export-release "Windows Desktop" ../dist/windows/ShurikenHero.exe
+          test -s dist/linux/ShurikenHero.x86_64 && test -s dist/windows/ShurikenHero.exe
+          (cd dist/linux && zip -q -r ../../release/ShurikenHero-linux.zip ShurikenHero.x86_64)
+          (cd dist/windows && zip -q -j ../../release/ShurikenHero-windows.zip ShurikenHero.exe)
+          zip -q -r release/ShurikenHero-web.zip index.*
       - uses: actions/upload-artifact@v4
         with:
-          name: web-build
-          path: out
+          name: builds
+          path: release/*.zip
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: export
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: builds
+          path: release
+      - name: Create GitHub Release with the three builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/*.zip --title "$GITHUB_REF_NAME" --generate-notes
