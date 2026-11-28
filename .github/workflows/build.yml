@@ -9,13 +9,14 @@ env:
 jobs:
   export:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot and export templates
         run: |
           base=https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}
-          curl -fsSL -o godot.zip $base/Godot_v${GODOT_VERSION}_linux.x86_64.zip
-          curl -fsSL -o tpl.tpz $base/Godot_v${GODOT_VERSION}_export_templates.tpz
+          curl -fsSL --retry 3 --retry-delay 5 --max-time 600 -o godot.zip $base/Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          curl -fsSL --retry 3 --retry-delay 5 --max-time 900 -o tpl.tpz $base/Godot_v${GODOT_VERSION}_export_templates.tpz
           unzip -q godot.zip && unzip -q tpl.tpz
           v=${GODOT_VERSION/-/.}
           mkdir -p ~/.local/share/godot/export_templates/$v ~/.local/bin
